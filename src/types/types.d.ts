@@ -1,53 +1,64 @@
 type Campaign = {
-  name: string
-  state: "draft" | "available" | "active"
-  description: string
-  comment?: string
-  players: Player[]
-  chapters: Chapter[]
+  name: string,
+  state: "draft" | "available" | "active",
+  description: string,
+  comment: string?,
+  players: Player[],
+  chapters: Chapter[],
 }
 
 type Chapter = {
-  name: string
-  state: "disabled" | "enabled" | "completed"
-  description: string
-  comment?: string
-  password?: string
-  resolutionItems: Item[]
+  name: string,
+  state: "disabled" | "enabled" | "completed",
+  description: string,
+  comment: string?,
+  password: string?,
+  resolutionItems: Item[],
   rewards: {
-    clues: Clue[]
-    items: Item[]
+    clues: Clue[],
+    items: Item[],
+  }
+}
+
+type Quest = {
+  name: string,
+  state: "inactive" | "active" | "completed" | "abandonned",
+  description: string,
+  activationPassword: string?,
+  resolutionPassword: string,
+  rewards: {
+    clues: Clue[]?,
+    items: Item[]?,
   }
 }
 
 type Player = {
-  name: string
-  state: "alive" | "dead"
-  comment: string
-  description: string
+  name: string,
+  state: "alive" | "dead",
+  comment: string,
+  description: string,
   inventory: {
-    clues: Clue[]
-    items: Item[]
+    clues: Clue[],
+    items: Item[],
   }
-  place: Place
+  place: Place,
 }
 
 type Place = {
-  name: string
-  description: string
-  comment: string
+  name: string,
+  description: string,
+  comment: string,
 }
 
 type Item = {
-  name: string
-  description: string
-  comment: string
+  name: string,
+  description: string,
+  comment: string,
 }
 
 type Clue = {
-  name: string
-  description: string
-  comment: string
+  name: string,
+  description: string,
+  comment: string,
 }
-
 
