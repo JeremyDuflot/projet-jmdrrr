@@ -2,7 +2,7 @@ type Campaign = {
   name: string,
   state: "draft" | "available" | "active",
   description: string,
-  comment: string?,
+  comment: string | null,
   players: Player[],
   chapters: Chapter[],
 }
@@ -11,8 +11,8 @@ type Chapter = {
   name: string,
   state: "disabled" | "enabled" | "completed",
   description: string,
-  comment: string?,
-  password: string?,
+  comment: string | null,
+  password: string | null,
   resolutionItems: Item[],
   rewards: {
     clues: Clue[],
@@ -24,11 +24,11 @@ type Quest = {
   name: string,
   state: "inactive" | "active" | "completed" | "abandonned",
   description: string,
-  activationPassword: string?,
+  activationPassword: string | null,
   resolutionPassword: string,
   rewards: {
-    clues: Clue[]?,
-    items: Item[]?,
+    clues: Clue[] | null,
+    items: Item[] | null,
   }
 }
 
