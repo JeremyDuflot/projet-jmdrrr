@@ -460,8 +460,22 @@ export const useCampaignsStore = defineStore(
       deleteClue,
     }
   },
-  { persist: true },
+  { persist: { hydrate: hydrateState } },
 )
+
+function hydrateState(saved) {
+  const campaigns = Array.isArray(saved.campaigns)
+    ? saved.campaigns.map((campaign) => entities.createCampaign(campaign))
+    : []
+
+  const knownId = (id) => (campaigns.some((campaign) => campaign.id === id) ? id : null)
+
+  return {
+    campaigns,
+    activeCampaignId: knownId(saved.activeCampaignId),
+    selectedCampaignId: knownId(saved.selectedCampaignId),
+  }
+}
 
 function applyPatch(target, patch, protectedKeys = []) {
   if (!patch) return target
