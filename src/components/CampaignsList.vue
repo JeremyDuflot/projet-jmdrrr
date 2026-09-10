@@ -46,6 +46,8 @@ function createCampaign() {
         state: 'alive',
         comment: faker.lorem.sentence(),
         description: faker.lorem.text(),
+        currentHp: 100,
+        maxHp: 150,
         inventory: {
           clues: [
             {
