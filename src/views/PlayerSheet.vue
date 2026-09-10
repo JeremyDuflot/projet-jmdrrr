@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { usePlayerStore } from '@/stores/playerStore.js'
+import LifeBar from '@/components/LifeBar.vue'
 
 const route = useRoute()
 const playerStore = usePlayerStore()
@@ -12,6 +13,20 @@ const playerName = route.params.playerName
 onMounted(() => {
   player.value = playerStore.getPlayer(playerName)
 })
+
+function handleUpdateHp(newHp) {
+  if (!player.value) return
+  
+  player.value.currentHp = newHp
+  
+  if (newHp === 0) {
+    player.value.state = 'dead'
+  } else if (player.value.state === 'dead' && newHp > 0) {
+    player.value.state = 'alive'
+  }
+  
+  playerStore.updateTestPlayer(player.value)
+}
 </script>
 
 <template>
@@ -26,7 +41,13 @@ onMounted(() => {
             {{ player.state === 'alive' ? 'Vivant' : 'Mort' }}
           </div>
 
-          <div class="divider"></div>
+          <div class="divider" />
+          <LifeBar 
+            :current-hp="player.currentHp" 
+            :max-hp="player.maxHp" 
+            @update-hp="handleUpdateHp"
+          />
+          <div class="divider" />
 
           <div>
             <h3 class="font-bold text-lg mb-2">Description</h3>
@@ -37,7 +58,7 @@ onMounted(() => {
             </div>
           </div>
 
-          <div class="divider"></div>
+          <div class="divider" />
 
           <div>
             <h3 class="font-bold text-lg mb-2">Localisation</h3>

@@ -58,10 +58,16 @@ export const usePlayerStore = defineStore('player', () => {
     return null
   }
 
+  function updateTestPlayer(updatedPlayer) {
+    testPlayer.value = updatedPlayer
+    localStorage.setItem('testPlayer', JSON.stringify(testPlayer.value))
+  }
+
   loadFromStorage()
 
   return {
     testPlayer,
     getPlayer,
+    updateTestPlayer,
   }
 })
