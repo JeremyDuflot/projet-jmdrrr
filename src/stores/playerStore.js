@@ -58,7 +58,7 @@ export const usePlayerStore = defineStore('player', () => {
     return null
   }
 
-  function updateTestPlayer(updatedPlayer) {
+  function updatePlayer(updatedPlayer) {
     testPlayer.value = updatedPlayer
     localStorage.setItem('testPlayer', JSON.stringify(testPlayer.value))
   }
@@ -68,6 +68,6 @@ export const usePlayerStore = defineStore('player', () => {
   return {
     testPlayer,
     getPlayer,
-    updateTestPlayer,
+    updatePlayer,
   }
 })

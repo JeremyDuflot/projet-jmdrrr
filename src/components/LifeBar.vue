@@ -16,7 +16,7 @@ const props = defineProps({
 const emit = defineEmits(['updateHp'])
 
 const isEditing = ref(false)
-const tempHp = ref(props.currentHp)
+const hp = ref(props.currentHp)
 
 const healthPercentage = computed(() => {
   if (props.maxHp <= 0) return 0
@@ -30,24 +30,34 @@ const healthColor = computed(() => {
   return 'progress-error'
 })
 
-function openEditModal() {
-  tempHp.value = props.currentHp
-  isEditing.value = true
-}
-
-function closeEditModal() {
-  isEditing.value = false
-}
-
 function adjustHp(amount) {
-  const newValue = tempHp.value + amount
+  const newValue = hp.value + amount
   if (newValue >= 0 && newValue <= props.maxHp) {
-    tempHp.value = newValue
+    hp.value = newValue
+  }
+}
+
+function handleHpInput() {
+  if (hp.value === '' || isNaN(hp.value)) {
+    hp.value = 0
+  } else if (hp.value < 0) {
+    hp.value = 0
+  } else if (hp.value > props.maxHp) {
+    hp.value = props.maxHp
+  }
+}
+
+function preventInvalidKeys(event) {
+  if (event.key === 'e' || event.key === 'E' || event.key === '-' || event.key === '+') {
+    event.preventDefault()
   }
 }
 
 function saveHp() {
-  emit('updateHp', tempHp.value)
+  if (hp.value === '' || isNaN(hp.value)) {
+    hp.value = 0
+  }
+  emit('updateHp', hp.value)
   isEditing.value = false
 }
 </script>
@@ -59,7 +69,7 @@ function saveHp() {
       <div class="flex items-center gap-2">
         <span class="font-bold">{{ currentHp }} / {{ maxHp }}</span>
         <button
-          @click="openEditModal"
+          @click="isEditing = true"
           class="btn btn-xs btn-ghost btn-circle"
           title="Modifier les points de vie"
         >
@@ -74,37 +84,30 @@ function saveHp() {
       :max="maxHp"
     ></progress>
 
-    <!-- Modal d'édition HP -->
-    <dialog class="modal" :class="{ 'modal-open': isEditing }">
-      <div class="modal-box">
-        <h3 class="font-bold text-lg mb-4">Modifier les points de vie</h3>
+    <!-- édition des points de vie -->
+    <div v-show="isEditing" class="flex justify-end gap-4 mt-4">
+      <div class="flex items-center gap-2">
+        <button @click="adjustHp(-10)" class="btn btn-circle btn-sm" :disabled="hp <= 0">-</button>
 
-        <div class="flex items-center gap-4 mb-4">
-          <button @click="adjustHp(-10)" class="btn btn-circle btn-sm" :disabled="tempHp <= 0">
-            -
-          </button>
+        <input
+          v-model.number="hp"
+          @input="handleHpInput"
+          @keydown="preventInvalidKeys"
+          type="number"
+          class="input input-bordered w-20 text-center"
+          min="0"
+          :max="maxHp"
+        />
 
-          <input
-            v-model.number="tempHp"
-            type="number"
-            class="input input-bordered w-24 text-center"
-            min="0"
-            :max="maxHp"
-          />
-
-          <button @click="adjustHp(10)" class="btn btn-circle btn-sm" :disabled="tempHp >= maxHp">
-            +
-          </button>
-        </div>
-
-        <div class="modal-action">
-          <button @click="closeEditModal" class="btn">Annuler</button>
-          <button @click="saveHp" class="btn btn-primary">Valider</button>
-        </div>
+        <button @click="adjustHp(10)" class="btn btn-circle btn-sm" :disabled="hp >= maxHp">
+          +
+        </button>
       </div>
-      <form method="dialog" class="modal-backdrop">
-        <button @click="closeEditModal">close</button>
-      </form>
-    </dialog>
+
+      <div class="flex gap-2">
+        <button @click="isEditing = false" class="btn">Annuler</button>
+        <button @click="saveHp" class="btn btn-primary">Valider</button>
+      </div>
+    </div>
   </div>
 </template>

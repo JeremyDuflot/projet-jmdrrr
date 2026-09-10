@@ -16,16 +16,16 @@ onMounted(() => {
 
 function handleUpdateHp(newHp) {
   if (!player.value) return
-  
+
   player.value.currentHp = newHp
-  
+
   if (newHp === 0) {
     player.value.state = 'dead'
   } else if (player.value.state === 'dead' && newHp > 0) {
     player.value.state = 'alive'
   }
-  
-  playerStore.updateTestPlayer(player.value)
+
+  playerStore.updatePlayer(player.value)
 }
 </script>
 
@@ -42,9 +42,9 @@ function handleUpdateHp(newHp) {
           </div>
 
           <div class="divider" />
-          <LifeBar 
-            :current-hp="player.currentHp" 
-            :max-hp="player.maxHp" 
+          <LifeBar
+            :current-hp="player.currentHp"
+            :max-hp="player.maxHp"
             @update-hp="handleUpdateHp"
           />
           <div class="divider" />
