@@ -173,7 +173,7 @@ export function duplicateContent(entity, prefix) {
 }
 
 export function remapReferences(campaign, remap) {
-  const remapList = (ids) => (Array.isArray(ids) ? ids.map(remap) : [])
+  const remapList = (ids) => (Array.isArray(ids) ? ids.map((id) => remap(id)) : [])
   const remapOne = (id) => (id ? remap(id) : null)
 
   campaign.revealedClueIds = remapList(campaign.revealedClueIds)
