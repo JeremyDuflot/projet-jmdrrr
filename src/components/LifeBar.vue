@@ -38,7 +38,7 @@ function adjustHp(amount) {
 }
 
 function handleHpInput() {
-  if (hp.value === '' || isNaN(hp.value)) {
+  if (hp.value === '' || Number.isNaN(hp.value)) {
     hp.value = 0
   } else if (hp.value < 0) {
     hp.value = 0
@@ -54,7 +54,7 @@ function preventInvalidKeys(event) {
 }
 
 function saveHp() {
-  if (hp.value === '' || isNaN(hp.value)) {
+  if (hp.value === '' || Number.isNaN(hp.value)) {
     hp.value = 0
   }
   emit('updateHp', hp.value)
@@ -89,7 +89,9 @@ function saveHp() {
       <div class="flex items-center gap-2">
         <button @click="adjustHp(-10)" class="btn btn-circle btn-sm" :disabled="hp <= 0">-</button>
 
+        <label for="hp-input" class="sr-only">Points de vie</label>
         <input
+          id="hp-input"
           v-model.number="hp"
           @input="handleHpInput"
           @keydown="preventInvalidKeys"

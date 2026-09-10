@@ -40,7 +40,7 @@ export const usePlayerStore = defineStore('player', () => {
     },
   })
 
-  // TODO: Ajouter la récup des campaigns actives pour récup les players
+  // Ajouter la récup des campaigns actives pour récup les players
   // Utilise testPlayer en attendant
   function loadFromStorage() {
     const storedTest = localStorage.getItem('testPlayer')
@@ -49,7 +49,7 @@ export const usePlayerStore = defineStore('player', () => {
     }
   }
 
-  // TODO: à update pour récup les vrai players
+  //  Update pour récup les vrai players
   //  Utilise testPlayer en attendant
   function getPlayer(playerName) {
     if (testPlayer.value.name === playerName) {
