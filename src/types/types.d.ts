@@ -33,6 +33,7 @@ type Quest = {
 }
 
 type Player = {
+  id: string
   name: string
   state: 'alive' | 'dead'
   currentHp: number
@@ -44,6 +45,7 @@ type Player = {
     items: Item[]
   }
   place: Place
+  campaignId: string
 }
 
 type Place = {
