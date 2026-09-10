@@ -86,7 +86,7 @@ const arrayOfFakeData = Array.from({ length: 20 }, createCampaign)
       :key="campaign.id"
       class="collapse collapse-arrow bg-base-100 border border-base-300 mb-2 hover:bg-base-200 hover:border-base-content/20 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
     >
-      <input type="checkbox" />
+      <input type="checkbox" :id="'my-campaign-' + campaign.id" />
       <h2 class="collapse-title font-extrabold">{{ campaign.name }}</h2>
       <div class="collapse-content font-bold">
         <p class="mb-2">{{ campaign.description }}</p>
