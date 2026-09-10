@@ -1,64 +1,65 @@
 type Campaign = {
-  name: string,
-  state: "draft" | "available" | "active",
-  description: string,
-  comment: string | null,
-  players: Player[],
-  chapters: Chapter[],
+  name: string
+  state: 'draft' | 'available' | 'active'
+  description: string
+  comment: string | null
+  players: Player[]
+  chapters: Chapter[]
 }
 
 type Chapter = {
-  name: string,
-  state: "disabled" | "enabled" | "completed",
-  description: string,
-  comment: string | null,
-  password: string | null,
-  resolutionItems: Item[],
+  name: string
+  state: 'disabled' | 'enabled' | 'completed'
+  description: string
+  comment: string | null
+  password: string | null
+  resolutionItems: Item[]
   rewards: {
-    clues: Clue[],
-    items: Item[],
+    clues: Clue[]
+    items: Item[]
   }
 }
 
 type Quest = {
-  name: string,
-  state: "inactive" | "active" | "completed" | "abandonned",
-  description: string,
-  activationPassword: string | null,
-  resolutionPassword: string,
+  name: string
+  state: 'inactive' | 'active' | 'completed' | 'abandonned'
+  description: string
+  activationPassword: string | null
+  resolutionPassword: string
   rewards: {
-    clues: Clue[] | null,
-    items: Item[] | null,
+    clues: Clue[] | null
+    items: Item[] | null
   }
 }
 
 type Player = {
-  name: string,
-  state: "alive" | "dead",
-  comment: string,
-  description: string,
+  name: string
+  state: 'alive' | 'dead'
+  maxHealth: number
+  currentHealth: number
+  comment: string
+  description: string
   inventory: {
-    clues: Clue[],
-    items: Item[],
+    clues: Clue[]
+    items: Item[]
   }
-  place: Place,
+  place: Place
 }
 
 type Place = {
-  name: string,
-  description: string,
-  comment: string,
+  name: string
+  description: string
+  comment: string
 }
 
 type Item = {
-  name: string,
-  description: string,
-  comment: string,
+  name: string
+  description: string
+  comment: string
 }
 
 type Clue = {
-  name: string,
-  description: string,
-  comment: string,
+  name: string
+  description: string
+  comment: string
 }
-
