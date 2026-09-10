@@ -1,18 +1,7 @@
 const PREFIX = 'rpg'
 
-export function storageKey(name) {
+function storageKey(name) {
   return `${PREFIX}:${name}`
-}
-
-export function isStorageAvailable() {
-  try {
-    const probe = storageKey('__probe__')
-    localStorage.setItem(probe, '1')
-    localStorage.removeItem(probe)
-    return true
-  } catch {
-    return false
-  }
 }
 
 export function readStorage(name, fallback = null) {
@@ -31,16 +20,6 @@ export function writeStorage(name, value) {
     return true
   } catch (error) {
     console.error(`[storage] écriture impossible de "${name}"`, error)
-    return false
-  }
-}
-
-export function removeStorage(name) {
-  try {
-    localStorage.removeItem(storageKey(name))
-    return true
-  } catch (error) {
-    console.warn(`[storage] suppression impossible de "${name}"`, error)
     return false
   }
 }
