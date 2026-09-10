@@ -16,9 +16,7 @@ export function persistPlugin({ store, options }) {
   store.$subscribe(
     (_mutation, state) => {
       clearTimeout(timer)
-      timer = setTimeout(() => {
-        writeStorage(key, pickKnownKeys(state, Object.keys(state)))
-      }, WRITE_DELAY_MS)
+      timer = setTimeout(() => writeStorage(key, state), WRITE_DELAY_MS)
     },
     { detached: true },
   )
