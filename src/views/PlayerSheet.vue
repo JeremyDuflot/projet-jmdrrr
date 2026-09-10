@@ -30,7 +30,11 @@ onMounted(() => {
 
           <div>
             <h3 class="font-bold text-lg mb-2">Description</h3>
-            <p class="text-base-content/80">{{ player.description }}</p>
+            <div class="card bg-base-200">
+              <div class="card-body p-4">
+                <p class="text-base-content/80">{{ player.description }}</p>
+              </div>
+            </div>
           </div>
 
           <div class="divider"></div>
