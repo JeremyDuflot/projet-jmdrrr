@@ -7,13 +7,16 @@ import LifeBar from '@/components/LifeBar.vue'
 const route = useRoute()
 const playerStore = usePlayerStore()
 
-const player = ref(null)
+const player = ref()
 const playerName = route.params.playerName
 
 onMounted(() => {
   player.value = playerStore.getPlayer(playerName)
 })
 
+/**
+ * @param {number} newHp
+ */
 function handleUpdateHp(newHp) {
   if (!player.value) return
 

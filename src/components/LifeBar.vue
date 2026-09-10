@@ -30,6 +30,9 @@ const healthColor = computed(() => {
   return 'progress-error'
 })
 
+/**
+ * @param {number} amount
+ */
 function adjustHp(amount) {
   const newValue = hp.value + amount
   if (newValue >= 0 && newValue <= props.maxHp) {
@@ -38,7 +41,7 @@ function adjustHp(amount) {
 }
 
 function handleHpInput() {
-  if (hp.value === '' || Number.isNaN(hp.value)) {
+  if ((typeof hp.value === 'string' && hp.value === '') || Number.isNaN(hp.value)) {
     hp.value = 0
   } else if (hp.value < 0) {
     hp.value = 0
@@ -47,6 +50,9 @@ function handleHpInput() {
   }
 }
 
+/**
+ * @param {KeyboardEvent} event
+ */
 function preventInvalidKeys(event) {
   if (event.key === 'e' || event.key === 'E' || event.key === '-' || event.key === '+') {
     event.preventDefault()
@@ -54,7 +60,7 @@ function preventInvalidKeys(event) {
 }
 
 function saveHp() {
-  if (hp.value === '' || Number.isNaN(hp.value)) {
+  if ((typeof hp.value === 'string' && hp.value === '') || Number.isNaN(hp.value)) {
     hp.value = 0
   }
   emit('updateHp', hp.value)
