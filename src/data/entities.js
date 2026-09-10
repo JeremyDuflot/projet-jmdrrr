@@ -172,10 +172,6 @@ export function duplicateContent(entity, prefix) {
   return copy
 }
 
-/**
- * Après duplication, les identifiants changent : les références internes
- * (lieux, objets, indices) doivent pointer vers les nouvelles copies.
- */
 export function remapReferences(campaign, remap) {
   const remapList = (ids) => (Array.isArray(ids) ? ids.map(remap) : [])
   const remapOne = (id) => (id ? remap(id) : null)
