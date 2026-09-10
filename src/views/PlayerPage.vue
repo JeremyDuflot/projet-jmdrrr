@@ -4,6 +4,7 @@ import { getPlayers } from '../data/mockPlayers.js'
 
 const players = getPlayers()
 
+/** @param {ReturnType<typeof getPlayers>[number]} player */
 function handlePlayerSelect(player) {
   console.log(player)
 }

@@ -1,4 +1,5 @@
 type Campaign = {
+  id: string
   name: string
   state: 'draft' | 'available' | 'active'
   description: string
