@@ -35,8 +35,8 @@ type Quest = {
 type Player = {
   name: string
   state: 'alive' | 'dead'
-  maxHealth: number
-  currentHealth: number
+  currentHp: number
+  maxHp: number
   comment: string
   description: string
   inventory: {
