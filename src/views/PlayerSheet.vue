@@ -103,7 +103,9 @@ function handleUpdateHp(newHp) {
       </div>
 
       <div class="mb-6">
+        <label for="search-input" class="label" />
         <input
+          id="search-input"
           v-model="searchQuery"
           type="text"
           placeholder="Rechercher dans l'inventaire..."
