@@ -1,4 +1,4 @@
 <script setup></script>
 <template>
-  <h1>Mj Page</h1>
+  <h1>GM Page</h1>
 </template>

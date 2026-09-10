@@ -1,13 +1,5 @@
 <script setup>
 defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
   role: {
     type: String,
     required: true,
@@ -30,12 +22,5 @@ const emit = defineEmits(['select'])
       class="absolute inset-0 bg-cover bg-center bg-no-repeat grayscale group-hover:grayscale-0 transition-all duration-500"
       :style="{ backgroundImage: `url(${image})` }"
     ></div>
-
-    <div
-      class="absolute inset-0 bg-black/20 flex flex-col justify-center items-center text-center px-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-    >
-      <h2 class="text-2xl font-bold text-white mb-3">{{ title }}</h2>
-      <p class="text-white/90">{{ description }}</p>
-    </div>
   </div>
 </template>
