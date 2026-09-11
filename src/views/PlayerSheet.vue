@@ -47,8 +47,14 @@ const filteredClues = computed(() => filterByQuery(player.value?.clues ?? [], se
 function handleUpdateHp(newHp) {
   if (!playerId.value) return
 
-  const state =
-    newHp === 0 ? 'dead' : player.value.state === 'dead' && newHp > 0 ? 'alive' : player.value.state
+  let state
+  if (newHp === 0) {
+    state = 'dead'
+  } else if (player.value.state === 'dead' && newHp > 0) {
+    state = 'alive'
+  } else {
+    state = player.value.state
+  }
 
   campaignsStore.updatePlayer(playerId.value, { currentHp: newHp, state })
 }
@@ -72,6 +78,7 @@ function handleUpdateHp(newHp) {
           <LifeBar
             :current-hp="player.currentHp"
             :max-hp="player.maxHp"
+            :editable="true"
             @update-hp="handleUpdateHp"
           />
           <div class="divider" />

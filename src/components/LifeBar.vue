@@ -5,6 +5,7 @@ import { Pencil, Check, X } from '@lucide/vue'
 const props = defineProps({
   currentHp: { type: Number, required: true },
   maxHp: { type: Number, required: true },
+  editable: { type: Boolean, default: false },
   showLabel: { type: Boolean, default: true },
 })
 
@@ -75,6 +76,7 @@ function saveHp() {
     <div v-if="!isEditing" class="flex items-center gap-2">
       <span class="font-bold text-gray-400">{{ currentHp }} / {{ maxHp }}</span>
       <button
+        v-if="editable"
         type="button"
         @click="startEditing"
         class="btn btn-xs btn-ghost btn-circle text-gray-400"

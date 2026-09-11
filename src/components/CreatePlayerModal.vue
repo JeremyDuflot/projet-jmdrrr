@@ -94,16 +94,21 @@ function handleClose() {
 </script>
 
 <template>
-  <div v-if="show" class="modal modal-open">
+  <dialog v-if="show" class="modal modal-open">
     <div class="modal-box">
       <h3 class="font-bold text-lg mb-4">Ajouter un nouveau personnage</h3>
 
       <form @submit.prevent="handleSubmit" class="space-y-4">
         <div class="form-control">
-          <label class="label">
+          <label class="label" for="player-campaign">
             <span class="label-text">Campagne *</span>
           </label>
-          <select v-model="formData.campaignId" class="select select-bordered w-full" required>
+          <select
+            id="player-campaign"
+            v-model="formData.campaignId"
+            class="select select-bordered w-full"
+            required
+          >
             <option
               v-for="campaign in campaignsStore.campaigns"
               :key="campaign.id"
@@ -115,10 +120,11 @@ function handleClose() {
         </div>
 
         <div class="form-control">
-          <label class="label">
+          <label class="label" for="player-name">
             <span class="label-text">Nom *</span>
           </label>
           <input
+            id="player-name"
             v-model="formData.name"
             type="text"
             placeholder="Nom du personnage"
@@ -128,10 +134,11 @@ function handleClose() {
         </div>
 
         <div class="form-control">
-          <label class="label">
+          <label class="label" for="player-description">
             <span class="label-text">Description</span>
           </label>
           <textarea
+            id="player-description"
             v-model="formData.description"
             placeholder="Description du personnage"
             class="textarea textarea-bordered w-full"
@@ -140,10 +147,11 @@ function handleClose() {
         </div>
 
         <div v-show="isGmPath" class="form-control">
-          <label class="label">
+          <label class="label" for="player-comment">
             <span class="label-text">Commentaire</span>
           </label>
           <textarea
+            id="player-comment"
             v-model="formData.comment"
             placeholder="Commentaire (visible uniquement par le MJ)"
             class="textarea textarea-bordered w-full"
@@ -152,10 +160,11 @@ function handleClose() {
         </div>
 
         <div class="form-control">
-          <label class="label">
+          <label class="label" for="player-max-hp">
             <span class="label-text">Points de vie max</span>
           </label>
           <input
+            id="player-max-hp"
             v-model.number="formData.maxHp"
             type="number"
             min="1"
@@ -176,7 +185,11 @@ function handleClose() {
               </button>
             </div>
             <div class="form-control mb-2">
+              <label class="label" :for="`item-name-${index}`">
+                <span class="label-text text-sm">Nom de l'objet</span>
+              </label>
               <input
+                :id="`item-name-${index}`"
                 v-model="item.name"
                 type="text"
                 placeholder="Nom de l'objet"
@@ -184,7 +197,11 @@ function handleClose() {
               />
             </div>
             <div class="form-control">
+              <label class="label" :for="`item-description-${index}`">
+                <span class="label-text text-sm">Description de l'objet</span>
+              </label>
               <textarea
+                :id="`item-description-${index}`"
                 v-model="item.description"
                 placeholder="Description de l'objet"
                 class="textarea textarea-bordered textarea-sm w-full"
@@ -204,5 +221,5 @@ function handleClose() {
       </form>
     </div>
     <div class="modal-backdrop" @click="handleClose" />
-  </div>
+  </dialog>
 </template>
