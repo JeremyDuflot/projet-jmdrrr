@@ -224,13 +224,13 @@ async function importFile(event) {
           <CampaignPlayersEditor :campaign="campaign" />
         </div>
 
-        <div v-if="editable" class="flex justify-between">
+        <div class="flex justify-between">
           <div>
             <RouterLink :to="{ name: 'chapters', params: { campaignId: campaign.id } }" class="justify-start btn btn-primary">
               Voir Plus
             </RouterLink>
           </div>
-          <div class="flex gap-2">
+          <div v-if="editable" class="flex gap-2">
             <button class="btn btn-outline" @click="exportCampaign(campaign)">Exporter</button>
             <button class="btn btn-error btn-outline" @click="askDelete(campaign)">Supprimer</button>
             <button class="btn btn-primary" @click="openEditForm(campaign)">Modifier</button>
