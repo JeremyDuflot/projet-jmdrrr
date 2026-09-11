@@ -1,7 +1,9 @@
 <script setup>
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { ChevronDown, ChevronUp } from '@lucide/vue'
 import { getPlayersByCampaign } from '../data/mockPlayers.js'
-import PlayerCard from './PlayerCard.vue'
-import { ref } from 'vue'
+import LifeBar from './LifeBar.vue'
 
 const props = defineProps({
   campaignId: {
@@ -16,6 +18,26 @@ const props = defineProps({
 
 const emit = defineEmits(['select', 'updateHp'])
 
+const router = useRouter()
+
+const players = ref(getPlayersByCampaign(props.campaignId))
+const expanded = ref(false)
+const collapsedCount = 3
+
+const visiblePlayers = computed(() =>
+  expanded.value ? players.value : players.value.slice(0, collapsedCount),
+)
+
+const hasMore = computed(() => players.value.length > collapsedCount)
+
+/**
+ * @param {Player} player
+ */
+function goToPlayerSheet(player) {
+  emit('select', player)
+  router.push({ name: 'player-sheet', params: { playerName: player.name } })
+}
+
 /**
  * @param {{ player: Player, newHp: number }} payload
  */
@@ -23,31 +45,49 @@ function handleUpdateHp({ player, newHp }) {
   player.currentHp = newHp
   emit('updateHp', { player, newHp })
 }
-
-/** @type {import('vue').Ref<HTMLDialogElement | null>} */
-const dialogRef = ref(null)
-const players = ref(getPlayersByCampaign(props.campaignId))
 </script>
 
 <template>
-  <button class="btn btn-primary" @click="dialogRef?.showModal()">Voir les joueurs</button>
-  <dialog ref="dialogRef" class="modal">
-    <form method="dialog" class="modal-box w-[95%] overflow-x-hidden">
-      <h3 class="font-bold text-lg mb-4">Liste des joueurs</h3>
-      <div class="flex flex-col gap-4">
-        <PlayerCard
-          v-for="player in players"
-          :key="player.id"
-          :player="player"
+  <div
+    class="fixed bottom-4 right-4 w-72 bg-black/80 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl shadow-2xl p-3 z-50 flex flex-col gap-3"
+  >
+    <div class="flex flex-col gap-3" :class="expanded ? 'max-h-[70vh] overflow-y-auto' : ''">
+      <div
+        v-for="player in visiblePlayers"
+        :key="player.id"
+        class="pb-2 border-b border-amber-500/20 last:border-0"
+      >
+        <button
+          type="button"
+          @click="goToPlayerSheet(player)"
+          class="font-bold text-amber-500 text-sm mb-1 hover:text-amber-300 hover:underline transition-colors text-left"
+        >
+          {{ player.name }}
+        </button>
+        <LifeBar
+          :current-hp="player.currentHp"
+          :max-hp="player.maxHp"
           :editable="editable"
-          class="w-full"
-          @select="$emit('select', player)"
-          @update-hp="handleUpdateHp"
+          :show-label="false"
+          @update-hp="handleUpdateHp({ player, newHp: $event })"
         />
       </div>
-      <div class="modal-action">
-        <button class="btn btn-primary">Fermer</button>
-      </div>
-    </form>
-  </dialog>
+    </div>
+
+    <button
+      v-if="hasMore"
+      type="button"
+      @click="expanded = !expanded"
+      class="btn btn-xs btn-ghost text-amber-500 flex items-center gap-1 self-center"
+    >
+      <template v-if="expanded">
+        Réduire
+        <ChevronUp :size="14" />
+      </template>
+      <template v-else>
+        Voir tous ({{ players.length }})
+        <ChevronDown :size="14" />
+      </template>
+    </button>
+  </div>
 </template>
