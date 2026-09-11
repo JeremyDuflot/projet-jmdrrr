@@ -2,6 +2,8 @@
 import { computed, reactive, ref } from 'vue'
 import { useCampaignsStore } from '@/stores/rpgStore'
 import { CAMPAIGN_STATES } from '@/data/entities'
+import CampaignPlacesEditor from './CampaignPlacesEditor.vue'
+import CampaignPlayersEditor from './CampaignPlayersEditor.vue'
 import {
   CAMPAIGN_FILE_EXTENSION,
   downloadCampaignFile,
@@ -212,6 +214,11 @@ async function importFile(event) {
           <span class="badge badge-outline">{{ campaign.places.length }} lieu(x)</span>
           <span class="badge badge-outline">{{ campaign.items.length }} objet(s)</span>
           <span class="badge badge-outline">{{ campaign.clues.length }} indice(s)</span>
+        </div>
+
+        <div v-if="editable" class="grid gap-4 mb-4 md:grid-cols-2">
+          <CampaignPlacesEditor :campaign="campaign" />
+          <CampaignPlayersEditor :campaign="campaign" />
         </div>
 
         <div v-if="editable" class="flex justify-end gap-2">
