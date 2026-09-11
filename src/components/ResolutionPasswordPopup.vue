@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import { Lock, Check } from '@lucide/vue'
 import { useCampaignsStore } from '@/stores/rpgStore.js'
+import { Lock } from '@lucide/vue'
 
 const props = defineProps({
   type: { type: String, required: true }, // 'quest' ou 'chapter'

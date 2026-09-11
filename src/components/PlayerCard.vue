@@ -16,7 +16,10 @@ const emit = defineEmits(['select', 'updateHp'])
   <div
     class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl p-5 shadow-lg cursor-pointer transition-all duration-300 hover:border-amber-400/70 hover:shadow-2xl"
     :class="{ 'hover:scale-105': hoverScale }"
+    role="button"
+    tabindex="0"
     @click="emit('select', player)"
+    @keydown.enter="emit('select', player)"
   >
     <div class="flex items-center gap-3 mb-3">
       <User class="w-8 h-8 text-amber-500" />
@@ -24,7 +27,7 @@ const emit = defineEmits(['select', 'updateHp'])
     </div>
     <p class="text-white/80 text-sm mb-3">Campagne : {{ getCampaignNameForPlayer(player.id) }}</p>
 
-    <div @click.stop>
+    <div @click.stop @keydown.stop>
       <LifeBar
         :current-hp="player.currentHp"
         :max-hp="player.maxHp"
