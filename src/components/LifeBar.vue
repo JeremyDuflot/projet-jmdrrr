@@ -28,7 +28,6 @@ const healthColor = computed(() => {
   return 'progress-error'
 })
 
-/** @param {number} amount */
 function adjustHp(amount) {
   const newValue = hp.value + amount
   if (newValue >= 0 && newValue <= props.maxHp) {
@@ -46,7 +45,6 @@ function handleHpInput() {
   }
 }
 
-/** @param {KeyboardEvent} event */
 function preventInvalidKeys(event) {
   if (event.key === '.' || event.key === ',' || event.key === '-' || event.key === '+') {
     event.preventDefault()

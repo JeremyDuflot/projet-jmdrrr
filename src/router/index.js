@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '@/views/HomePage.vue'
-import PlayerPage from '@/views/SelectPlayerPage.vue'
+import SelectPlayerPage from '@/views/SelectPlayerPage.vue'
 import GmCampaignsView from '@/views/gm/CampaignsPage.vue'
 import PlayerCampaignsView from '@/views/player/CampaignsPage.vue'
 import GmLayout from '@/layouts/GmLayout.vue'
@@ -14,8 +14,8 @@ const router = createRouter({
     { name: 'gm-campaigns', path: '/gm/campaigns', component: GmCampaignsView },
     { name: 'player-campaigns', path: '/player/campaigns', component: PlayerCampaignsView },
     { name: 'chapters', path: '/campaigns/:campaignId/chapters', component: ChaptersPage },
-    { name: 'player', path: '/player', component: PlayerPage },
-    { name: 'player-sheet', path: '/player/:playerName', component: PlayerSheetPage },
+    { name: 'players', path: '/players', component: SelectPlayerPage },
+    { name: 'player-sheet', path: '/players/:playerName', component: PlayerSheetPage },
   ],
 })
 

@@ -3,7 +3,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 import SelectableRoleCard from '../components/SelectableRoleCard.vue'
 
-/** @param {import('vue-router').RouteRecordNameGeneric} role */
+/** @param {import('vue-router').RouteRecordNameGeneric} routeName */
 function handleRoleSelect(routeName) {
   router.push({ name: routeName })
 }
