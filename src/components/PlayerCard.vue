@@ -1,5 +1,5 @@
 <script setup>
-import { getCampaignName } from '../data/mockPlayers.js'
+import { getCampaignNameForPlayer } from '../data/playerHelpers.js'
 import { User } from '@lucide/vue'
 import LifeBar from './LifeBar.vue'
 
@@ -22,7 +22,7 @@ const emit = defineEmits(['select', 'updateHp'])
       <User class="w-8 h-8 text-amber-500" />
       <h2 class="text-xl font-bold text-amber-500 font-['Cinzel']">{{ player.name }}</h2>
     </div>
-    <p class="text-white/80 text-sm mb-3">Campagne : {{ getCampaignName(player.campaignId) }}</p>
+    <p class="text-white/80 text-sm mb-3">Campagne : {{ getCampaignNameForPlayer(player.id) }}</p>
 
     <div @click.stop>
       <LifeBar
