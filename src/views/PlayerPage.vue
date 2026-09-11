@@ -1,15 +1,27 @@
 <script setup>
+import { ref } from 'vue'
 import PlayerCard from '../components/PlayerCard.vue'
+import CreatePlayerModal from '../components/CreatePlayerModal.vue'
+import { useCampaignsStore } from '@/stores/rpgStore.js'
 import { useRouter } from 'vue-router'
-import { useCampaignsStore } from '@/stores/campaigns'
-import { computed } from 'vue'
+import { Plus } from '@lucide/vue'
 
 const router = useRouter()
 const campaignsStore = useCampaignsStore()
-const players = computed(() => campaignsStore.campaigns.flatMap((campaign) => campaign.players))
+const players = campaignsStore.players
+
+const showCreateModal = ref(false)
 
 function handlePlayerSelect(player) {
   router.push({ name: 'player-sheet', params: { playerId: player.id } })
+}
+
+function handleOpenCreateModal() {
+  showCreateModal.value = true
+}
+
+function handlePlayerCreated(player) {
+  router.push({ name: 'player-sheet', params: { playerName: player.name } })
 }
 </script>
 
@@ -38,6 +50,20 @@ function handlePlayerSelect(player) {
         class="w-72"
         @select="handlePlayerSelect"
       />
+
+      <div
+        class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl p-5 shadow-lg cursor-pointer transition-all duration-300 hover:border-amber-400/70 hover:shadow-2xl hover:scale-105 w-72 flex flex-col items-center justify-center min-h-140px"
+        @click="handleOpenCreateModal"
+      >
+        <Plus class="w-12 h-12 text-amber-500 mb-2" />
+        <h2 class="text-xl font-bold text-amber-500 font-['Cinzel']">Nouveau Personnage</h2>
+      </div>
     </div>
+
+    <CreatePlayerModal
+      :show="showCreateModal"
+      @close="showCreateModal = false"
+      @created="handlePlayerCreated"
+    />
   </main>
 </template>

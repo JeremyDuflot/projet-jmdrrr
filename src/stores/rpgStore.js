@@ -70,6 +70,13 @@ export const useCampaignsStore = defineStore(
       return pushInto(campaigns.value, entities.duplicateCampaign(campaign))
     }
 
+    function importCampaign(data) {
+      const campaign = pushInto(campaigns.value, entities.importCampaign(data))
+      selectedCampaignId.value = campaign.id
+
+      return campaign
+    }
+
     function deleteCampaign(campaignId) {
       const index = campaigns.value.findIndex((campaign) => campaign.id === campaignId)
       if (index === -1) return false
@@ -438,6 +445,7 @@ export const useCampaignsStore = defineStore(
       createCampaign,
       updateCampaign,
       duplicateCampaign,
+      importCampaign,
       deleteCampaign,
       selectCampaign,
       setActiveCampaign,

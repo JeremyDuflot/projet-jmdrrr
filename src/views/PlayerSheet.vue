@@ -1,59 +1,62 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { usePlayerStore } from '@/stores/playerStore.js'
+import { useCampaignsStore } from '@/stores/rpgStore.js'
 import LifeBar from '@/components/LifeBar.vue'
 
 const route = useRoute()
-const playerStore = usePlayerStore()
+const campaignsStore = useCampaignsStore()
 
-const player = ref()
 const playerName = route.params.playerName
 const searchQuery = ref('')
 
-onMounted(() => {
-  player.value = playerStore.getPlayer(playerName)
+const player = computed(() => {
+  for (const campaign of campaignsStore.campaigns) {
+    const found = campaign.players.find((p) => p.name === playerName)
+    if (found) {
+      return campaignsStore.playerView(found.id)
+    }
+  }
+  return null
 })
 
-const filteredItems = computed(() => {
-  if (!player.value?.inventory?.items) return []
-  if (!searchQuery.value) return player.value.inventory.items
+const playerId = computed(() => {
+  for (const campaign of campaignsStore.campaigns) {
+    const found = campaign.players.find((p) => p.name === playerName)
+    if (found) return found.id
+  }
+  return null
+})
 
-  const query = (searchQuery.value || '').toLowerCase()
-  return player.value.inventory.items.filter(
-    /** @param {{ name: string, description: string }} item */
+function filterByQuery(items, query) {
+  if (!items) return []
+  if (!query) return items
+
+  const lowerQuery = query.toLowerCase()
+  return items.filter(
     (item) =>
-      item.name.toLowerCase().includes(query) || item.description.toLowerCase().includes(query),
+      item.name.toLowerCase().includes(lowerQuery) ||
+      item.description.toLowerCase().includes(lowerQuery),
   )
-})
+}
 
-const filteredClues = computed(() => {
-  if (!player.value?.inventory?.clues) return []
-  if (!searchQuery.value) return player.value.inventory.clues
+const filteredItems = computed(() => filterByQuery(player.value?.items ?? [], searchQuery.value))
 
-  const query = (searchQuery.value || '').toLowerCase()
-  return player.value.inventory.clues.filter(
-    /** @param {{ name: string, description: string }} clue */
-    (clue) =>
-      clue.name.toLowerCase().includes(query) || clue.description.toLowerCase().includes(query),
-  )
-})
+const filteredClues = computed(() => filterByQuery(player.value?.clues ?? [], searchQuery.value))
 
-/**
- * @param {number} newHp
- */
 function handleUpdateHp(newHp) {
-  if (!player.value) return
+  if (!playerId.value) return
 
-  player.value.currentHp = newHp
-
+  let state
   if (newHp === 0) {
-    player.value.state = 'dead'
+    state = 'dead'
   } else if (player.value.state === 'dead' && newHp > 0) {
-    player.value.state = 'alive'
+    state = 'alive'
+  } else {
+    state = player.value.state
   }
 
-  playerStore.updatePlayer(player.value)
+  campaignsStore.updatePlayer(playerId.value, { currentHp: newHp, state })
 }
 </script>
 
@@ -75,6 +78,7 @@ function handleUpdateHp(newHp) {
           <LifeBar
             :current-hp="player.currentHp"
             :max-hp="player.maxHp"
+            :editable="true"
             @update-hp="handleUpdateHp"
           />
           <div class="divider" />
@@ -92,10 +96,15 @@ function handleUpdateHp(newHp) {
 
           <div>
             <h3 class="font-bold text-lg mb-2">Localisation</h3>
-            <div class="card bg-base-200">
+            <div v-if="player.place" class="card bg-base-200">
               <div class="card-body p-4">
                 <h4 class="font-semibold">{{ player.place.name }}</h4>
                 <p class="text-sm text-base-content/70">{{ player.place.description }}</p>
+              </div>
+            </div>
+            <div v-else class="card bg-base-200">
+              <div class="card-body p-4">
+                <p class="text-sm text-base-content/50 italic">Aucune localisation définie</p>
               </div>
             </div>
           </div>
@@ -103,7 +112,7 @@ function handleUpdateHp(newHp) {
       </div>
 
       <div class="mb-6">
-        <label for="search-input" class="label" />
+        <label for="search-input" class="sr-only">Rechercher dans l'inventaire</label>
         <input
           id="search-input"
           v-model="searchQuery"
@@ -118,7 +127,7 @@ function handleUpdateHp(newHp) {
           <div class="card-body">
             <h3 class="card-title">Inventaire - Objets</h3>
             <div v-if="filteredItems.length > 0" class="mt-4 space-y-3">
-              <div v-for="item in filteredItems" :key="item.name" class="card bg-base-200">
+              <div v-for="item in filteredItems" :key="item.id" class="card bg-base-200">
                 <div class="card-body p-4">
                   <h4 class="font-semibold">{{ item.name }}</h4>
                   <p class="text-sm text-base-content/70">{{ item.description }}</p>
@@ -135,7 +144,7 @@ function handleUpdateHp(newHp) {
           <div class="card-body">
             <h3 class="card-title">Inventaire - Indices</h3>
             <div v-if="filteredClues.length > 0" class="mt-4 space-y-3">
-              <div v-for="clue in filteredClues" :key="clue.name" class="card bg-base-200">
+              <div v-for="clue in filteredClues" :key="clue.id" class="card bg-base-200">
                 <div class="card-body p-4">
                   <h4 class="font-semibold">{{ clue.name }}</h4>
                   <p class="text-sm text-base-content/70">{{ clue.description }}</p>
