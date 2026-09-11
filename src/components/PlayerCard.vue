@@ -19,7 +19,7 @@ const emit = defineEmits(['select', 'updateHp'])
 
 <template>
   <div
-    class="w-72 bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl p-5 shadow-lg cursor-pointer transition-all duration-300 hover:scale-105 hover:border-amber-400/70 hover:shadow-2xl"
+    class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl p-5 shadow-lg cursor-pointer transition-all duration-300 hover:scale-105 hover:border-amber-400/70 hover:shadow-2xl"
     @click="emit('select', player)"
   >
     <div class="flex items-center gap-3 mb-3">
@@ -31,6 +31,7 @@ const emit = defineEmits(['select', 'updateHp'])
       <LifeBar
         :current-hp="player.currentHp"
         :max-hp="player.maxHp"
+        :editable="editable"
         @update-hp="emit('updateHp', { player, newHp: $event })"
       />
     </div>

@@ -79,6 +79,7 @@ function saveHp() {
       <div class="flex items-center gap-2">
         <span class="font-bold">{{ currentHp }} / {{ maxHp }}</span>
         <button
+          type="button"
           v-if="editable"
           @click="isEditing = true"
           class="btn btn-xs btn-ghost btn-circle"
@@ -112,14 +113,19 @@ function saveHp() {
           :max="maxHp"
         />
 
-        <button @click="adjustHp(10)" class="btn btn-circle btn-sm" :disabled="hp >= maxHp">
+        <button
+          type="button"
+          @click="adjustHp(10)"
+          class="btn btn-circle btn-sm"
+          :disabled="hp >= maxHp"
+        >
           +
         </button>
       </div>
 
       <div class="flex gap-2">
-        <button @click="isEditing = false" class="btn">Annuler</button>
-        <button @click="saveHp" class="btn btn-primary">Valider</button>
+        <button type="button" @click="isEditing = false" class="btn">Annuler</button>
+        <button type="button" @click="saveHp" class="btn btn-primary">Valider</button>
       </div>
     </div>
   </div>

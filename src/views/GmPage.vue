@@ -1,4 +1,16 @@
-<script setup></script>
+<script setup>
+import CampaignPlayersPanel from '../components/CampaignPlayersPanel.vue'
+
+const props = defineProps({
+  editable: {
+    type: Boolean,
+    default: true,
+  },
+})
+</script>
+
 <template>
-  <h1>GM Page</h1>
+  <main class="min-h-screen flex items-center justify-center">
+    <CampaignPlayersPanel campaign-id="campaign-1" />
+  </main>
 </template>

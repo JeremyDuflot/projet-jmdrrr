@@ -32,6 +32,7 @@ function handlePlayerSelect(player) {
         v-for="player in players"
         :key="player.id"
         :player="player"
+        class="w-72"
         @select="handlePlayerSelect"
       />
     </div>

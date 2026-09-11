@@ -60,3 +60,11 @@ export function getCampaignName(campaignId) {
   const campaign = mockCampaigns.find((c) => c.id === campaignId)
   return campaign ? campaign.name : 'Campagne inconnue'
 }
+
+/**
+ * @param {Player["campaignId"]} campaignId
+ * @returns {Player[]}
+ */
+export function getPlayersByCampaign(campaignId) {
+  return mockPlayers.filter((player) => player.campaignId === campaignId)
+}
