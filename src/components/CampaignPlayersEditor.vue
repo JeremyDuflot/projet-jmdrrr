@@ -2,6 +2,7 @@
 import { computed, reactive, ref } from 'vue'
 import { useCampaignsStore } from '@/stores/rpgStore'
 import { PLAYER_STATES } from '@/data/entities'
+import BaseModal from './BaseModal.vue'
 import LifeBar from './LifeBar.vue'
 
 const STATE_LABELS = {
@@ -158,100 +159,88 @@ function confirmDelete() {
       </li>
     </ul>
 
-    <Teleport to="body">
-      <div class="modal" :class="{ 'modal-open': isFormOpen }" role="dialog">
-        <div class="modal-box">
-          <h3 class="text-lg font-bold mb-4">
-            {{ isEditing ? 'Modifier le joueur' : 'Nouveau joueur' }}
-          </h3>
+    <BaseModal
+      :open="isFormOpen"
+      :title="isEditing ? 'Modifier le joueur' : 'Nouveau joueur'"
+      @close="closeForm"
+    >
+      <form @submit.prevent="submitForm">
+        <label class="form-control w-full mb-3">
+          <span class="label-text">Nom</span>
+          <input v-model="form.name" type="text" class="input input-bordered w-full" />
+        </label>
 
-          <form @submit.prevent="submitForm">
-            <label class="form-control w-full mb-3">
-              <span class="label-text">Nom</span>
-              <input v-model="form.name" type="text" class="input input-bordered w-full" />
-            </label>
+        <label class="form-control w-full mb-3">
+          <span class="label-text">État</span>
+          <select v-model="form.state" class="select select-bordered w-full">
+            <option v-for="state in PLAYER_STATES" :key="state" :value="state">
+              {{ STATE_LABELS[state] }}
+            </option>
+          </select>
+        </label>
 
-            <label class="form-control w-full mb-3">
-              <span class="label-text">État</span>
-              <select v-model="form.state" class="select select-bordered w-full">
-                <option v-for="state in PLAYER_STATES" :key="state" :value="state">
-                  {{ STATE_LABELS[state] }}
-                </option>
-              </select>
-            </label>
-
-            <div class="flex gap-3 mb-3">
-              <label v-if="isEditing" class="form-control flex-1">
-                <span class="label-text">PV actuels</span>
-                <input
-                  v-model.number="form.currentHp"
-                  type="number"
-                  min="0"
-                  :max="form.maxHp"
-                  class="input input-bordered w-full"
-                />
-              </label>
-              <label class="form-control flex-1">
-                <span class="label-text">PV max</span>
-                <input
-                  v-model.number="form.maxHp"
-                  type="number"
-                  min="1"
-                  class="input input-bordered w-full"
-                />
-              </label>
-            </div>
-
-            <label class="form-control w-full mb-3">
-              <span class="label-text">Lieu</span>
-              <select v-model="form.placeId" class="select select-bordered w-full">
-                <option :value="null">Aucun lieu</option>
-                <option v-for="place in campaign.places" :key="place.id" :value="place.id">
-                  {{ place.name }}
-                </option>
-              </select>
-            </label>
-
-            <label class="form-control w-full mb-3">
-              <span class="label-text">Description</span>
-              <textarea
-                v-model="form.description"
-                class="textarea textarea-bordered w-full"
-              ></textarea>
-            </label>
-
-            <label class="form-control w-full mb-3">
-              <span class="label-text">Commentaire (visible par le MJ uniquement)</span>
-              <textarea v-model="form.comment" class="textarea textarea-bordered w-full"></textarea>
-            </label>
-
-            <p v-if="formError" class="text-error mb-2">{{ formError }}</p>
-
-            <div class="modal-action">
-              <button type="button" class="btn" @click="closeForm">Annuler</button>
-              <button type="submit" class="btn btn-primary">
-                {{ isEditing ? 'Enregistrer' : 'Ajouter' }}
-              </button>
-            </div>
-          </form>
+        <div class="flex gap-3 mb-3">
+          <label v-if="isEditing" class="form-control flex-1">
+            <span class="label-text">PV actuels</span>
+            <input
+              v-model.number="form.currentHp"
+              type="number"
+              min="0"
+              :max="form.maxHp"
+              class="input input-bordered w-full"
+            />
+          </label>
+          <label class="form-control flex-1">
+            <span class="label-text">PV max</span>
+            <input
+              v-model.number="form.maxHp"
+              type="number"
+              min="1"
+              class="input input-bordered w-full"
+            />
+          </label>
         </div>
-        <div class="modal-backdrop" @click="closeForm"></div>
-      </div>
 
-      <div class="modal" :class="{ 'modal-open': deletedPlayer }" role="dialog">
-        <div class="modal-box">
-          <h3 class="text-lg font-bold mb-4">Supprimer le joueur</h3>
-          <p>
-            Voulez-vous vraiment retirer « {{ deletedPlayer?.name }} » de la campagne ? Cette action
-            est irréversible.
-          </p>
-          <div class="modal-action">
-            <button type="button" class="btn" @click="deletedId = null">Annuler</button>
-            <button type="button" class="btn btn-error" @click="confirmDelete">Supprimer</button>
-          </div>
+        <label class="form-control w-full mb-3">
+          <span class="label-text">Lieu</span>
+          <select v-model="form.placeId" class="select select-bordered w-full">
+            <option :value="null">Aucun lieu</option>
+            <option v-for="place in campaign.places" :key="place.id" :value="place.id">
+              {{ place.name }}
+            </option>
+          </select>
+        </label>
+
+        <label class="form-control w-full mb-3">
+          <span class="label-text">Description</span>
+          <textarea v-model="form.description" class="textarea textarea-bordered w-full"></textarea>
+        </label>
+
+        <label class="form-control w-full mb-3">
+          <span class="label-text">Commentaire (visible par le MJ uniquement)</span>
+          <textarea v-model="form.comment" class="textarea textarea-bordered w-full"></textarea>
+        </label>
+
+        <p v-if="formError" class="text-error mb-2">{{ formError }}</p>
+
+        <div class="modal-action">
+          <button type="button" class="btn" @click="closeForm">Annuler</button>
+          <button type="submit" class="btn btn-primary">
+            {{ isEditing ? 'Enregistrer' : 'Ajouter' }}
+          </button>
         </div>
-        <div class="modal-backdrop" @click="deletedId = null"></div>
+      </form>
+    </BaseModal>
+
+    <BaseModal :open="deletedPlayer !== null" title="Supprimer le joueur" @close="deletedId = null">
+      <p>
+        Voulez-vous vraiment retirer « {{ deletedPlayer?.name }} » de la campagne ? Cette action est
+        irréversible.
+      </p>
+      <div class="modal-action">
+        <button type="button" class="btn" @click="deletedId = null">Annuler</button>
+        <button type="button" class="btn btn-error" @click="confirmDelete">Supprimer</button>
       </div>
-    </Teleport>
+    </BaseModal>
   </section>
 </template>

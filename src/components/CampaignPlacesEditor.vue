@@ -1,6 +1,7 @@
 <script setup>
 import { computed, reactive, ref } from 'vue'
 import { useCampaignsStore } from '@/stores/rpgStore'
+import BaseModal from './BaseModal.vue'
 
 const props = defineProps({
   campaign: {
@@ -103,59 +104,47 @@ function confirmDelete() {
       </li>
     </ul>
 
-    <Teleport to="body">
-      <div class="modal" :class="{ 'modal-open': isFormOpen }" role="dialog">
-        <div class="modal-box">
-          <h3 class="text-lg font-bold mb-4">
-            {{ isEditing ? 'Modifier le lieu' : 'Nouveau lieu' }}
-          </h3>
+    <BaseModal
+      :open="isFormOpen"
+      :title="isEditing ? 'Modifier le lieu' : 'Nouveau lieu'"
+      @close="closeForm"
+    >
+      <form @submit.prevent="submitForm">
+        <label class="form-control w-full mb-3">
+          <span class="label-text">Nom</span>
+          <input v-model="form.name" type="text" class="input input-bordered w-full" />
+        </label>
 
-          <form @submit.prevent="submitForm">
-            <label class="form-control w-full mb-3">
-              <span class="label-text">Nom</span>
-              <input v-model="form.name" type="text" class="input input-bordered w-full" />
-            </label>
+        <label class="form-control w-full mb-3">
+          <span class="label-text">Description</span>
+          <textarea v-model="form.description" class="textarea textarea-bordered w-full"></textarea>
+        </label>
 
-            <label class="form-control w-full mb-3">
-              <span class="label-text">Description</span>
-              <textarea
-                v-model="form.description"
-                class="textarea textarea-bordered w-full"
-              ></textarea>
-            </label>
+        <label class="form-control w-full mb-3">
+          <span class="label-text">Commentaire (visible par le MJ uniquement)</span>
+          <textarea v-model="form.comment" class="textarea textarea-bordered w-full"></textarea>
+        </label>
 
-            <label class="form-control w-full mb-3">
-              <span class="label-text">Commentaire (visible par le MJ uniquement)</span>
-              <textarea v-model="form.comment" class="textarea textarea-bordered w-full"></textarea>
-            </label>
+        <p v-if="formError" class="text-error mb-2">{{ formError }}</p>
 
-            <p v-if="formError" class="text-error mb-2">{{ formError }}</p>
-
-            <div class="modal-action">
-              <button type="button" class="btn" @click="closeForm">Annuler</button>
-              <button type="submit" class="btn btn-primary">
-                {{ isEditing ? 'Enregistrer' : 'Ajouter' }}
-              </button>
-            </div>
-          </form>
+        <div class="modal-action">
+          <button type="button" class="btn" @click="closeForm">Annuler</button>
+          <button type="submit" class="btn btn-primary">
+            {{ isEditing ? 'Enregistrer' : 'Ajouter' }}
+          </button>
         </div>
-        <div class="modal-backdrop" @click="closeForm"></div>
-      </div>
+      </form>
+    </BaseModal>
 
-      <div class="modal" :class="{ 'modal-open': deletedPlace }" role="dialog">
-        <div class="modal-box">
-          <h3 class="text-lg font-bold mb-4">Supprimer le lieu</h3>
-          <p>Voulez-vous vraiment supprimer « {{ deletedPlace?.name }} » ?</p>
-          <p v-if="deletedPlaceOccupants.length" class="mt-2 text-sm text-base-content/70">
-            {{ deletedPlaceOccupants.length }} joueur(s) s'y trouvent et n'auront plus de lieu.
-          </p>
-          <div class="modal-action">
-            <button type="button" class="btn" @click="deletedId = null">Annuler</button>
-            <button type="button" class="btn btn-error" @click="confirmDelete">Supprimer</button>
-          </div>
-        </div>
-        <div class="modal-backdrop" @click="deletedId = null"></div>
+    <BaseModal :open="deletedPlace !== null" title="Supprimer le lieu" @close="deletedId = null">
+      <p>Voulez-vous vraiment supprimer « {{ deletedPlace?.name }} » ?</p>
+      <p v-if="deletedPlaceOccupants.length" class="mt-2 text-sm text-base-content/70">
+        {{ deletedPlaceOccupants.length }} joueur(s) s'y trouvent et n'auront plus de lieu.
+      </p>
+      <div class="modal-action">
+        <button type="button" class="btn" @click="deletedId = null">Annuler</button>
+        <button type="button" class="btn btn-error" @click="confirmDelete">Supprimer</button>
       </div>
-    </Teleport>
+    </BaseModal>
   </section>
 </template>
