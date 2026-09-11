@@ -115,7 +115,22 @@ export function clone(value) {
 }
 
 export function duplicateCampaign(campaign) {
-  const copy = clone(campaign)
+  const copy = renewCampaignIds(clone(campaign))
+
+  copy.name = `${campaign.name} (copie)`
+  copy.state = 'draft'
+
+  return copy
+}
+
+export function importCampaign(data) {
+  const campaign = renewCampaignIds(createCampaign(clone(data)))
+  if (campaign.state === 'active') campaign.state = 'available'
+
+  return campaign
+}
+
+function renewCampaignIds(campaign) {
   const idMap = new Map()
 
   const renew = (entity, prefix) => {
@@ -124,22 +139,19 @@ export function duplicateCampaign(campaign) {
     entity.id = nextId
   }
 
-  copy.places.forEach((place) => renew(place, 'place'))
-  copy.items.forEach((item) => renew(item, 'item'))
-  copy.clues.forEach((clue) => renew(clue, 'clue'))
-  copy.players.forEach((player) => renew(player, 'player'))
-  copy.chapters.forEach((chapter) => {
+  campaign.places.forEach((place) => renew(place, 'place'))
+  campaign.items.forEach((item) => renew(item, 'item'))
+  campaign.clues.forEach((clue) => renew(clue, 'clue'))
+  campaign.players.forEach((player) => renew(player, 'player'))
+  campaign.chapters.forEach((chapter) => {
     renew(chapter, 'chapter')
     chapter.quests.forEach((quest) => renew(quest, 'quest'))
   })
 
-  remapReferences(copy, (id) => idMap.get(id) ?? id)
+  remapReferences(campaign, (id) => idMap.get(id) ?? id)
+  campaign.id = createId('campaign')
 
-  copy.id = createId('campaign')
-  copy.name = `${campaign.name} (copie)`
-  copy.state = 'draft'
-
-  return copy
+  return campaign
 }
 
 export function duplicateChapter(chapter) {
