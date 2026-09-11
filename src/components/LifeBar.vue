@@ -11,6 +11,10 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  editable: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['updateHp'])
@@ -75,6 +79,7 @@ function saveHp() {
       <div class="flex items-center gap-2">
         <span class="font-bold">{{ currentHp }} / {{ maxHp }}</span>
         <button
+          v-if="editable"
           @click="isEditing = true"
           class="btn btn-xs btn-ghost btn-circle"
           title="Modifier les points de vie"
@@ -91,7 +96,7 @@ function saveHp() {
     ></progress>
 
     <!-- édition des points de vie -->
-    <div v-show="isEditing" class="flex justify-end gap-4 mt-4">
+    <div v-if="editable" v-show="isEditing" class="flex justify-end gap-4 mt-4">
       <div class="flex items-center gap-2">
         <button @click="adjustHp(-10)" class="btn btn-circle btn-sm" :disabled="hp <= 0">-</button>
 

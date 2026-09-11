@@ -23,13 +23,14 @@ const mockPlayers = []
 
 for (let i = 0; i < 6; i++) {
   const maxHp = 20
+  const currentHp = Math.floor(Math.random() * (maxHp + 1))
   const randomCampaign = getRandomItem(mockCampaigns)
 
   mockPlayers.push({
     id: `player-${i}`,
     name: getRandomItem(names),
     state: 'alive',
-    currentHp: maxHp,
+    currentHp: currentHp,
     maxHp: maxHp,
     comment: '',
     description: 'Un aventurier prêt à en découdre.',

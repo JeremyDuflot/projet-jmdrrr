@@ -3,7 +3,9 @@ import { ref } from 'vue'
 
 export const usePlayerStore = defineStore('player', () => {
   // Fake data pour tester la vue de la Fiche de Perso en allant sur '/player/Lady Jessica'
+  /** @type {import('vue').Ref<Player>} */
   const testPlayer = ref({
+    id: 'player-test',
     name: 'Lady Jessica',
     state: 'alive',
     currentHp: 85,
@@ -38,6 +40,7 @@ export const usePlayerStore = defineStore('player', () => {
         "Planète désertique également connue sous le nom de Dune, seule source de l'épice.",
       comment: 'Monde hostile',
     },
+    campaignId: 'campaign-1',
   })
 
   // Ajouter la récup des campaigns actives pour récup les players
@@ -51,6 +54,11 @@ export const usePlayerStore = defineStore('player', () => {
 
   //  Update pour récup les vrai players
   //  Utilise testPlayer en attendant
+  /**
+   * Récupère un joueur par son nom
+   * @param {string} playerName - Le nom du joueur à récupérer
+   * @returns {Object|null} - Le joueur correspondant ou null s'il n'existe pas
+   */
   function getPlayer(playerName) {
     if (testPlayer.value.name === playerName) {
       return testPlayer.value
@@ -58,6 +66,10 @@ export const usePlayerStore = defineStore('player', () => {
     return null
   }
 
+  /**
+   * Met à jour un joueur
+   * @param {Player} updatedPlayer - Le joueur mis à jour
+   */
   function updatePlayer(updatedPlayer) {
     testPlayer.value = updatedPlayer
     localStorage.setItem('testPlayer', JSON.stringify(testPlayer.value))

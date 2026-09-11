@@ -1,15 +1,20 @@
 <script setup>
 import { getCampaignName } from '../data/mockPlayers.js'
 import { User } from '@lucide/vue'
+import LifeBar from './LifeBar.vue'
 
 defineProps({
   player: {
     type: Object,
     required: true,
   },
+  editable: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-const emit = defineEmits(['select'])
+const emit = defineEmits(['select', 'updateHp'])
 </script>
 
 <template>
@@ -22,6 +27,12 @@ const emit = defineEmits(['select'])
       <h2 class="text-xl font-bold text-amber-500 font-['Cinzel']">{{ player.name }}</h2>
     </div>
     <p class="text-white/80 text-sm mb-1">Campagne : {{ getCampaignName(player.campaignId) }}</p>
-    <p class="text-white/80 text-sm">PV : {{ player.currentHp }} / {{ player.maxHp }}</p>
+    <div @click.stop>
+      <LifeBar
+        :current-hp="player.currentHp"
+        :max-hp="player.maxHp"
+        @update-hp="emit('updateHp', { player, newHp: $event })"
+      />
+    </div>
   </div>
 </template>
