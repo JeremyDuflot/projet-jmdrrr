@@ -3,8 +3,9 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 import SelectableRoleCard from '../components/SelectableRoleCard.vue'
 
-function handleRoleSelect(role) {
-  router.push({ name: role })
+/** @param {import('vue-router').RouteRecordNameGeneric} routeName */
+function handleRoleSelect(routeName) {
+  router.push({ name: routeName })
 }
 </script>
 
@@ -26,9 +27,9 @@ function handleRoleSelect(role) {
     </div>
 
     <div class="flex w-full px-12 items-center gap-12 justify-center">
-      <SelectableRoleCard role="gm" image="/images/GmImage.png" @select="handleRoleSelect">
+      <SelectableRoleCard routeName="gm-campaigns" image="/images/GmImage.png" @select="handleRoleSelect">
       </SelectableRoleCard>
-      <SelectableRoleCard role="player" image="/images/PlayerImage.png" @select="handleRoleSelect">
+      <SelectableRoleCard routeName="player-campaigns" image="/images/PlayerImage.png" @select="handleRoleSelect">
       </SelectableRoleCard>
     </div>
   </main>

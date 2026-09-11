@@ -1,5 +1,5 @@
 <script setup>
-import CampaignsList from '@/components/CampaignsList.vue'
+import CampaignsList from '@/components/Campaigns/CampaignsList.vue'
 </script>
 
 <template>
