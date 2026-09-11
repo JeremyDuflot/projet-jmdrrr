@@ -1,8 +1,8 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ChevronDown, ChevronUp } from '@lucide/vue'
-import { getPlayersByCampaign } from '../data/mockPlayers.js'
+import { useCampaignsStore } from '@/stores/campaigns'
 import LifeBar from './LifeBar.vue'
 
 const props = defineProps({
@@ -19,8 +19,10 @@ const props = defineProps({
 const emit = defineEmits(['select', 'updateHp'])
 
 const router = useRouter()
+const campaignsStore = useCampaignsStore()
 
-const players = ref(getPlayersByCampaign(props.campaignId))
+const players = computed(() => campaignsStore.campaignById(props.campaignId)?.players ?? [])
+
 const expanded = ref(false)
 const collapsedCount = 3
 
@@ -35,14 +37,14 @@ const hasMore = computed(() => players.value.length > collapsedCount)
  */
 function goToPlayerSheet(player) {
   emit('select', player)
-  router.push({ name: 'player-sheet', params: { playerName: player.name } })
+  router.push({ name: 'player-sheet', params: { playerId: player.id } })
 }
 
 /**
  * @param {{ player: Player, newHp: number }} payload
  */
 function handleUpdateHp({ player, newHp }) {
-  player.currentHp = newHp
+  campaignsStore.updatePlayer(player.id, { currentHp: newHp })
   emit('updateHp', { player, newHp })
 }
 </script>

@@ -12,7 +12,7 @@ const router = createRouter({
     { name: 'home', path: '/', component: HomePage },
     { name: 'campaigns', path: '/campaigns', component: CampaignsView },
     { path: '/player', component: PlayerPage, name: 'player' },
-    { path: '/player/:playerName', name: 'player-sheet', component: PlayerSheet },
+    { path: '/player/:playerId', name: 'player-sheet', component: PlayerSheet },
     {
       path: '/gm',
       component: GmLayout,
