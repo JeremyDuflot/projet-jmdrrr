@@ -2,7 +2,10 @@
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const routesNames = router.getRoutes().map((route) => route.name)
+const routesNames = router
+  .getRoutes()
+  .filter((route) => !route.path.includes(':'))
+  .map((route) => route.name)
 </script>
 
 <template>
