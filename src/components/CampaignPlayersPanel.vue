@@ -37,7 +37,7 @@ const hasMore = computed(() => players.value.length > collapsedCount)
  */
 function goToPlayerSheet(player) {
   emit('select', player)
-  router.push({ name: 'player-sheet', params: { playerId: player.id } })
+  router.push({ name: 'player-sheet', params: { playerName: player.name } })
 }
 
 /**
