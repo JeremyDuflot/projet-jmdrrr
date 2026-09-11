@@ -15,29 +15,29 @@ onMounted(() => {
   player.value = playerStore.getPlayer(playerName)
 })
 
-const filteredItems = computed(() => {
-  if (!player.value?.inventory?.items) return []
-  if (!searchQuery.value) return player.value.inventory.items
+/**
+ * @param {Array<{ name: string, description: string }>} items
+ * @param {string} query
+ */
+function filterByQuery(items, query) {
+  if (!items) return []
+  if (!query) return items
 
-  const query = (searchQuery.value || '').toLowerCase()
-  return player.value.inventory.items.filter(
-    /** @param {{ name: string, description: string }} item */
+  const lowerQuery = query.toLowerCase()
+  return items.filter(
     (item) =>
-      item.name.toLowerCase().includes(query) || item.description.toLowerCase().includes(query),
+      item.name.toLowerCase().includes(lowerQuery) ||
+      item.description.toLowerCase().includes(lowerQuery),
   )
-})
+}
 
-const filteredClues = computed(() => {
-  if (!player.value?.inventory?.clues) return []
-  if (!searchQuery.value) return player.value.inventory.clues
+const filteredItems = computed(() =>
+  filterByQuery(player.value?.inventory?.items, searchQuery.value),
+)
 
-  const query = (searchQuery.value || '').toLowerCase()
-  return player.value.inventory.clues.filter(
-    /** @param {{ name: string, description: string }} clue */
-    (clue) =>
-      clue.name.toLowerCase().includes(query) || clue.description.toLowerCase().includes(query),
-  )
-})
+const filteredClues = computed(() =>
+  filterByQuery(player.value?.inventory?.clues, searchQuery.value),
+)
 
 /**
  * @param {number} newHp
@@ -103,7 +103,7 @@ function handleUpdateHp(newHp) {
       </div>
 
       <div class="mb-6">
-        <label for="search-input" class="label" />
+        <label for="search-input" class="sr-only">Rechercher dans l'inventaire</label>
         <input
           id="search-input"
           v-model="searchQuery"
