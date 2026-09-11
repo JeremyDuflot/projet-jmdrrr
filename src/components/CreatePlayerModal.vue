@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { useCampaignsStore } from '@/stores/campaigns.js'
+import { useCampaignsStore } from '@/stores/rpgStore'
 
 const props = defineProps({
   show: { type: Boolean, required: true },
@@ -19,6 +19,7 @@ const formData = ref({
   description: '',
   comment: '',
   maxHp: 100,
+  campaignId: campaignsStore.selectedCampaignId || campaignsStore.activeCampaignId,
 })
 
 const items = ref([])
@@ -33,33 +34,45 @@ function removeItem(index) {
 
 function handleSubmit() {
   if (!formData.value.name.trim()) return
+  if (!formData.value.campaignId) {
+    alert('Erreur: Aucune campagne sélectionnée. Veuillez sélectionner une campagne.')
+    return
+  }
 
   const itemIds = []
   for (const item of items.value) {
     if (item.name.trim()) {
-      const newItem = campaignsStore.createItem({
-        name: item.name,
-        description: item.description,
-      })
+      const newItem = campaignsStore.createItem(
+        {
+          name: item.name,
+          description: item.description,
+        },
+        formData.value.campaignId,
+      )
       if (newItem) {
         itemIds.push(newItem.id)
       }
     }
   }
 
-  const newPlayer = campaignsStore.createPlayer({
-    name: formData.value.name,
-    description: formData.value.description,
-    comment: isGmPath.value ? formData.value.comment : '',
-    currentHp: formData.value.maxHp,
-    maxHp: formData.value.maxHp,
-    inventory: { itemIds },
-  })
+  const newPlayer = campaignsStore.createPlayer(
+    {
+      name: formData.value.name,
+      description: formData.value.description,
+      comment: isGmPath.value ? formData.value.comment : '',
+      currentHp: formData.value.maxHp,
+      maxHp: formData.value.maxHp,
+      inventory: { itemIds },
+    },
+    formData.value.campaignId,
+  )
 
   if (newPlayer) {
     emit('created', newPlayer)
     emit('close')
     resetForm()
+  } else {
+    alert('Erreur lors de la création du personnage.')
   }
 }
 
@@ -69,6 +82,7 @@ function resetForm() {
     description: '',
     comment: '',
     maxHp: 100,
+    campaignId: campaignsStore.selectedCampaignId || campaignsStore.activeCampaignId,
   }
   items.value = []
 }
@@ -85,6 +99,21 @@ function handleClose() {
       <h3 class="font-bold text-lg mb-4">Ajouter un nouveau personnage</h3>
 
       <form @submit.prevent="handleSubmit" class="space-y-4">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Campagne *</span>
+          </label>
+          <select v-model="formData.campaignId" class="select select-bordered w-full" required>
+            <option
+              v-for="campaign in campaignsStore.campaigns"
+              :key="campaign.id"
+              :value="campaign.id"
+            >
+              {{ campaign.name }}
+            </option>
+          </select>
+        </div>
+
         <div class="form-control">
           <label class="label">
             <span class="label-text">Nom *</span>

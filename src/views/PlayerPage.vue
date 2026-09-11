@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import PlayerCard from '../components/PlayerCard.vue'
 import CreatePlayerModal from '../components/CreatePlayerModal.vue'
-import { useCampaignsStore } from '@/stores/campaigns.js'
+import { useCampaignsStore } from '@/stores/rpgStore.js'
 import { useRouter } from 'vue-router'
 import { Plus } from '@lucide/vue'
 
@@ -13,7 +13,7 @@ const players = campaignsStore.players
 const showCreateModal = ref(false)
 
 function handlePlayerSelect(player) {
-  router.push({ name: 'player-sheet', params: { playerId: player.id } })
+  router.push({ name: 'player-sheet', params: { playerName: player.name } })
 }
 
 function handleOpenCreateModal() {
@@ -21,7 +21,7 @@ function handleOpenCreateModal() {
 }
 
 function handlePlayerCreated(player) {
-  router.push({ name: 'player-sheet', params: { playerId: player.id } })
+  router.push({ name: 'player-sheet', params: { playerName: player.name } })
 }
 </script>
 

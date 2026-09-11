@@ -1,16 +1,32 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { useCampaignsStore } from '@/stores/campaigns.js'
+import { useCampaignsStore } from '@/stores/rpgStore.js'
 import LifeBar from '@/components/LifeBar.vue'
 
 const route = useRoute()
 const campaignsStore = useCampaignsStore()
 
-const playerId = route.params.playerId
+const playerName = route.params.playerName
 const searchQuery = ref('')
 
-const player = computed(() => campaignsStore.playerView(playerId))
+const player = computed(() => {
+  for (const campaign of campaignsStore.campaigns) {
+    const found = campaign.players.find((p) => p.name === playerName)
+    if (found) {
+      return campaignsStore.playerView(found.id)
+    }
+  }
+  return null
+})
+
+const playerId = computed(() => {
+  for (const campaign of campaignsStore.campaigns) {
+    const found = campaign.players.find((p) => p.name === playerName)
+    if (found) return found.id
+  }
+  return null
+})
 
 function filterByQuery(items, query) {
   if (!items) return []
@@ -73,10 +89,15 @@ function handleUpdateHp(newHp) {
 
           <div>
             <h3 class="font-bold text-lg mb-2">Localisation</h3>
-            <div class="card bg-base-200">
+            <div v-if="player.place" class="card bg-base-200">
               <div class="card-body p-4">
                 <h4 class="font-semibold">{{ player.place.name }}</h4>
                 <p class="text-sm text-base-content/70">{{ player.place.description }}</p>
+              </div>
+            </div>
+            <div v-else class="card bg-base-200">
+              <div class="card-body p-4">
+                <p class="text-sm text-base-content/50 italic">Aucune localisation définie</p>
               </div>
             </div>
           </div>
