@@ -2,8 +2,8 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { ChevronDown, ChevronUp } from '@lucide/vue'
-import { getPlayersByCampaign } from '../data/mockPlayers.js'
-import LifeBar from './LifeBar.vue'
+import { getPlayersByCampaign } from '@/data/mockPlayers'
+import LifeBar from '@/components/LifeBar.vue'
 
 const props = defineProps({
   campaignId: {
@@ -33,7 +33,7 @@ const hasMore = computed(() => players.value.length > collapsedCount)
 /**
  * @param {Player} player
  */
-function goToPlayerSheet(player) {
+function goToPlayerSheetPage(player) {
   emit('select', player)
   router.push({ name: 'player-sheet', params: { playerName: player.name } })
 }
@@ -59,7 +59,7 @@ function handleUpdateHp({ player, newHp }) {
       >
         <button
           type="button"
-          @click="goToPlayerSheet(player)"
+          @click="goToPlayerSheetPage(player)"
           class="font-bold text-amber-500 text-sm mb-1 hover:text-amber-300 hover:underline transition-colors text-left"
         >
           {{ player.name }}

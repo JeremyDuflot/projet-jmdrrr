@@ -1,5 +1,5 @@
 <script setup>
-import CampaignPlayersPanel from '../components/CampaignPlayersPanel.vue'
+import CampaignPlayersPanel from '@/components/Campaigns/CampaignPlayersPanel.vue'
 </script>
 
 <template>
