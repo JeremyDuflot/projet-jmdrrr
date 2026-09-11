@@ -15,7 +15,7 @@ const emit = defineEmits(['select', 'updateHp'])
 <template>
   <button
     type="button"
-    class="w-full text-left bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl p-5 shadow-lg cursor-pointer transition-all duration-300 hover:border-amber-400/70 hover:shadow-2xl"
+    class="text-left bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl p-5 shadow-lg cursor-pointer transition-all duration-300 hover:border-amber-400/70 hover:shadow-2xl"
     :class="{ 'hover:scale-105': hoverScale }"
     @click="emit('select', player)"
   >

@@ -1,36 +1,45 @@
 <script setup>
+import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useCampaignsStore } from '@/stores/rpgStore.js'
 const router = useRouter()
+const campaignsStore = useCampaignsStore()
 import SelectableRoleCard from '../components/SelectableRoleCard.vue'
 
 /** @param {import('vue-router').RouteRecordNameGeneric} routeName */
 function handleRoleSelect(routeName) {
   router.push({ name: routeName })
 }
+
+onMounted(() => {
+  const campaign = campaignsStore.createCampaign({ name: 'Campagne test déplacement' })
+  campaignsStore.createPlayer({ name: 'TestNav', maxHp: 20 }, campaign.id)
+  campaignsStore.setActiveCampaign(campaign.id)
+
+  const forest = campaignsStore.createPlace(
+    { name: 'Forêt Sombre', description: 'Un bois dense.' },
+    campaign.id,
+  )
+  const village = campaignsStore.createPlace(
+    { name: 'Village de Pierregris', description: 'Un petit village.' },
+    campaign.id,
+  )
+
+  const chapter = campaignsStore.createChapter(
+    { name: 'Chapitre 1', resolutionPassword: 'chap1' },
+    campaign.id,
+  )
+
+  campaignsStore.createQuest(chapter.id, {
+    name: 'Quête 1 - Explorer la forêt',
+    resolutionPassword: 'quest1',
+    placeId: forest.id,
+  })
+
+  campaignsStore.createQuest(chapter.id, {
+    name: 'Quête 2 - Enquête au village',
+    resolutionPassword: 'quest2',
+    placeId: village.id,
+  })
+})
 </script>
-
-<template>
-  <main
-    class="flex flex-col items-center justify-center pt-2 bg-[url('/images/Background.png')] bg-cover bg-center min-h-screen"
-  >
-    <div class="bg-black/20 backdrop-blur-sm rounded-4xl px-12 py-8 mb-16">
-      <h1
-        class="text-6xl font-black mb-2 justify-center font-['Cinzel'] text-amber-500 drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]"
-      >
-        Bienvenue dans le jeu de rôle !
-      </h1>
-      <p
-        class="text-lg font-bold text-center text-amber-500 font-['Cinzel'] drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]"
-      >
-        Veuillez sélectionner votre rôle pour commencer l'aventure...
-      </p>
-    </div>
-
-    <div class="flex w-full px-12 items-center gap-12 justify-center">
-      <SelectableRoleCard routeName="gm-campaigns" image="/images/GmImage.png" @select="handleRoleSelect">
-      </SelectableRoleCard>
-      <SelectableRoleCard routeName="players" image="/images/PlayerImage.png" @select="handleRoleSelect">
-      </SelectableRoleCard>
-    </div>
-  </main>
-</template>
