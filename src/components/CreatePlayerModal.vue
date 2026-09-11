@@ -138,9 +138,7 @@ function handleClose() {
           <label class="label">
             <span class="label-text font-bold">Inventaire</span>
           </label>
-          <div v-if="items.length === 0" class="text-sm text-base-content/50 mb-2">
-            Aucun objet
-          </div>
+          <div v-if="items.length === 0" class="text-sm text-base-content/50 mb-2">Aucun objet</div>
           <div v-for="(item, index) in items" :key="index" class="mb-3 p-3 bg-base-200 rounded-lg">
             <div class="flex justify-between items-center mb-2">
               <span class="text-sm font-semibold">Objet {{ index + 1 }}</span>
