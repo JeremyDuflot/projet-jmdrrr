@@ -29,7 +29,7 @@ export function createClue(data = {}) {
   return {
     id: data.id ?? createId('clue'),
     name: data.name ?? 'Nouvel indice',
-    text: data.text ?? '',
+    description: data.description ?? '',
     comment: data.comment ?? '',
   }
 }
@@ -80,7 +80,6 @@ export function createChapter(data = {}) {
     state: data.state ?? 'inactive',
     description: data.description ?? '',
     comment: data.comment ?? '',
-    activationPassword: data.activationPassword ?? '',
     requiredItemIds: toIdList(data.requiredItemIds),
     resolutionPassword: data.resolutionPassword ?? '',
     rewards: createRewards(data.rewards),
@@ -89,7 +88,7 @@ export function createChapter(data = {}) {
 }
 
 export function createCampaign(data = {}) {
-  return {
+  return activateFirstChapter({
     id: data.id ?? createId('campaign'),
     name: data.name ?? 'Nouvelle campagne',
     state: data.state ?? 'draft',
@@ -101,7 +100,14 @@ export function createCampaign(data = {}) {
     items: Array.isArray(data.items) ? data.items.map(createItem) : [],
     clues: Array.isArray(data.clues) ? data.clues.map(createClue) : [],
     revealedClueIds: toIdList(data.revealedClueIds),
-  }
+  })
+}
+
+export function activateFirstChapter(campaign) {
+  const [first] = campaign.chapters
+  if (first && first.state !== 'completed') first.state = 'active'
+
+  return campaign
 }
 
 export function clone(value) {

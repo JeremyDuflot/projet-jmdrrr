@@ -23,7 +23,6 @@ type Chapter = {
   state: 'inactive' | 'active' | 'completed'
   description: string
   comment: string
-  activationPassword: string
   requiredItemIds: string[]
   resolutionPassword: string
   rewards: Rewards
@@ -73,7 +72,7 @@ type Item = {
 type Clue = {
   id: string
   name: string
-  text: string
+  description: string
   comment: string
 }
 
