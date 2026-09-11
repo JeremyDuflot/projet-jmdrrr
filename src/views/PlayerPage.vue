@@ -51,13 +51,14 @@ function handlePlayerCreated(player) {
         @select="handlePlayerSelect"
       />
 
-      <div
-        class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl p-5 shadow-lg cursor-pointer transition-all duration-300 hover:border-amber-400/70 hover:shadow-2xl hover:scale-105 w-72 flex flex-col items-center justify-center min-h-[140px]"
+      <button
+        type="button"
+        class="w-72 bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl p-5 shadow-lg cursor-pointer transition-all duration-300 hover:border-amber-400/70 hover:shadow-2xl hover:scale-105 flex flex-col items-center justify-center min-h-140px"
         @click="handleOpenCreateModal"
       >
         <Plus class="w-12 h-12 text-amber-500 mb-2" />
         <h2 class="text-xl font-bold text-amber-500 font-['Cinzel']">Nouveau Personnage</h2>
-      </div>
+      </button>
     </div>
 
     <CreatePlayerModal
