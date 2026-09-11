@@ -35,7 +35,7 @@ watchEffect(
       <slot />
     </div>
     <form method="dialog" class="modal-backdrop">
-      <button>Fermer</button>
+      <button type="submit">Fermer</button>
     </form>
   </dialog>
 </template>
