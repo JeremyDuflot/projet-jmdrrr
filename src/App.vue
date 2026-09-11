@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { useCampaignsStore } from '@/stores/campaigns'
+import { useCampaignsStore } from '@/stores/rpgStore'
 
 const campaignsStore = useCampaignsStore()
 const router = useRouter()
