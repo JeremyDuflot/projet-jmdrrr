@@ -15,6 +15,13 @@ const STATE_BADGES = {
   active: 'badge-success',
 }
 
+const props = defineProps({
+  editable: {
+    type: Boolean,
+    default: false,
+  },
+})
+
 const campaignsStore = useCampaignsStore()
 
 const campaigns = computed(() => campaignsStore.campaigns)
@@ -35,6 +42,8 @@ const isEditing = computed(() => editedId.value !== null)
 const deletedCampaign = computed(() => campaignsStore.campaignById(deletedId.value))
 
 function openCreateForm() {
+  if (!props.editable) return
+
   editedId.value = null
   formError.value = ''
   Object.assign(form, { name: '', state: 'draft', description: '', comment: '' })
@@ -42,6 +51,8 @@ function openCreateForm() {
 }
 
 function openEditForm(campaign) {
+  if (!props.editable) return
+
   editedId.value = campaign.id
   formError.value = ''
   Object.assign(form, {
@@ -60,6 +71,8 @@ function closeForm() {
 }
 
 function submitForm() {
+  if (!props.editable) return
+
   const name = form.name.trim()
   if (!name) {
     formError.value = 'Le nom de la campagne est obligatoire.'
@@ -83,6 +96,8 @@ function submitForm() {
 }
 
 function askDelete(campaign) {
+  if (!props.editable) return
+
   deletedId.value = campaign.id
 }
 
@@ -91,6 +106,8 @@ function cancelDelete() {
 }
 
 function confirmDelete() {
+  if (!props.editable) return
+
   campaignsStore.deleteCampaign(deletedId.value)
   if (editedId.value === deletedId.value) closeForm()
   deletedId.value = null
@@ -101,11 +118,17 @@ function confirmDelete() {
   <div class="m-2">
     <div class="flex items-center justify-between mb-4">
       <h1 class="text-2xl font-extrabold">Campagnes</h1>
-      <button class="btn btn-primary" @click="openCreateForm">Nouvelle campagne</button>
+      <button v-if="editable" class="btn btn-primary" @click="openCreateForm">
+        Nouvelle campagne
+      </button>
     </div>
 
     <p v-if="campaigns.length === 0" class="text-base-content/60 italic">
-      Aucune campagne pour le moment. Créez-en une pour commencer.
+      {{
+        editable
+          ? 'Aucune campagne pour le moment. Créez-en une pour commencer.'
+          : 'Aucune campagne disponible pour le moment.'
+      }}
     </p>
 
     <div
@@ -124,7 +147,9 @@ function confirmDelete() {
         <p v-if="campaign.description" class="mb-2">{{ campaign.description }}</p>
         <p v-else class="mb-2 text-base-content/60 italic">Pas de description.</p>
 
-        <p v-if="campaign.comment" class="mb-2 text-base-content/70">{{ campaign.comment }}</p>
+        <p v-if="editable && campaign.comment" class="mb-2 text-base-content/70">
+          {{ campaign.comment }}
+        </p>
 
         <div class="flex flex-wrap gap-2 mb-4 text-sm font-normal">
           <span class="badge badge-outline">{{ campaign.chapters.length }} chapitre(s)</span>
@@ -134,14 +159,14 @@ function confirmDelete() {
           <span class="badge badge-outline">{{ campaign.clues.length }} indice(s)</span>
         </div>
 
-        <div class="flex justify-end gap-2">
+        <div v-if="editable" class="flex justify-end gap-2">
           <button class="btn btn-error btn-outline" @click="askDelete(campaign)">Supprimer</button>
           <button class="btn btn-primary" @click="openEditForm(campaign)">Modifier</button>
         </div>
       </div>
     </div>
 
-    <div class="modal" :class="{ 'modal-open': isFormOpen }" role="dialog">
+    <div v-if="editable" class="modal" :class="{ 'modal-open': isFormOpen }" role="dialog">
       <div class="modal-box">
         <h3 class="text-lg font-bold mb-4">
           {{ isEditing ? 'Modifier la campagne' : 'Nouvelle campagne' }}
@@ -164,7 +189,10 @@ function confirmDelete() {
 
           <label class="form-control w-full mb-3">
             <span class="label-text">Description</span>
-            <textarea v-model="form.description" class="textarea textarea-bordered w-full"></textarea>
+            <textarea
+              v-model="form.description"
+              class="textarea textarea-bordered w-full"
+            ></textarea>
           </label>
 
           <label class="form-control w-full mb-3">
@@ -185,7 +213,7 @@ function confirmDelete() {
       <div class="modal-backdrop" @click="closeForm"></div>
     </div>
 
-    <div class="modal" :class="{ 'modal-open': deletedCampaign }" role="dialog">
+    <div v-if="editable" class="modal" :class="{ 'modal-open': deletedCampaign }" role="dialog">
       <div class="modal-box">
         <h3 class="text-lg font-bold mb-4">Supprimer la campagne</h3>
         <p>
