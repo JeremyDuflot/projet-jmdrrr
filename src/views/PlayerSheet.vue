@@ -7,26 +7,10 @@ import LifeBar from '@/components/LifeBar.vue'
 const route = useRoute()
 const campaignsStore = useCampaignsStore()
 
-const playerName = route.params.playerName
+const playerId = route.params.playerId
 const searchQuery = ref('')
 
-const player = computed(() => {
-  for (const campaign of campaignsStore.campaigns) {
-    const found = campaign.players.find((p) => p.name === playerName)
-    if (found) {
-      return campaignsStore.playerView(found.id)
-    }
-  }
-  return null
-})
-
-const playerId = computed(() => {
-  for (const campaign of campaignsStore.campaigns) {
-    const found = campaign.players.find((p) => p.name === playerName)
-    if (found) return found.id
-  }
-  return null
-})
+const player = computed(() => campaignsStore.playerView(playerId))
 
 function filterByQuery(items, query) {
   if (!items) return []

@@ -14,7 +14,7 @@ const router = createRouter({
     { name: 'player', path: '/players', component: PlayerPage },
     {
       name: 'player-sheet',
-      path: '/players/:playerName',
+      path: '/players/:playerId',
       component: PlayerSheet,
     },
     {
