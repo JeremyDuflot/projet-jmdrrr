@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const usePlayerStore = defineStore('player', () => {
-  // Fake data pour tester la vue de la Fiche de Perso en allant sur '/player/Lady Jessica'
+  // Fake data pour tester la vue de la Fiche de Perso en allant sur '/players/Lady Jessica'
   const testPlayer = ref({
     name: 'Lady Jessica',
     state: 'alive',

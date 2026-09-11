@@ -10,11 +10,11 @@ const router = createRouter({
   routes: [
     { name: 'home', path: '/', component: HomePage },
     { name: 'campaigns', path: '/campaigns', component: CampaignsView },
-    { name: 'players', path: '/player', component: PlayerPage },
+    { name: 'player', path: '/players', component: PlayerPage },
     { name: 'gm', path: '/gm', component: GmPage },
     {
-      path: '/players/:playerName',
       name: 'player-sheet',
+      path: '/players/:playerName',
       component: PlayerSheet,
     },
   ],
