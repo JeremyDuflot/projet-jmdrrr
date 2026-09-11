@@ -1,6 +1,8 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import { useCampaignsStore } from '@/stores/campaigns'
 
+const campaignsStore = useCampaignsStore()
 const router = useRouter()
 const routesNames = router
   .getRoutes()
@@ -9,6 +11,12 @@ const routesNames = router
 </script>
 
 <template>
+  <div v-if="campaignsStore.persistenceFailed" role="alert" class="alert alert-error">
+    <span
+      >Sauvegarde impossible : les modifications seront perdues au rechargement de la page.</span
+    >
+  </div>
+
   <RouterLink
     v-for="(routeName, index) in routesNames"
     :key="index"

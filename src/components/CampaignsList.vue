@@ -42,12 +42,14 @@ function createCampaign() {
     comment: faker.lorem.sentence(),
     players: [
       {
+        id: crypto.randomUUID(),
         name: faker.person.firstName(),
         state: 'alive',
         comment: faker.lorem.sentence(),
         description: faker.lorem.text(),
         currentHp: 100,
         maxHp: 150,
+        campaignId: crypto.randomUUID(),
         inventory: {
           clues: [
             {
@@ -91,7 +93,7 @@ const arrayOfFakeData = Array.from({ length: 20 }, createCampaign)
       <div class="collapse-content font-bold">
         <p class="mb-2">{{ campaign.description }}</p>
         <div class="flex justify-end">
-          <button class="btn btn-primary">See more</button>
+          <button class="btn btn-primary">Voir plus</button>
         </div>
       </div>
     </div>

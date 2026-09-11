@@ -1,4 +1,3 @@
-<script setup></script>
 <template>
-  <h1>GM Page</h1>
+  <main class="min-h-screen"></main>
 </template>

@@ -1,16 +1,12 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { Pencil } from '@lucide/vue'
+import { Pencil, Check, X } from '@lucide/vue'
 
 const props = defineProps({
-  currentHp: {
-    type: Number,
-    required: true,
-  },
-  maxHp: {
-    type: Number,
-    required: true,
-  },
+  currentHp: { type: Number, required: true },
+  maxHp: { type: Number, required: true },
+  editable: { type: Boolean, default: false },
+  showLabel: { type: Boolean, default: true },
 })
 
 const emit = defineEmits(['updateHp'])
@@ -18,9 +14,11 @@ const emit = defineEmits(['updateHp'])
 const isEditing = ref(false)
 const hp = ref(props.currentHp)
 
+const displayedHp = computed(() => (isEditing.value ? hp.value : props.currentHp))
+
 const healthPercentage = computed(() => {
   if (props.maxHp <= 0) return 0
-  return Math.round((props.currentHp / props.maxHp) * 100)
+  return Math.round((displayedHp.value / props.maxHp) * 100)
 })
 
 const healthColor = computed(() => {
@@ -30,9 +28,6 @@ const healthColor = computed(() => {
   return 'progress-error'
 })
 
-/**
- * @param {number} amount
- */
 function adjustHp(amount) {
   const newValue = hp.value + amount
   if (newValue >= 0 && newValue <= props.maxHp) {
@@ -50,13 +45,19 @@ function handleHpInput() {
   }
 }
 
-/**
- * @param {KeyboardEvent} event
- */
 function preventInvalidKeys(event) {
-  if (event.key === 'e' || event.key === 'E' || event.key === '-' || event.key === '+') {
+  if (event.key === '.' || event.key === ',' || event.key === '-' || event.key === '+') {
     event.preventDefault()
   }
+}
+
+function startEditing() {
+  hp.value = props.currentHp
+  isEditing.value = true
+}
+
+function cancelEditing() {
+  isEditing.value = false
 }
 
 function saveHp() {
@@ -70,52 +71,95 @@ function saveHp() {
 
 <template>
   <div class="w-full">
-    <div class="flex justify-between mb-1 items-center">
-      <span class="font-bold">Points de vie</span>
-      <div class="flex items-center gap-2">
-        <span class="font-bold">{{ currentHp }} / {{ maxHp }}</span>
-        <button
-          @click="isEditing = true"
-          class="btn btn-xs btn-ghost btn-circle"
-          title="Modifier les points de vie"
-        >
-          <Pencil :size="16" />
-        </button>
-      </div>
+    <span v-if="showLabel" class="font-bold block mb-1">Points de vie</span>
+
+    <div v-if="!isEditing" class="flex items-center gap-2">
+      <span class="font-bold text-gray-400">{{ currentHp }} / {{ maxHp }}</span>
+      <button
+        v-if="editable"
+        type="button"
+        @click="startEditing"
+        class="btn btn-xs btn-ghost btn-circle text-gray-400"
+        title="Modifier les points de vie"
+      >
+        <Pencil :size="16" />
+      </button>
     </div>
+
+    <div v-else class="flex items-center gap-0.5 flex-wrap text-gray-400">
+      <button
+        type="button"
+        @click="adjustHp(-10)"
+        class="btn btn-circle btn-xs bg-transparent border-none shadow-none text-gray-400 hover:bg-amber-500/20 text-[10px] min-h-0 h-6 w-6 p-0"
+        :disabled="hp <= 0"
+        title="-10"
+      >
+        -10
+      </button>
+      <button
+        type="button"
+        @click="adjustHp(-1)"
+        class="btn btn-circle btn-xs bg-transparent border-none shadow-none text-gray-400 hover:bg-amber-500/20 text-base min-h-0 h-6 w-6 p-0"
+        :disabled="hp <= 0"
+        title="-1"
+      >
+        -
+      </button>
+
+      <label for="hp-input" class="sr-only">Points de vie</label>
+      <input
+        id="hp-input"
+        v-model.number="hp"
+        @input="handleHpInput"
+        @keydown="preventInvalidKeys"
+        type="number"
+        class="input input-xs w-12 text-center text-base font-bold bg-transparent border-none shadow-none text-gray-200 px-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        min="0"
+        :max="maxHp"
+      />
+
+      <button
+        type="button"
+        @click="adjustHp(1)"
+        class="btn btn-circle btn-xs bg-transparent border-none shadow-none text-gray-400 hover:bg-amber-500/20 text-base min-h-0 h-6 w-6 p-0"
+        :disabled="hp >= maxHp"
+        title="+1"
+      >
+        +
+      </button>
+      <button
+        type="button"
+        @click="adjustHp(10)"
+        class="btn btn-circle btn-xs bg-transparent border-none shadow-none text-gray-400 hover:bg-amber-500/20 text-[10px] min-h-0 h-6 w-6 p-0"
+        :disabled="hp >= maxHp"
+        title="+10"
+      >
+        +10
+      </button>
+
+      <button
+        type="button"
+        @click="saveHp"
+        class="btn btn-circle btn-xs btn-ghost text-success min-h-0 h-6 w-6 p-0 ml-1"
+        title="Valider"
+      >
+        <Check :size="16" />
+      </button>
+      <button
+        type="button"
+        @click="cancelEditing"
+        class="btn btn-circle btn-xs btn-ghost text-error min-h-0 h-6 w-6 p-0"
+        title="Annuler"
+      >
+        <X :size="16" />
+      </button>
+    </div>
+
     <progress
       class="progress w-full"
       :class="healthColor"
-      :value="currentHp"
+      :value="displayedHp"
       :max="maxHp"
     ></progress>
-
-    <!-- édition des points de vie -->
-    <div v-show="isEditing" class="flex justify-end gap-4 mt-4">
-      <div class="flex items-center gap-2">
-        <button @click="adjustHp(-10)" class="btn btn-circle btn-sm" :disabled="hp <= 0">-</button>
-
-        <label for="hp-input" class="sr-only">Points de vie</label>
-        <input
-          id="hp-input"
-          v-model.number="hp"
-          @input="handleHpInput"
-          @keydown="preventInvalidKeys"
-          type="number"
-          class="input input-bordered w-20 text-center"
-          min="0"
-          :max="maxHp"
-        />
-
-        <button @click="adjustHp(10)" class="btn btn-circle btn-sm" :disabled="hp >= maxHp">
-          +
-        </button>
-      </div>
-
-      <div class="flex gap-2">
-        <button @click="isEditing = false" class="btn">Annuler</button>
-        <button @click="saveHp" class="btn btn-primary">Valider</button>
-      </div>
-    </div>
   </div>
 </template>

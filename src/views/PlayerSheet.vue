@@ -1,24 +1,33 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { usePlayerStore } from '@/stores/playerStore.js'
+import { useCampaignsStore } from '@/stores/campaigns.js'
 import LifeBar from '@/components/LifeBar.vue'
 
 const route = useRoute()
-const playerStore = usePlayerStore()
+const campaignsStore = useCampaignsStore()
 
-const player = ref()
 const playerName = route.params.playerName
 const searchQuery = ref('')
 
-onMounted(() => {
-  player.value = playerStore.getPlayer(playerName)
+const player = computed(() => {
+  for (const campaign of campaignsStore.campaigns) {
+    const found = campaign.players.find((p) => p.name === playerName)
+    if (found) {
+      return campaignsStore.playerView(found.id)
+    }
+  }
+  return null
 })
 
-/**
- * @param {Array<{ name: string, description: string }>} items
- * @param {string} query
- */
+const playerId = computed(() => {
+  for (const campaign of campaignsStore.campaigns) {
+    const found = campaign.players.find((p) => p.name === playerName)
+    if (found) return found.id
+  }
+  return null
+})
+
 function filterByQuery(items, query) {
   if (!items) return []
   if (!query) return items
@@ -31,29 +40,17 @@ function filterByQuery(items, query) {
   )
 }
 
-const filteredItems = computed(() =>
-  filterByQuery(player.value?.inventory?.items, searchQuery.value),
-)
+const filteredItems = computed(() => filterByQuery(player.value?.items ?? [], searchQuery.value))
 
-const filteredClues = computed(() =>
-  filterByQuery(player.value?.inventory?.clues, searchQuery.value),
-)
+const filteredClues = computed(() => filterByQuery(player.value?.clues ?? [], searchQuery.value))
 
-/**
- * @param {number} newHp
- */
 function handleUpdateHp(newHp) {
-  if (!player.value) return
+  if (!playerId.value) return
 
-  player.value.currentHp = newHp
+  const state =
+    newHp === 0 ? 'dead' : player.value.state === 'dead' && newHp > 0 ? 'alive' : player.value.state
 
-  if (newHp === 0) {
-    player.value.state = 'dead'
-  } else if (player.value.state === 'dead' && newHp > 0) {
-    player.value.state = 'alive'
-  }
-
-  playerStore.updatePlayer(player.value)
+  campaignsStore.updatePlayer(playerId.value, { currentHp: newHp, state })
 }
 </script>
 
@@ -118,7 +115,7 @@ function handleUpdateHp(newHp) {
           <div class="card-body">
             <h3 class="card-title">Inventaire - Objets</h3>
             <div v-if="filteredItems.length > 0" class="mt-4 space-y-3">
-              <div v-for="item in filteredItems" :key="item.name" class="card bg-base-200">
+              <div v-for="item in filteredItems" :key="item.id" class="card bg-base-200">
                 <div class="card-body p-4">
                   <h4 class="font-semibold">{{ item.name }}</h4>
                   <p class="text-sm text-base-content/70">{{ item.description }}</p>
@@ -135,7 +132,7 @@ function handleUpdateHp(newHp) {
           <div class="card-body">
             <h3 class="card-title">Inventaire - Indices</h3>
             <div v-if="filteredClues.length > 0" class="mt-4 space-y-3">
-              <div v-for="clue in filteredClues" :key="clue.name" class="card bg-base-200">
+              <div v-for="clue in filteredClues" :key="clue.id" class="card bg-base-200">
                 <div class="card-body p-4">
                   <h4 class="font-semibold">{{ clue.name }}</h4>
                   <p class="text-sm text-base-content/70">{{ clue.description }}</p>
