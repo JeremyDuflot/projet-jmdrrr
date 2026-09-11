@@ -2,6 +2,7 @@
 import { computed, reactive, ref } from 'vue'
 import { useCampaignsStore } from '@/stores/rpgStore'
 import { CAMPAIGN_STATES } from '@/data/entities'
+import BaseModal from './BaseModal.vue'
 import CampaignPlacesEditor from './CampaignPlacesEditor.vue'
 import CampaignPlayersEditor from './CampaignPlayersEditor.vue'
 import {
@@ -160,7 +161,9 @@ async function importFile(event) {
       <div v-if="editable" class="flex gap-2">
         <button class="btn btn-outline" @click="openImportDialog">Importer</button>
         <button class="btn btn-primary" @click="openCreateForm">Nouvelle campagne</button>
+        <label for="campaign-import-input" class="sr-only">Fichier de campagne à importer</label>
         <input
+          id="campaign-import-input"
           ref="fileInput"
           type="file"
           :accept="`${CAMPAIGN_FILE_EXTENSION},application/json`"
@@ -229,66 +232,62 @@ async function importFile(event) {
       </div>
     </div>
 
-    <div v-if="editable" class="modal" :class="{ 'modal-open': isFormOpen }" role="dialog">
-      <div class="modal-box">
-        <h3 class="text-lg font-bold mb-4">
-          {{ isEditing ? 'Modifier la campagne' : 'Nouvelle campagne' }}
-        </h3>
+    <BaseModal
+      v-if="editable"
+      :open="isFormOpen"
+      :title="isEditing ? 'Modifier la campagne' : 'Nouvelle campagne'"
+      @close="closeForm"
+    >
+      <form @submit.prevent="submitForm">
+        <label class="form-control w-full mb-3">
+          <span class="label-text">Nom</span>
+          <input v-model="form.name" type="text" class="input input-bordered w-full" />
+        </label>
 
-        <form @submit.prevent="submitForm">
-          <label class="form-control w-full mb-3">
-            <span class="label-text">Nom</span>
-            <input v-model="form.name" type="text" class="input input-bordered w-full" />
-          </label>
+        <label class="form-control w-full mb-3">
+          <span class="label-text">État</span>
+          <select v-model="form.state" class="select select-bordered w-full">
+            <option v-for="state in CAMPAIGN_STATES" :key="state" :value="state">
+              {{ STATE_LABELS[state] }}
+            </option>
+          </select>
+        </label>
 
-          <label class="form-control w-full mb-3">
-            <span class="label-text">État</span>
-            <select v-model="form.state" class="select select-bordered w-full">
-              <option v-for="state in CAMPAIGN_STATES" :key="state" :value="state">
-                {{ STATE_LABELS[state] }}
-              </option>
-            </select>
-          </label>
+        <label class="form-control w-full mb-3">
+          <span class="label-text">Description</span>
+          <textarea v-model="form.description" class="textarea textarea-bordered w-full"></textarea>
+        </label>
 
-          <label class="form-control w-full mb-3">
-            <span class="label-text">Description</span>
-            <textarea
-              v-model="form.description"
-              class="textarea textarea-bordered w-full"
-            ></textarea>
-          </label>
+        <label class="form-control w-full mb-3">
+          <span class="label-text">Commentaire</span>
+          <textarea v-model="form.comment" class="textarea textarea-bordered w-full"></textarea>
+        </label>
 
-          <label class="form-control w-full mb-3">
-            <span class="label-text">Commentaire</span>
-            <textarea v-model="form.comment" class="textarea textarea-bordered w-full"></textarea>
-          </label>
+        <p v-if="formError" class="text-error mb-2">{{ formError }}</p>
 
-          <p v-if="formError" class="text-error mb-2">{{ formError }}</p>
-
-          <div class="modal-action">
-            <button type="button" class="btn" @click="closeForm">Annuler</button>
-            <button type="submit" class="btn btn-primary">
-              {{ isEditing ? 'Enregistrer' : 'Créer' }}
-            </button>
-          </div>
-        </form>
-      </div>
-      <div class="modal-backdrop" @click="closeForm"></div>
-    </div>
-
-    <div v-if="editable" class="modal" :class="{ 'modal-open': deletedCampaign }" role="dialog">
-      <div class="modal-box">
-        <h3 class="text-lg font-bold mb-4">Supprimer la campagne</h3>
-        <p>
-          Voulez-vous vraiment supprimer « {{ deletedCampaign?.name }} » ? Cette action est
-          irréversible.
-        </p>
         <div class="modal-action">
-          <button type="button" class="btn" @click="cancelDelete">Annuler</button>
-          <button type="button" class="btn btn-error" @click="confirmDelete">Supprimer</button>
+          <button type="button" class="btn" @click="closeForm">Annuler</button>
+          <button type="submit" class="btn btn-primary">
+            {{ isEditing ? 'Enregistrer' : 'Créer' }}
+          </button>
         </div>
+      </form>
+    </BaseModal>
+
+    <BaseModal
+      v-if="editable"
+      :open="deletedCampaign !== null"
+      title="Supprimer la campagne"
+      @close="cancelDelete"
+    >
+      <p>
+        Voulez-vous vraiment supprimer « {{ deletedCampaign?.name }} » ? Cette action est
+        irréversible.
+      </p>
+      <div class="modal-action">
+        <button type="button" class="btn" @click="cancelDelete">Annuler</button>
+        <button type="button" class="btn btn-error" @click="confirmDelete">Supprimer</button>
       </div>
-      <div class="modal-backdrop" @click="cancelDelete"></div>
-    </div>
+    </BaseModal>
   </div>
 </template>
