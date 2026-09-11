@@ -11,9 +11,9 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { name: 'home', path: '/', component: HomePage },
-    { name: 'player', path: '/player', component: PlayerPage },
-    { name: 'player-campaigns', path: '/player/campaigns', component: PlayerCampaignsView },
-    { name: 'player-sheet', path: '/player/:playerName', component: PlayerSheet },
+    { name: 'player', path: '/players', component: PlayerPage },
+    { name: 'player-campaigns', path: '/players/campaigns', component: PlayerCampaignsView },
+    { name: 'player-sheet', path: '/players/:playerName', component: PlayerSheet },
     { name: 'gm', path: '/gm/campaigns', component: GmCampaignsView },
     {
       path: '/gm',
