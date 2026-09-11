@@ -1,8 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { Lock, Check } from '@lucide/vue'
-import { useCampaignsStore } from '@/stores/rpgStore.js'
 import { Lock } from '@lucide/vue'
+import { useCampaignsStore } from '@/stores/rpgStore.js'
 
 const props = defineProps({
   type: { type: String, required: true }, // 'quest' ou 'chapter'
@@ -18,7 +17,6 @@ const campaignsStore = useCampaignsStore()
 const dialogRef = ref(null)
 const password = ref('')
 const errorMessage = ref('')
-const isResolved = ref(false)
 
 const entity = computed(() => {
   return props.type === 'quest'
@@ -33,7 +31,6 @@ const label = computed(() => (props.type === 'quest' ? 'la quête' : 'le chapitr
 function openPopup() {
   password.value = ''
   errorMessage.value = ''
-  isResolved.value = false
   dialogRef.value?.showModal()
 }
 
