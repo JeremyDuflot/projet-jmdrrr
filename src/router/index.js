@@ -10,10 +10,10 @@ const router = createRouter({
   routes: [
     { name: 'home', path: '/', component: HomePage },
     { name: 'campaigns', path: '/campaigns', component: CampaignsView },
-    { path: '/player', component: PlayerPage, name: 'player' },
-    { path: '/gm', component: GmPage, name: 'gm' },
+    { name: 'players', path: '/player', component: PlayerPage },
+    { name: 'gm', path: '/gm', component: GmPage },
     {
-      path: '/player/:playerName',
+      path: '/players/:playerName',
       name: 'player-sheet',
       component: PlayerSheet,
     },
