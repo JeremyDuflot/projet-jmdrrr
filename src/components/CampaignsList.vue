@@ -42,12 +42,14 @@ function createCampaign() {
     comment: faker.lorem.sentence(),
     players: [
       {
+        id: crypto.randomUUID(),
         name: faker.person.firstName(),
         state: 'alive',
         comment: faker.lorem.sentence(),
         description: faker.lorem.text(),
         currentHp: 100,
         maxHp: 150,
+        campaignId: crypto.randomUUID(),
         inventory: {
           clues: [
             {
