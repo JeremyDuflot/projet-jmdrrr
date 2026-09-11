@@ -1,12 +1,14 @@
 <script setup>
 import PlayerCard from '../components/PlayerCard.vue'
 import { getPlayers } from '../data/mockPlayers.js'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const players = getPlayers()
 
 /** @param {ReturnType<typeof getPlayers>[number]} player */
 function handlePlayerSelect(player) {
-  console.log(player)
+  router.push({ name: 'player-sheet', params: { playerName: player.name } })
 }
 </script>
 
