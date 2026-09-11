@@ -3,30 +3,33 @@ import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useCampaignsStore } from '@/stores/rpgStore.js'
 import LifeBar from '@/components/LifeBar.vue'
+import ResolutionPasswordPopup from '@/components/ResolutionPasswordPopup.vue'
 
 const route = useRoute()
 const campaignsStore = useCampaignsStore()
 
 const playerName = route.params.playerName
 const searchQuery = ref('')
+const successMessage = ref('')
 
-const player = computed(() => {
-  for (const campaign of campaignsStore.campaigns) {
-    const found = campaign.players.find((p) => p.name === playerName)
-    if (found) {
-      return campaignsStore.playerView(found.id)
-    }
-  }
-  return null
+const campaign = computed(() => {
+  return campaignsStore.campaigns.find((c) => c.players.some((p) => p.name === playerName)) ?? null
 })
 
 const playerId = computed(() => {
-  for (const campaign of campaignsStore.campaigns) {
-    const found = campaign.players.find((p) => p.name === playerName)
-    if (found) return found.id
-  }
-  return null
+  const found = campaign.value?.players.find((p) => p.name === playerName)
+  return found ? found.id : null
 })
+
+const player = computed(() => (playerId.value ? campaignsStore.playerView(playerId.value) : null))
+
+const activeChapter = computed(
+  () => campaign.value?.chapters.find((c) => c.state === 'active') ?? null,
+)
+
+const activeQuests = computed(
+  () => activeChapter.value?.quests.filter((q) => q.state === 'active') ?? [],
+)
 
 function filterByQuery(items, query) {
   if (!items) return []
@@ -58,10 +61,21 @@ function handleUpdateHp(newHp) {
 
   campaignsStore.updatePlayer(playerId.value, { currentHp: newHp, state })
 }
+
+function handleResolved({ type, name }) {
+  successMessage.value = `${type === 'quest' ? 'Quête' : 'Chapitre'} "${name}" résolu(e) !`
+  setTimeout(() => {
+    successMessage.value = ''
+  }, 4000)
+}
 </script>
 
 <template>
   <div class="min-h-screen bg-base-200 p-6">
+    <div v-if="successMessage" class="alert alert-success mb-4 max-w-4xl mx-auto">
+      <p>{{ successMessage }}</p>
+    </div>
+
     <div v-if="player" class="max-w-4xl mx-auto">
       <h1 class="text-4xl font-bold mb-6 text-center">Fiche de Personnage</h1>
 
@@ -105,6 +119,38 @@ function handleUpdateHp(newHp) {
             <div v-else class="card bg-base-200">
               <div class="card-body p-4">
                 <p class="text-sm text-base-content/50 italic">Aucune localisation définie</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="activeChapter" class="card bg-base-100 shadow-xl mb-6">
+        <div class="card-body">
+          <h3 class="card-title">Chapitre en cours</h3>
+          <p class="font-semibold">{{ activeChapter.name }}</p>
+          <p class="text-sm text-base-content/70 mb-3">{{ activeChapter.description }}</p>
+          <ResolutionPasswordPopup
+            type="chapter"
+            :entity-id="activeChapter.id"
+            :player-id="playerId"
+            @resolved="handleResolved"
+          />
+
+          <div v-if="activeQuests.length > 0" class="mt-4">
+            <h4 class="font-semibold mb-2">Quêtes actives</h4>
+            <div class="flex flex-col gap-3">
+              <div v-for="quest in activeQuests" :key="quest.id" class="card bg-base-200">
+                <div class="card-body p-4">
+                  <p class="font-semibold">{{ quest.name }}</p>
+                  <p class="text-sm text-base-content/70 mb-2">{{ quest.description }}</p>
+                  <ResolutionPasswordPopup
+                    type="quest"
+                    :entity-id="quest.id"
+                    :player-id="playerId"
+                    @resolved="handleResolved"
+                  />
+                </div>
               </div>
             </div>
           </div>

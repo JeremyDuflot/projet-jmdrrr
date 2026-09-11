@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ChevronDown, ChevronUp } from '@lucide/vue'
-import { useCampaignsStore } from '@/stores/campaigns'
+import { useCampaignsStore } from '@/stores/rpgStore.js'
 import LifeBar from './LifeBar.vue'
 
 const props = defineProps({

@@ -1,13 +1,15 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { Lock, Check } from '@lucide/vue'
-import { useCampaignsStore } from '@/stores/campaigns'
+import { useCampaignsStore } from '@/stores/rpgStore.js'
 
 const props = defineProps({
   type: { type: String, required: true }, // 'quest' ou 'chapter'
   entityId: { type: String, required: true },
   playerId: { type: String, required: true },
 })
+
+const emit = defineEmits(['resolved'])
 
 const campaignsStore = useCampaignsStore()
 
@@ -59,14 +61,15 @@ function submitPassword() {
     return
   }
 
+  const entityName = entity.value.name
+
   if (props.type === 'quest') {
     campaignsStore.updateQuest(props.entityId, { state: 'completed' })
   } else {
     campaignsStore.completeChapter(props.entityId)
   }
 
-  errorMessage.value = ''
-  isResolved.value = true
+  emit('resolved', { type: props.type, name: entityName })
 }
 </script>
 
@@ -82,55 +85,32 @@ function submitPassword() {
 
   <dialog ref="dialogRef" class="modal">
     <div class="modal-box bg-black/90 backdrop-blur-sm border-2 border-amber-500/40 text-gray-200">
-      <template v-if="!isResolved">
-        <h3 class="font-bold text-lg mb-4 text-amber-500 font-['Cinzel']">Résoudre {{ label }}</h3>
+      <h3 class="font-bold text-lg mb-4 text-amber-500 font-['Cinzel']">Résoudre {{ label }}</h3>
 
-        <label for="resolution-password" class="label text-gray-400">Mot de passe</label>
-        <input
-          id="resolution-password"
-          v-model="password"
-          type="text"
-          class="input input-bordered w-full bg-transparent border-amber-500/40 text-gray-200 focus:border-amber-400"
-          autocomplete="off"
-          @keydown.enter="submitPassword"
-        />
+      <label for="resolution-password" class="label text-gray-400">Mot de passe</label>
+      <input
+        id="resolution-password"
+        v-model="password"
+        type="text"
+        class="input input-bordered w-full bg-transparent border-amber-500/40 text-gray-200 focus:border-amber-400"
+        autocomplete="off"
+        @keydown.enter="submitPassword"
+      />
 
-        <p v-if="errorMessage" class="text-error text-sm mt-2">{{ errorMessage }}</p>
+      <p v-if="errorMessage" class="text-error text-sm mt-2">{{ errorMessage }}</p>
 
-        <div class="modal-action">
-          <button type="button" class="btn btn-ghost text-gray-300" @click="closePopup">
-            Annuler
-          </button>
-          <button
-            type="button"
-            class="btn bg-amber-500/20 border-amber-500/40 text-amber-400 hover:bg-amber-500/30"
-            @click="submitPassword"
-          >
-            Valider
-          </button>
-        </div>
-      </template>
-
-      <template v-else>
-        <div class="flex flex-col items-center text-center py-4">
-          <div class="rounded-full bg-success/20 p-3 mb-3">
-            <Check :size="32" class="text-success" />
-          </div>
-          <h3 class="font-bold text-lg mb-1 text-amber-500 font-['Cinzel']">
-            {{ props.type === 'quest' ? 'Quête résolue !' : 'Chapitre résolu !' }}
-          </h3>
-          <p class="text-gray-400 text-sm">Bien joué, l'aventure continue.</p>
-        </div>
-        <div class="modal-action justify-center">
-          <button
-            type="button"
-            class="btn bg-amber-500/20 border-amber-500/40 text-amber-400 hover:bg-amber-500/30"
-            @click="closePopup"
-          >
-            Fermer
-          </button>
-        </div>
-      </template>
+      <div class="modal-action">
+        <button type="button" class="btn btn-ghost text-gray-300" @click="closePopup">
+          Annuler
+        </button>
+        <button
+          type="button"
+          class="btn bg-amber-500/20 border-amber-500/40 text-amber-400 hover:bg-amber-500/30"
+          @click="submitPassword"
+        >
+          Valider
+        </button>
+      </div>
     </div>
   </dialog>
 </template>

@@ -13,7 +13,7 @@ const players = campaignsStore.players
 const showCreateModal = ref(false)
 
 function handlePlayerSelect(player) {
-  router.push({ name: 'player-sheet', params: { playerId: player.id } })
+  router.push({ name: 'player-sheet', params: { playerName: player.name } })
 }
 
 function handleOpenCreateModal() {

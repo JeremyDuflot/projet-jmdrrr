@@ -1,4 +1,4 @@
-import { useCampaignsStore } from '@/stores/campaigns'
+import { useCampaignsStore } from '@/stores/rpgStore.js'
 
 export function getCampaignNameForPlayer(playerId) {
   const store = useCampaignsStore()
