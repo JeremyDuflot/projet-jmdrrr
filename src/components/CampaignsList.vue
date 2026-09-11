@@ -1,7 +1,12 @@
 <script setup>
 import { computed, reactive, ref } from 'vue'
-import { useCampaignsStore } from '@/stores/campaigns'
+import { useCampaignsStore } from '@/stores/rpgStore'
 import { CAMPAIGN_STATES } from '@/data/entities'
+import {
+  CAMPAIGN_FILE_EXTENSION,
+  downloadCampaignFile,
+  readCampaignFile,
+} from '@/utils/campaignFile'
 
 const STATE_LABELS = {
   draft: 'Brouillon',
@@ -36,6 +41,9 @@ const form = reactive({
   description: '',
   comment: '',
 })
+
+const fileInput = ref(null)
+const importFeedback = ref(null)
 
 const isFormOpen = ref(false)
 const isEditing = computed(() => editedId.value !== null)
@@ -112,15 +120,62 @@ function confirmDelete() {
   if (editedId.value === deletedId.value) closeForm()
   deletedId.value = null
 }
+
+function exportCampaign(campaign) {
+  if (!props.editable) return
+
+  downloadCampaignFile(campaign)
+}
+
+function openImportDialog() {
+  if (!props.editable) return
+
+  fileInput.value.click()
+}
+
+async function importFile(event) {
+  const [file] = event.target.files
+  // Réinitialisé pour pouvoir réimporter le même fichier.
+  event.target.value = ''
+  if (!file) return
+
+  try {
+    const campaign = campaignsStore.importCampaign(await readCampaignFile(file))
+    importFeedback.value = { type: 'success', text: `Campagne « ${campaign.name} » importée.` }
+  } catch (error) {
+    importFeedback.value = {
+      type: 'error',
+      text: error.message || 'Impossible de lire ce fichier de campagne.',
+    }
+  }
+}
 </script>
 
 <template>
   <div class="m-2">
     <div class="flex items-center justify-between mb-4">
       <h1 class="text-2xl font-extrabold">Campagnes</h1>
-      <button v-if="editable" class="btn btn-primary" @click="openCreateForm">
-        Nouvelle campagne
-      </button>
+      <div v-if="editable" class="flex gap-2">
+        <button class="btn btn-outline" @click="openImportDialog">Importer</button>
+        <button class="btn btn-primary" @click="openCreateForm">Nouvelle campagne</button>
+        <input
+          ref="fileInput"
+          type="file"
+          :accept="`${CAMPAIGN_FILE_EXTENSION},application/json`"
+          class="hidden"
+          @change="importFile"
+        />
+      </div>
+    </div>
+
+    <div
+      v-if="editable && importFeedback"
+      role="alert"
+      class="alert mb-4"
+      :class="importFeedback.type === 'error' ? 'alert-error' : 'alert-success'"
+    >
+      <span>{{ importFeedback.text }}</span>
+      <button class="btn btn-sm btn-ghost" @click="importFeedback = null">Fermer</button>
     </div>
 
     <p v-if="campaigns.length === 0" class="text-base-content/60 italic">
@@ -160,6 +215,7 @@ function confirmDelete() {
         </div>
 
         <div v-if="editable" class="flex justify-end gap-2">
+          <button class="btn btn-outline" @click="exportCampaign(campaign)">Exporter</button>
           <button class="btn btn-error btn-outline" @click="askDelete(campaign)">Supprimer</button>
           <button class="btn btn-primary" @click="openEditForm(campaign)">Modifier</button>
         </div>
