@@ -122,7 +122,10 @@ export const useCampaignsStore = defineStore(
 
       const wasCompleted = found.chapter.state === 'completed'
       applyPatch(found.chapter, patch, ['quests'])
-      if (!wasCompleted && found.chapter.state === 'completed') activateNextChapter(found)
+      if (!wasCompleted && found.chapter.state === 'completed') {
+        activateNextChapter(found)
+        abandonUnresolvedQuests(found.chapter)
+      }
       entities.activateFirstChapter(found.campaign)
 
       return found.chapter
@@ -546,6 +549,12 @@ function pickByIds(list, ids) {
 function activateNextChapter({ campaign, index }) {
   const next = campaign.chapters[index + 1]
   if (next?.state === 'inactive') next.state = 'active'
+}
+
+function abandonUnresolvedQuests(chapter) {
+  chapter.quests.forEach((quest) => {
+    if (quest.state !== 'completed') quest.state = 'abandoned'
+  })
 }
 
 function eachQuest(campaign, callback) {

@@ -1,9 +1,14 @@
 <script setup>
 import CampaignPlayersPanel from '@/components/Campaigns/CampaignPlayersPanel.vue'
+import { useCampaignsStore } from '@/stores/rpgStore.js'
+
+const campaignsStore = useCampaignsStore()
 </script>
 
 <template>
   <router-view />
-  <!-- TODO: remplacer 'campaign-1' par la vraie campagne active -->
-  <CampaignPlayersPanel campaign-id="campaign-1" />
+  <CampaignPlayersPanel
+    v-if="campaignsStore.activeCampaignId"
+    :campaign-id="campaignsStore.activeCampaignId"
+  />
 </template>
