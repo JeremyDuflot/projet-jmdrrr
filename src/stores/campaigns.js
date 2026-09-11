@@ -103,16 +103,26 @@ export const useCampaignsStore = defineStore(
       const campaign = findCampaign(campaignId)
       if (!campaign) return null
 
-      return pushInto(campaign.chapters, entities.createChapter(data))
+      const chapter = pushInto(campaign.chapters, entities.createChapter(data))
+      entities.activateFirstChapter(campaign)
+
+      return chapter
     }
 
     function updateChapter(chapterId, patch) {
       const found = locateChapter(chapterId)
       if (!found) return null
 
+      const wasCompleted = found.chapter.state === 'completed'
       applyPatch(found.chapter, patch, ['quests'])
+      if (!wasCompleted && found.chapter.state === 'completed') activateNextChapter(found)
+      entities.activateFirstChapter(found.campaign)
 
       return found.chapter
+    }
+
+    function completeChapter(chapterId) {
+      return updateChapter(chapterId, { state: 'completed' })
     }
 
     function duplicateChapter(chapterId) {
@@ -131,6 +141,7 @@ export const useCampaignsStore = defineStore(
       if (!found) return false
 
       found.campaign.chapters.splice(found.index, 1)
+      entities.activateFirstChapter(found.campaign)
 
       return true
     }
@@ -139,7 +150,12 @@ export const useCampaignsStore = defineStore(
       const found = locateChapter(chapterId)
       if (!found) return false
 
+      const [previousFirst] = found.campaign.chapters
       move(found.campaign.chapters, found.index, toIndex)
+      if (found.campaign.chapters[0] !== previousFirst && previousFirst.state === 'active') {
+        previousFirst.state = 'inactive'
+      }
+      entities.activateFirstChapter(found.campaign)
 
       return true
     }
@@ -428,6 +444,7 @@ export const useCampaignsStore = defineStore(
 
       createChapter,
       updateChapter,
+      completeChapter,
       duplicateChapter,
       deleteChapter,
       moveChapter,
@@ -516,6 +533,11 @@ function insertInto(list, index, entity) {
 
 function pickByIds(list, ids) {
   return ids.map((id) => list.find((entity) => entity.id === id)).filter(Boolean)
+}
+
+function activateNextChapter({ campaign, index }) {
+  const next = campaign.chapters[index + 1]
+  if (next?.state === 'inactive') next.state = 'active'
 }
 
 function eachQuest(campaign, callback) {
