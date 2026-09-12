@@ -7,3 +7,11 @@ export function getCampaignNameForPlayer(playerId) {
   )
   return campaign ? campaign.name : 'Campagne inconnue'
 }
+
+export function getPlacesForPlayer(playerId) {
+  const store = useCampaignsStore()
+  const campaign = store.campaigns.find((campaign) =>
+    campaign.players.some((player) => player.id === playerId),
+  )
+  return campaign ? campaign.places : []
+}

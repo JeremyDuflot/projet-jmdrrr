@@ -27,9 +27,17 @@ function handleRoleSelect(routeName) {
     </div>
 
     <div class="flex w-full px-12 items-center gap-12 justify-center">
-      <SelectableRoleCard routeName="gm-campaigns" image="/images/GmImage.png" @select="handleRoleSelect">
+      <SelectableRoleCard
+        routeName="gm-campaigns"
+        image="/images/GmImage.png"
+        @select="handleRoleSelect"
+      >
       </SelectableRoleCard>
-      <SelectableRoleCard routeName="players" image="/images/PlayerImage.png" @select="handleRoleSelect">
+      <SelectableRoleCard
+        routeName="players"
+        image="/images/PlayerImage.png"
+        @select="handleRoleSelect"
+      >
       </SelectableRoleCard>
     </div>
   </main>
