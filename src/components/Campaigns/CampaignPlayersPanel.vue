@@ -24,7 +24,7 @@ const campaignsStore = useCampaignsStore()
 const players = computed(() => campaignsStore.campaignById(props.campaignId)?.players ?? [])
 
 const expanded = ref(false)
-const collapsedCount = 3
+const collapsedCount = 1
 
 const visiblePlayers = computed(() =>
   expanded.value ? players.value : players.value.slice(0, collapsedCount),

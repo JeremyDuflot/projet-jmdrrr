@@ -6,7 +6,7 @@ const campaignsStore = useCampaignsStore()
 </script>
 
 <template>
-  <router-view />
+  <slot />
   <CampaignPlayersPanel
     v-if="campaignsStore.activeCampaignId"
     :campaign-id="campaignsStore.activeCampaignId"
