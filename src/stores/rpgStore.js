@@ -181,7 +181,9 @@ export const useCampaignsStore = defineStore(
       const found = locateQuest(questId)
       if (!found) return null
 
+      const wasLocked = Boolean(found.quest.activationPassword)
       applyPatch(found.quest, patch)
+      syncQuestLock(found.quest, wasLocked)
 
       return found.quest
     }
@@ -544,6 +546,14 @@ function insertInto(list, index, entity) {
 
 function pickByIds(list, ids) {
   return ids.map((id) => list.find((entity) => entity.id === id)).filter(Boolean)
+}
+
+function syncQuestLock(quest, wasLocked) {
+  const isLocked = Boolean(quest.activationPassword)
+  if (isLocked === wasLocked) return
+
+  if (!isLocked && quest.state === 'inactive') quest.state = 'active'
+  else if (isLocked && quest.state === 'active') quest.state = 'inactive'
 }
 
 function activateNextChapter({ campaign, index }) {
