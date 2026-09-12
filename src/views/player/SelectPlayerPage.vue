@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
-import PlayerCard from '../components/PlayerCard.vue'
-import CreatePlayerModal from '../components/CreatePlayerModal.vue'
+import PlayerCard from '@/components/players/PlayerCard.vue'
+import PlayerCreateModal from '@/components/players/PlayerCreateModal.vue'
 import { useCampaignsStore } from '@/stores/rpgStore.js'
 import { useRouter } from 'vue-router'
 import { Plus } from '@lucide/vue'
@@ -59,7 +59,7 @@ function handlePlayerCreated(player) {
       </button>
     </div>
 
-    <CreatePlayerModal
+    <PlayerCreateModal
       :show="showCreateModal"
       @close="showCreateModal = false"
       @created="handlePlayerCreated"

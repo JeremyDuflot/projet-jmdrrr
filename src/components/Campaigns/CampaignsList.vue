@@ -3,8 +3,8 @@ import { computed, reactive, ref } from 'vue'
 import { useCampaignsStore } from '@/stores/rpgStore'
 import { CAMPAIGN_STATES } from '@/data/entities'
 import BaseModal from '@/components/BaseModal.vue'
-import CampaignContentEditor from '@/components/CampaignContentEditor.vue'
-import CampaignPlayersEditor from '@/components/CampaignPlayersEditor.vue'
+import CampaignContentEditor from '@/components/Campaigns/CampaignContentEditor.vue'
+import CampaignPlayersEditor from '@/components/Campaigns/CampaignPlayersEditor.vue'
 import {
   CAMPAIGN_FILE_EXTENSION,
   downloadCampaignFile,
