@@ -3,6 +3,7 @@ import { computed, reactive, ref } from 'vue'
 import { Copy, Eye, Pencil, Trash } from '@lucide/vue'
 import { useCampaignsStore } from '@/stores/rpgStore'
 import BaseModal from '@/components/BaseModal.vue'
+import IdListPicker from '@/components/IdListPicker.vue'
 
 const STATE_LABELS = {
   inactive: 'Inactive',
@@ -34,6 +35,8 @@ const campaignsStore = useCampaignsStore()
 
 const quests = computed(() => props.chapter.quests)
 const places = computed(() => campaignsStore.places)
+const items = computed(() => campaignsStore.items)
+const clues = computed(() => campaignsStore.clues)
 
 const editedId = ref(null)
 const deletedId = ref(null)
@@ -47,6 +50,8 @@ const form = reactive({
   placeId: '',
   activationPassword: '',
   resolutionPassword: '',
+  rewardItemIds: [],
+  rewardClueIds: [],
 })
 
 const isFormOpen = ref(false)
@@ -90,6 +95,8 @@ function openCreateForm() {
     placeId: '',
     activationPassword: '',
     resolutionPassword: '',
+    rewardItemIds: [],
+    rewardClueIds: [],
   })
   isFormOpen.value = true
 }
@@ -106,6 +113,8 @@ function openEditForm(quest) {
     placeId: quest.placeId ?? '',
     activationPassword: quest.activationPassword ?? '',
     resolutionPassword: quest.resolutionPassword,
+    rewardItemIds: [...quest.rewards.itemIds],
+    rewardClueIds: [...quest.rewards.clueIds],
   })
   isFormOpen.value = true
 }
@@ -132,6 +141,11 @@ function submitForm() {
     placeId: form.placeId || null,
     activationPassword: form.activationPassword.trim() || null,
     resolutionPassword: form.resolutionPassword.trim(),
+    // Rebuilt whole: applyPatch replaces the rewards object, it does not merge it.
+    rewards: {
+      itemIds: [...form.rewardItemIds],
+      clueIds: [...form.rewardClueIds],
+    },
   }
 
   if (isEditing.value) campaignsStore.updateQuest(editedId.value, data)
@@ -332,6 +346,20 @@ function duplicate(quest) {
           <span class="label-text">Commentaire</span>
           <textarea v-model="form.comment" class="textarea textarea-bordered w-full"></textarea>
         </label>
+
+        <IdListPicker
+          v-model="form.rewardItemIds"
+          :entities="items"
+          label="Objets en récompense"
+          empty-text="Aucun objet dans cette campagne. Créez-en depuis la page des campagnes."
+        />
+
+        <IdListPicker
+          v-model="form.rewardClueIds"
+          :entities="clues"
+          label="Indices en récompense"
+          empty-text="Aucun indice dans cette campagne. Créez-en depuis la page des campagnes."
+        />
 
         <label class="form-control w-full mb-3">
           <span class="label-text">Mot de passe d'activation</span>

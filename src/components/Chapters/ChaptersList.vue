@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import { useCampaignsStore } from '@/stores/rpgStore'
 import BaseModal from '@/components/BaseModal.vue'
 import QuestsList from '@/components/Quests/QuestsList.vue'
+import IdListPicker from '@/components/IdListPicker.vue'
 
 const STATE_LABELS = {
   inactive: 'Inactif',
@@ -36,6 +37,8 @@ watch(
 )
 
 const campaign = computed(() => campaignsStore.selectedCampaign)
+const items = computed(() => campaignsStore.items)
+const clues = computed(() => campaignsStore.clues)
 
 // Players only see the chapters they have reached: active and completed ones.
 // Each entry keeps the index the chapter has in the store, so that reordering
@@ -63,6 +66,9 @@ const form = reactive({
   description: '',
   comment: '',
   resolutionPassword: '',
+  requiredItemIds: [],
+  rewardItemIds: [],
+  rewardClueIds: [],
 })
 
 const isFormOpen = ref(false)
@@ -74,7 +80,15 @@ function openCreateForm() {
 
   editedId.value = null
   formError.value = ''
-  Object.assign(form, { name: '', description: '', comment: '', resolutionPassword: '' })
+  Object.assign(form, {
+    name: '',
+    description: '',
+    comment: '',
+    resolutionPassword: '',
+    requiredItemIds: [],
+    rewardItemIds: [],
+    rewardClueIds: [],
+  })
   isFormOpen.value = true
 }
 
@@ -88,6 +102,9 @@ function openEditForm(chapter) {
     description: chapter.description,
     comment: chapter.comment,
     resolutionPassword: chapter.resolutionPassword,
+    requiredItemIds: [...chapter.requiredItemIds],
+    rewardItemIds: [...chapter.rewards.itemIds],
+    rewardClueIds: [...chapter.rewards.clueIds],
   })
   isFormOpen.value = true
 }
@@ -112,6 +129,12 @@ function submitForm() {
     description: form.description.trim(),
     comment: form.comment.trim(),
     resolutionPassword: form.resolutionPassword.trim(),
+    requiredItemIds: [...form.requiredItemIds],
+    // Rebuilt whole: applyPatch replaces the rewards object, it does not merge it.
+    rewards: {
+      itemIds: [...form.rewardItemIds],
+      clueIds: [...form.rewardClueIds],
+    },
   }
 
   if (isEditing.value) campaignsStore.updateChapter(editedId.value, data)
@@ -260,6 +283,27 @@ function move(chapter, index, offset) {
           <span class="label-text">Commentaire</span>
           <textarea v-model="form.comment" class="textarea textarea-bordered w-full"></textarea>
         </label>
+
+        <IdListPicker
+          v-model="form.requiredItemIds"
+          :entities="items"
+          label="Objets requis pour entrer dans le chapitre"
+          empty-text="Aucun objet dans cette campagne. Créez-en depuis la page des campagnes."
+        />
+
+        <IdListPicker
+          v-model="form.rewardItemIds"
+          :entities="items"
+          label="Objets en récompense"
+          empty-text="Aucun objet dans cette campagne. Créez-en depuis la page des campagnes."
+        />
+
+        <IdListPicker
+          v-model="form.rewardClueIds"
+          :entities="clues"
+          label="Indices en récompense"
+          empty-text="Aucun indice dans cette campagne. Créez-en depuis la page des campagnes."
+        />
 
         <label class="form-control w-full mb-3">
           <span class="label-text">Mot de passe de résolution</span>
