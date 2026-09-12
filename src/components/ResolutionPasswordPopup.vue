@@ -38,6 +38,10 @@ function closePopup() {
   dialogRef.value?.close()
 }
 
+function rewardNames(catalogue, ids) {
+  return ids.map((id) => catalogue.find((entity) => entity.id === id)?.name).filter(Boolean)
+}
+
 function submitPassword() {
   if (!entity.value || !player.value) {
     errorMessage.value = 'Personnage ou contenu introuvable.'
@@ -60,14 +64,18 @@ function submitPassword() {
   }
 
   const entityName = entity.value.name
+  const rewards = entity.value.rewards
+
+  const gainedItems = rewardNames(campaignsStore.items, rewards.itemIds)
+  const gainedClues = rewardNames(campaignsStore.clues, rewards.clueIds)
 
   if (props.type === 'quest') {
-    campaignsStore.updateQuest(props.entityId, { state: 'completed' })
+    campaignsStore.completeQuest(props.entityId, props.playerId)
   } else {
-    campaignsStore.completeChapter(props.entityId)
+    campaignsStore.completeChapter(props.entityId, props.playerId)
   }
 
-  emit('resolved', { type: props.type, name: entityName })
+  emit('resolved', { type: props.type, name: entityName, gainedItems, gainedClues })
 }
 </script>
 

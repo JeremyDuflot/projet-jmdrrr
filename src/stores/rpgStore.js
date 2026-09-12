@@ -131,8 +131,14 @@ export const useCampaignsStore = defineStore(
       return found.chapter
     }
 
-    function completeChapter(chapterId) {
-      return updateChapter(chapterId, { state: 'completed' })
+    function completeChapter(chapterId, playerId = null) {
+      const found = locateChapter(chapterId)
+      if (!found || found.chapter.state === 'completed') return found?.chapter ?? null
+
+      const chapter = updateChapter(chapterId, { state: 'completed' })
+      grantRewards(found.campaign, found.chapter.rewards, playerId)
+
+      return chapter
     }
 
     function duplicateChapter(chapterId) {
@@ -186,6 +192,16 @@ export const useCampaignsStore = defineStore(
       syncQuestLock(found.quest, wasLocked)
 
       return found.quest
+    }
+
+    function completeQuest(questId, playerId = null) {
+      const found = locateQuest(questId)
+      if (!found || found.quest.state === 'completed') return found?.quest ?? null
+
+      const quest = updateQuest(questId, { state: 'completed' })
+      grantRewards(found.campaign, found.quest.rewards, playerId)
+
+      return quest
     }
 
     function duplicateQuest(questId) {
@@ -479,6 +495,7 @@ export const useCampaignsStore = defineStore(
 
       createQuest,
       updateQuest,
+      completeQuest,
       duplicateQuest,
       deleteQuest,
       moveQuest,
@@ -570,6 +587,24 @@ function syncQuestLock(quest, wasLocked) {
 
   if (!isLocked && quest.state === 'inactive') quest.state = 'active'
   else if (isLocked && quest.state === 'active') quest.state = 'inactive'
+}
+
+function grantRewards(campaign, rewards, playerId) {
+  const inCatalogue = (catalogue, ids) => {
+    const known = new Set(catalogue.map((entity) => entity.id))
+    return ids.filter((id) => known.has(id))
+  }
+
+  campaign.revealedClueIds = [
+    ...new Set([...campaign.revealedClueIds, ...inCatalogue(campaign.clues, rewards.clueIds)]),
+  ]
+
+  const player = campaign.players.find((candidate) => candidate.id === playerId)
+  if (!player) return
+
+  player.inventory.itemIds = [
+    ...new Set([...player.inventory.itemIds, ...inCatalogue(campaign.items, rewards.itemIds)]),
+  ]
 }
 
 function activateNextChapter({ campaign, index }) {
