@@ -3,6 +3,7 @@ import { computed, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useCampaignsStore } from '@/stores/rpgStore'
 import BaseModal from '@/components/BaseModal.vue'
+import QuestsList from '@/components/Quests/QuestsList.vue'
 
 const STATE_LABELS = {
   inactive: 'Inactif',
@@ -219,6 +220,8 @@ function move(chapter, index, offset) {
             {{ chapter.rewards.clueIds.length }} indice(s) en récompense
           </span>
         </div>
+
+        <QuestsList :chapter="chapter" :editable="editable" />
 
         <div v-if="editable" class="flex flex-wrap justify-between gap-2">
           <div class="flex gap-2">
