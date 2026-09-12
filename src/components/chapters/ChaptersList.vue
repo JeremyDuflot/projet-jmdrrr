@@ -255,21 +255,39 @@ function move(chapter, index, offset) {
 
         <div v-if="editable" class="flex flex-wrap justify-between gap-2">
           <div class="flex gap-2">
-            <button
-              class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all disabled:opacity-50 cursor-pointer"
-              :disabled="isFirst"
-              @click="move(chapter, index, -1)"
-            >
-              Monter
-            </button>
-            <button
-              class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all disabled:opacity-50 cursor-pointer"
-              :disabled="isLast"
-              @click="move(chapter, index, 1)"
-            >
-              Descendre
-            </button>
+            <div class="relative group">
+              <button
+                class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all disabled:opacity-50 cursor-pointer"
+                :disabled="isFirst"
+                @click="move(chapter, index, -1)"
+              >
+                Monter
+              </button>
+              <div
+                v-if="!isFirst"
+                class="pointer-events-none absolute bottom-full left-0 mb-2 whitespace-nowrap rounded-lg bg-black/90 border border-amber-500/40 px-3 py-1.5 text-xs text-amber-500 opacity-0 shadow-xl transition-opacity duration-200 group-hover:opacity-100"
+              >
+                Rendre le chapitre actif (si déjà terminé reste terminé)
+              </div>
+            </div>
+
+            <div class="relative group">
+              <button
+                class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all disabled:opacity-50 cursor-pointer"
+                :disabled="isLast"
+                @click="move(chapter, index, 1)"
+              >
+                Descendre
+              </button>
+              <div
+                v-if="!isLast"
+                class="pointer-events-none absolute bottom-full left-0 mb-2 whitespace-nowrap rounded-lg bg-black/90 border border-amber-500/40 px-3 py-1.5 text-xs text-amber-500 opacity-0 shadow-xl transition-opacity duration-200 group-hover:opacity-100"
+              >
+                Rendre le chapitre inactif
+              </div>
+            </div>
           </div>
+
           <div class="flex flex-wrap gap-2">
             <button
               v-if="chapter.state === 'active'"
