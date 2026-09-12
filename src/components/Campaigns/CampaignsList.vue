@@ -163,10 +163,10 @@ function redirectToGmOrPlayerChapters(editableMode, campaign) {
 <template>
   <div class="m-2">
     <div class="flex items-center justify-between mb-4">
-      <h1 class="text-2xl font-extrabold">Campagnes</h1>
+      <h1 class="text-2xl font-extrabold text-amber-500 font-['Cinzel']">Campagnes</h1>
       <div v-if="editable" class="flex gap-2">
-        <button class="btn btn-outline" @click="openImportDialog">Importer</button>
-        <button class="btn btn-primary" @click="openCreateForm">Nouvelle campagne</button>
+        <button class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all" @click="openImportDialog">Importer</button>
+        <button class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all" @click="openCreateForm">Nouvelle campagne</button>
         <label for="campaign-import-input" class="sr-only">Fichier de campagne à importer</label>
         <input
           id="campaign-import-input"
@@ -182,14 +182,14 @@ function redirectToGmOrPlayerChapters(editableMode, campaign) {
     <div
       v-if="editable && importFeedback"
       role="alert"
-      class="alert mb-4"
-      :class="importFeedback.type === 'error' ? 'alert-error' : 'alert-success'"
+      class="bg-black/50 backdrop-blur-sm border-2 rounded-xl p-4 mb-4"
+      :class="importFeedback.type === 'error' ? 'border-red-500/40 text-red-400' : 'border-green-500/40 text-green-400'"
     >
       <span>{{ importFeedback.text }}</span>
-      <button class="btn btn-sm btn-ghost" @click="importFeedback = null">Fermer</button>
+      <button class="ml-4 text-amber-500 hover:text-amber-300" @click="importFeedback = null">Fermer</button>
     </div>
 
-    <p v-if="campaigns.length === 0" class="text-base-content/60 italic">
+    <p v-if="campaigns.length === 0" class="text-amber-500/60 italic font-['Cinzel']">
       {{
         editable
           ? 'Aucune campagne pour le moment. Créez-en une pour commencer.'
@@ -200,29 +200,29 @@ function redirectToGmOrPlayerChapters(editableMode, campaign) {
     <div
       v-for="campaign in campaigns"
       :key="campaign.id"
-      class="collapse collapse-arrow bg-base-100 border border-base-300 mb-2 hover:bg-base-200 hover:border-base-content/20 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+      class="collapse collapse-arrow bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl mb-2 hover:border-amber-400/70 hover:shadow-xl transition-all duration-300"
     >
       <input type="checkbox" :id="'my-campaign-' + campaign.id" />
-      <h2 class="collapse-title font-extrabold flex items-center gap-2">
+      <h2 class="collapse-title p-4 font-extrabold flex items-center gap-2 text-amber-500 font-['Cinzel']">
         <span>{{ campaign.name }}</span>
-        <span class="badge" :class="STATE_BADGES[campaign.state]">
+        <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400">
           {{ STATE_LABELS[campaign.state] }}
         </span>
       </h2>
-      <div class="collapse-content font-bold">
-        <p v-if="campaign.description" class="mb-2">{{ campaign.description }}</p>
-        <p v-else class="mb-2 text-base-content/60 italic">Pas de description.</p>
+      <div class="collapse-content p-4 font-bold">
+        <p v-if="campaign.description" class="mb-2 text-amber-500/80">{{ campaign.description }}</p>
+        <p v-else class="mb-2 text-amber-500/60 italic">Pas de description.</p>
 
-        <p v-if="editable && campaign.comment" class="mb-2 text-base-content/70">
+        <p v-if="editable && campaign.comment" class="mb-2 text-amber-500/70">
           {{ campaign.comment }}
         </p>
 
         <div class="flex flex-wrap gap-2 mb-4 text-sm font-normal">
-          <span class="badge badge-outline">{{ campaign.chapters.length }} chapitre(s)</span>
-          <span class="badge badge-outline">{{ campaign.players.length }} joueur(s)</span>
-          <span class="badge badge-outline">{{ campaign.places.length }} lieu(x)</span>
-          <span class="badge badge-outline">{{ campaign.items.length }} objet(s)</span>
-          <span class="badge badge-outline">{{ campaign.clues.length }} indice(s)</span>
+          <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400">{{ campaign.chapters.length }} chapitre(s)</span>
+          <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400">{{ campaign.players.length }} joueur(s)</span>
+          <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400">{{ campaign.places.length }} lieu(x)</span>
+          <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400">{{ campaign.items.length }} objet(s)</span>
+          <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400">{{ campaign.clues.length }} indice(s)</span>
         </div>
 
         <div v-if="editable" class="grid gap-4 mb-4 md:grid-cols-2">
@@ -234,17 +234,17 @@ function redirectToGmOrPlayerChapters(editableMode, campaign) {
           <div>
             <RouterLink
               :to="redirectToGmOrPlayerChapters(editable, campaign)"
-              class="justify-start btn btn-primary"
+              class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
             >
               Voir Plus
             </RouterLink>
           </div>
           <div v-if="editable" class="flex gap-2">
-            <button class="btn btn-outline" @click="exportCampaign(campaign)">Exporter</button>
-            <button class="btn btn-error btn-outline" @click="askDelete(campaign)">
+            <button class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all" @click="exportCampaign(campaign)">Exporter</button>
+            <button class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-4 py-2 text-red-500 hover:border-red-400/70 transition-all" @click="askDelete(campaign)">
               Supprimer
             </button>
-            <button class="btn btn-primary" @click="openEditForm(campaign)">Modifier</button>
+            <button class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all" @click="openEditForm(campaign)">Modifier</button>
           </div>
         </div>
       </div>
@@ -258,13 +258,13 @@ function redirectToGmOrPlayerChapters(editableMode, campaign) {
     >
       <form @submit.prevent="submitForm">
         <label class="form-control w-full mb-3">
-          <span class="label-text">Nom</span>
-          <input v-model="form.name" type="text" class="input input-bordered w-full" />
+          <span class="label-text text-amber-500 font-['Cinzel']">Nom</span>
+          <input v-model="form.name" type="text" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full" />
         </label>
 
         <label class="form-control w-full mb-3">
-          <span class="label-text">État</span>
-          <select v-model="form.state" class="select select-bordered w-full">
+          <span class="label-text text-amber-500 font-['Cinzel']">État</span>
+          <select v-model="form.state" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full">
             <option v-for="state in CAMPAIGN_STATES" :key="state" :value="state">
               {{ STATE_LABELS[state] }}
             </option>
@@ -272,20 +272,20 @@ function redirectToGmOrPlayerChapters(editableMode, campaign) {
         </label>
 
         <label class="form-control w-full mb-3">
-          <span class="label-text">Description</span>
-          <textarea v-model="form.description" class="textarea textarea-bordered w-full"></textarea>
+          <span class="label-text text-amber-500 font-['Cinzel']">Description</span>
+          <textarea v-model="form.description" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"></textarea>
         </label>
 
         <label class="form-control w-full mb-3">
-          <span class="label-text">Commentaire</span>
-          <textarea v-model="form.comment" class="textarea textarea-bordered w-full"></textarea>
+          <span class="label-text text-amber-500 font-['Cinzel']">Commentaire</span>
+          <textarea v-model="form.comment" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"></textarea>
         </label>
 
-        <p v-if="formError" class="text-error mb-2">{{ formError }}</p>
+        <p v-if="formError" class="text-red-400 mb-2">{{ formError }}</p>
 
         <div class="modal-action">
-          <button type="button" class="btn" @click="closeForm">Annuler</button>
-          <button type="submit" class="btn btn-primary">
+          <button type="button" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all" @click="closeForm">Annuler</button>
+          <button type="submit" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all">
             {{ isEditing ? 'Enregistrer' : 'Créer' }}
           </button>
         </div>
@@ -298,13 +298,13 @@ function redirectToGmOrPlayerChapters(editableMode, campaign) {
       title="Supprimer la campagne"
       @close="cancelDelete"
     >
-      <p>
+      <p class="text-amber-500/80">
         Voulez-vous vraiment supprimer « {{ deletedCampaign?.name }} » ? Cette action est
         irréversible.
       </p>
       <div class="modal-action">
-        <button type="button" class="btn" @click="cancelDelete">Annuler</button>
-        <button type="button" class="btn btn-error" @click="confirmDelete">Supprimer</button>
+        <button type="button" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all" @click="cancelDelete">Annuler</button>
+        <button type="button" class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-4 py-2 text-red-500 hover:border-red-400/70 transition-all" @click="confirmDelete">Supprimer</button>
       </div>
     </BaseModal>
   </div>

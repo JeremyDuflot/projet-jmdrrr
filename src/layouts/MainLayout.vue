@@ -6,7 +6,7 @@ const router = useRouter()
 </script>
 
 <template>
-  <div class="relative min-h-screen">
+  <div class="relative min-h-screen pt-16 bg-[url('/images/Background.png')] bg-cover bg-center">
     <div class="absolute top-2 right-2 z-50">
       <button
         type="button"
@@ -20,3 +20,7 @@ const router = useRouter()
     <slot />
   </div>
 </template>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap');
+</style>

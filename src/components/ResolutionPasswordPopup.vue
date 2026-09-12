@@ -82,28 +82,28 @@ function submitPassword() {
   </button>
 
   <dialog ref="dialogRef" class="modal">
-    <div class="modal-box bg-black/90 backdrop-blur-sm border-2 border-amber-500/40 text-gray-200">
+    <div class="modal-box bg-black/90 backdrop-blur-sm border-2 border-amber-500/40 text-amber-500">
       <h3 class="font-bold text-lg mb-4 text-amber-500 font-['Cinzel']">Résoudre {{ label }}</h3>
 
-      <label for="resolution-password" class="label text-gray-400">Mot de passe</label>
+      <label for="resolution-password" class="label text-amber-500 font-['Cinzel']">Mot de passe</label>
       <input
         id="resolution-password"
         v-model="password"
         type="text"
-        class="input input-bordered w-full bg-transparent border-amber-500/40 text-gray-200 focus:border-amber-400"
+        class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
         autocomplete="off"
         @keydown.enter="submitPassword"
       />
 
-      <p v-if="errorMessage" class="text-error text-sm mt-2">{{ errorMessage }}</p>
+      <p v-if="errorMessage" class="text-red-400 text-sm mt-2">{{ errorMessage }}</p>
 
       <div class="modal-action">
-        <button type="button" class="btn btn-ghost text-gray-300" @click="closePopup">
+        <button type="button" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all" @click="closePopup">
           Annuler
         </button>
         <button
           type="button"
-          class="btn bg-amber-500/20 border-amber-500/40 text-amber-400 hover:bg-amber-500/30"
+          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
           @click="submitPassword"
         >
           Valider

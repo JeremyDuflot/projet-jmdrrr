@@ -30,12 +30,12 @@ watchEffect(
 
 <template>
   <dialog ref="dialog" class="modal" @close="emit('close')">
-    <div class="modal-box">
-      <h3 v-if="title" class="text-lg font-bold mb-4">{{ title }}</h3>
+    <div class="modal-box bg-black/90 backdrop-blur-sm border-2 border-amber-500/40 text-amber-500">
+      <h3 v-if="title" class="text-lg font-bold mb-4 text-amber-500 font-['Cinzel']">{{ title }}</h3>
       <slot />
     </div>
     <form method="dialog" class="modal-backdrop">
-      <button type="submit">Fermer</button>
+      <button type="submit" class="sr-only">Fermer</button>
     </form>
   </dialog>
 </template>

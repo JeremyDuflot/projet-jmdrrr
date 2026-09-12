@@ -95,18 +95,18 @@ function handleClose() {
 
 <template>
   <dialog v-if="show" class="modal modal-open">
-    <div class="modal-box">
-      <h3 class="font-bold text-lg mb-4">Ajouter un nouveau personnage</h3>
+    <div class="modal-box bg-black/90 backdrop-blur-sm border-2 border-amber-500/40 text-amber-500">
+      <h3 class="font-bold text-lg mb-4 text-amber-500 font-['Cinzel']">Ajouter un nouveau personnage</h3>
 
       <form @submit.prevent="handleSubmit" class="space-y-4">
         <div class="form-control">
           <label class="label" for="player-campaign">
-            <span class="label-text">Campagne *</span>
+            <span class="label-text text-amber-500 font-['Cinzel']">Campagne *</span>
           </label>
           <select
             id="player-campaign"
             v-model="formData.campaignId"
-            class="select select-bordered w-full"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
             required
           >
             <option
@@ -121,102 +121,102 @@ function handleClose() {
 
         <div class="form-control">
           <label class="label" for="player-name">
-            <span class="label-text">Nom *</span>
+            <span class="label-text text-amber-500 font-['Cinzel']">Nom *</span>
           </label>
           <input
             id="player-name"
             v-model="formData.name"
             type="text"
             placeholder="Nom du personnage"
-            class="input input-bordered w-full"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
             required
           />
         </div>
 
         <div class="form-control">
           <label class="label" for="player-description">
-            <span class="label-text">Description</span>
+            <span class="label-text text-amber-500 font-['Cinzel']">Description</span>
           </label>
           <textarea
             id="player-description"
             v-model="formData.description"
             placeholder="Description du personnage"
-            class="textarea textarea-bordered w-full"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
             rows="3"
           />
         </div>
 
         <div v-show="isGmPath" class="form-control">
           <label class="label" for="player-comment">
-            <span class="label-text">Commentaire</span>
+            <span class="label-text text-amber-500 font-['Cinzel']">Commentaire</span>
           </label>
           <textarea
             id="player-comment"
             v-model="formData.comment"
-            placeholder="Commentaire (visible uniquement par le MJ)"
-            class="textarea textarea-bordered w-full"
+            placeholder="Commentaire"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
             rows="2"
           />
         </div>
 
         <div class="form-control">
           <label class="label" for="player-max-hp">
-            <span class="label-text">Points de vie max</span>
+            <span class="label-text text-amber-500 font-['Cinzel']">Points de vie max</span>
           </label>
           <input
             id="player-max-hp"
             v-model.number="formData.maxHp"
             type="number"
             min="1"
-            class="input input-bordered w-full"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
           />
         </div>
 
         <div class="form-control">
           <label class="label">
-            <span class="label-text font-bold">Inventaire</span>
+            <span class="label-text font-bold text-amber-500 font-['Cinzel']">Inventaire</span>
           </label>
-          <div v-if="items.length === 0" class="text-sm text-base-content/50 mb-2">Aucun objet</div>
-          <div v-for="(item, index) in items" :key="index" class="mb-3 p-3 bg-base-200 rounded-lg">
+          <div v-if="items.length === 0" class="text-sm text-amber-500/50 mb-2">Aucun objet</div>
+          <div v-for="(item, index) in items" :key="index" class="mb-3 p-3 bg-black/30 backdrop-blur-sm border border-amber-500/20 rounded-xl">
             <div class="flex justify-between items-center mb-2">
-              <span class="text-sm font-semibold">Objet {{ index + 1 }}</span>
-              <button type="button" class="btn btn-xs btn-error" @click="removeItem(index)">
+              <span class="text-sm font-semibold text-amber-500">Objet {{ index + 1 }}</span>
+              <button type="button" class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-2 py-1 text-red-500 hover:border-red-400/70 transition-all text-xs" @click="removeItem(index)">
                 Supprimer
               </button>
             </div>
             <div class="form-control mb-2">
               <label class="label" :for="`item-name-${index}`">
-                <span class="label-text text-sm">Nom de l'objet</span>
+                <span class="label-text text-sm text-amber-500">Nom de l'objet</span>
               </label>
               <input
                 :id="`item-name-${index}`"
                 v-model="item.name"
                 type="text"
                 placeholder="Nom de l'objet"
-                class="input input-bordered input-sm w-full"
+                class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 focus:border-amber-400/70 w-full text-sm"
               />
             </div>
             <div class="form-control">
               <label class="label" :for="`item-description-${index}`">
-                <span class="label-text text-sm">Description de l'objet</span>
+                <span class="label-text text-sm text-amber-500">Description de l'objet</span>
               </label>
               <textarea
                 :id="`item-description-${index}`"
                 v-model="item.description"
                 placeholder="Description de l'objet"
-                class="textarea textarea-bordered textarea-sm w-full"
+                class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 focus:border-amber-400/70 w-full text-sm"
                 rows="2"
               />
             </div>
           </div>
-          <button type="button" class="btn btn-sm btn-outline mt-2" @click="addItem">
+          <button type="button" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm mt-2" @click="addItem">
             Ajouter un objet
           </button>
         </div>
 
         <div class="modal-action">
-          <button type="button" class="btn" @click="handleClose">Annuler</button>
-          <button type="submit" class="btn btn-primary">Créer</button>
+          <button type="button" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all" @click="handleClose">Annuler</button>
+          <button type="submit" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all">Créer</button>
         </div>
       </form>
     </div>
