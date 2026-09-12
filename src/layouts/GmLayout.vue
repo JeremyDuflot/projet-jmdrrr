@@ -6,7 +6,9 @@ const campaignsStore = useCampaignsStore()
 </script>
 
 <template>
-  <slot />
+  <div :class="campaignsStore.activeCampaignId ? 'pb-20' : ''">
+    <slot />
+  </div>
   <CampaignPlayersPanel
     v-if="campaignsStore.activeCampaignId"
     :campaign-id="campaignsStore.activeCampaignId"

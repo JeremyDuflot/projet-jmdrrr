@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { ChevronDown, ChevronUp } from '@lucide/vue'
+import { ChevronUp, User } from '@lucide/vue'
 import LifeBar from '@/components/LifeBar.vue'
 import { useCampaignsStore } from '@/stores/rpgStore.js'
 
@@ -24,25 +24,12 @@ const campaignsStore = useCampaignsStore()
 const players = computed(() => campaignsStore.campaignById(props.campaignId)?.players ?? [])
 
 const expanded = ref(false)
-const collapsedCount = 1
 
-const visiblePlayers = computed(() =>
-  expanded.value ? players.value : players.value.slice(0, collapsedCount),
-)
-
-const hasMore = computed(() => players.value.length > collapsedCount)
-
-/**
- * @param {Player} player
- */
 function goToPlayerSheetPage(player) {
   emit('select', player)
   router.push({ name: 'player-sheet', params: { playerName: player.name } })
 }
 
-/**
- * @param {{ player: Player, newHp: number }} payload
- */
 function handleUpdateHp({ player, newHp }) {
   let cappedHp = newHp
   if (cappedHp > player.maxHp) {
@@ -64,12 +51,30 @@ function handleUpdateHp({ player, newHp }) {
 </script>
 
 <template>
+  <div v-if="!expanded" class="fixed bottom-4 right-4 z-50 group">
+    <button
+      type="button"
+      @click="expanded = true"
+      class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl p-3 shadow-lg cursor-pointer transition-all duration-300 hover:border-amber-400/70 hover:shadow-2xl flex items-center gap-2"
+    >
+      <User class="w-5 h-5 text-amber-500" />
+      <span class="text-amber-500 font-['Cinzel']">Joueurs</span>
+    </button>
+
+    <div
+      class="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap rounded-lg bg-black/90 border border-amber-500/40 px-3 py-1.5 text-xs text-amber-500 opacity-0 shadow-xl transition-opacity duration-200 group-hover:opacity-100"
+    >
+      Voir les PVs de tous les joueurs ({{ players.length }})
+    </div>
+  </div>
+
   <div
+    v-else
     class="fixed bottom-4 right-4 w-72 bg-black/80 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl shadow-2xl p-3 z-50 flex flex-col gap-3"
   >
-    <div class="flex flex-col gap-3" :class="expanded ? 'max-h-[70vh] overflow-y-auto' : ''">
+    <div class="flex flex-col gap-3 max-h-[70vh] overflow-y-auto">
       <div
-        v-for="player in visiblePlayers"
+        v-for="player in players"
         :key="player.id"
         class="pb-2 border-b border-amber-500/20 last:border-0"
       >
@@ -91,19 +96,12 @@ function handleUpdateHp({ player, newHp }) {
     </div>
 
     <button
-      v-if="hasMore"
       type="button"
-      @click="expanded = !expanded"
-      class="btn btn-xs btn-ghost text-amber-500 flex items-center gap-1 self-center"
+      @click="expanded = false"
+      class="btn btn-xs btn-ghost text-amber-500 bg-black/50 flex items-center gap-1 self-center"
     >
-      <template v-if="expanded">
-        Réduire
-        <ChevronUp :size="14" />
-      </template>
-      <template v-else>
-        Voir tous ({{ players.length }})
-        <ChevronDown :size="14" />
-      </template>
+      Réduire
+      <ChevronUp :size="14" />
     </button>
   </div>
 </template>
