@@ -4,6 +4,7 @@ import { useCampaignsStore } from '@/stores/rpgStore'
 import { PLAYER_STATES } from '@/data/entities'
 import BaseModal from './BaseModal.vue'
 import LifeBar from './LifeBar.vue'
+import IdListPicker from './IdListPicker.vue'
 
 const STATE_LABELS = {
   alive: 'Vivant',
@@ -34,6 +35,7 @@ const form = reactive({
   placeId: null,
   description: '',
   comment: '',
+  itemIds: [],
 })
 
 const isEditing = computed(() => editedId.value !== null)
@@ -53,6 +55,7 @@ function openCreateForm() {
     placeId: null,
     description: '',
     comment: '',
+    itemIds: [],
   })
   isFormOpen.value = true
 }
@@ -68,6 +71,7 @@ function openEditForm(player) {
     placeId: player.placeId,
     description: player.description,
     comment: player.comment,
+    itemIds: [...player.inventory.itemIds],
   })
   isFormOpen.value = true
 }
@@ -108,8 +112,16 @@ function submitForm() {
     comment: form.comment.trim(),
   }
 
-  if (isEditing.value) campaignsStore.updatePlayer(editedId.value, data)
-  else campaignsStore.createPlayer(data, props.campaign.id)
+  if (isEditing.value) {
+    campaignsStore.updatePlayer(editedId.value, data)
+    campaignsStore.setPlayerInventory(editedId.value, form.itemIds)
+  } else {
+    const player = campaignsStore.createPlayer(
+      { ...data, inventory: { itemIds: [...form.itemIds] } },
+      props.campaign.id,
+    )
+    if (!player) return
+  }
 
   closeForm()
 }
@@ -138,6 +150,12 @@ function confirmDelete() {
             <span>{{ player.name }}</span>
             <span v-if="player.state === 'dead'" class="badge badge-sm badge-error">
               {{ STATE_LABELS.dead }}
+            </span>
+            <span
+              v-if="player.inventory.itemIds.length"
+              class="badge badge-sm badge-outline font-normal"
+            >
+              {{ player.inventory.itemIds.length }} objet(s)
             </span>
           </p>
           <p class="text-sm text-base-content/70">
@@ -210,6 +228,13 @@ function confirmDelete() {
             </option>
           </select>
         </label>
+
+        <IdListPicker
+          v-model="form.itemIds"
+          :entities="campaign.items"
+          label="Inventaire"
+          empty-text="Aucun objet dans cette campagne. Créez-en depuis l'éditeur Objets."
+        />
 
         <label class="form-control w-full mb-3">
           <span class="label-text">Description</span>
