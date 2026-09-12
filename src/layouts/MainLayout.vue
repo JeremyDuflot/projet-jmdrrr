@@ -1,0 +1,22 @@
+<script setup>
+import { useRouter } from 'vue-router'
+import { Home } from '@lucide/vue'
+
+const router = useRouter()
+</script>
+
+<template>
+  <div class="relative min-h-screen">
+    <div class="absolute top-2 right-2 z-50">
+      <button
+        type="button"
+        class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl p-3 shadow-lg cursor-pointer transition-all duration-300 hover:border-amber-400/70 hover:shadow-2xl flex items-center gap-2"
+        @click="router.push('/')"
+      >
+        <Home class="w-5 h-5 text-amber-500" />
+        <span class="text-amber-500 font-['Cinzel']">Accueil</span>
+      </button>
+    </div>
+    <slot />
+  </div>
+</template>

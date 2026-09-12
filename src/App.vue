@@ -1,6 +1,10 @@
 <script setup>
 import { useCampaignsStore } from '@/stores/rpgStore'
+import { useRoute } from 'vue-router'
+import MainLayout from '@/layouts/MainLayout.vue'
+
 const campaignsStore = useCampaignsStore()
+const route = useRoute()
 </script>
 
 <template>
@@ -10,5 +14,8 @@ const campaignsStore = useCampaignsStore()
     >
   </div>
 
-  <RouterView />
+  <MainLayout v-if="route.meta.useLayout">
+    <RouterView />
+  </MainLayout>
+  <RouterView v-else />
 </template>
