@@ -1,5 +1,6 @@
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { useCampaignsStore } from '@/stores/rpgStore'
 import BaseModal from '@/components/BaseModal.vue'
 
@@ -22,10 +23,35 @@ const props = defineProps({
   },
 })
 
+const route = useRoute()
 const campaignsStore = useCampaignsStore()
 
+// Keeps the store in sync with the campaign in the URL, including when
+// navigating from one campaign to another without unmounting this component.
+watch(
+  () => route.params.campaignId,
+  (campaignId) => campaignsStore.selectCampaign(campaignId),
+  { immediate: true },
+)
+
 const campaign = computed(() => campaignsStore.selectedCampaign)
-const chapters = computed(() => campaignsStore.chapters)
+
+// Players only see the chapters they have reached: active and completed ones.
+// Each entry keeps the index the chapter has in the store, so that reordering
+// stays correct even when the list is filtered.
+const visibleChapters = computed(() => {
+  /** @type {Chapter[]} */
+  const all = campaignsStore.chapters
+
+  return all
+    .map((chapter, index) => ({
+      chapter,
+      index,
+      isFirst: index === 0,
+      isLast: index === all.length - 1,
+    }))
+    .filter(({ chapter }) => props.editable || chapter.state !== 'inactive')
+})
 
 const editedId = ref(null)
 const deletedId = ref(null)
@@ -144,7 +170,7 @@ function move(chapter, index, offset) {
 
     <p v-if="!campaign" class="text-base-content/60 italic">Aucune campagne sélectionnée.</p>
 
-    <p v-else-if="chapters.length === 0" class="text-base-content/60 italic">
+    <p v-else-if="visibleChapters.length === 0" class="text-base-content/60 italic">
       {{
         editable
           ? 'Aucun chapitre pour le moment. Créez-en un pour commencer.'
@@ -153,7 +179,7 @@ function move(chapter, index, offset) {
     </p>
 
     <div
-      v-for="(chapter, index) in chapters"
+      v-for="{ chapter, index, isFirst, isLast } in visibleChapters"
       :key="chapter.id"
       class="collapse collapse-arrow bg-base-100 border border-base-300 mb-2 hover:bg-base-200 hover:border-base-content/20 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
     >
@@ -187,18 +213,10 @@ function move(chapter, index, offset) {
 
         <div v-if="editable" class="flex flex-wrap justify-between gap-2">
           <div class="flex gap-2">
-            <button
-              class="btn btn-outline"
-              :disabled="index === 0"
-              @click="move(chapter, index, -1)"
-            >
+            <button class="btn btn-outline" :disabled="isFirst" @click="move(chapter, index, -1)">
               Monter
             </button>
-            <button
-              class="btn btn-outline"
-              :disabled="index === chapters.length - 1"
-              @click="move(chapter, index, 1)"
-            >
+            <button class="btn btn-outline" :disabled="isLast" @click="move(chapter, index, 1)">
               Descendre
             </button>
           </div>

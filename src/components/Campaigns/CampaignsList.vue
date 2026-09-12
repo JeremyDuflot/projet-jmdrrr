@@ -152,6 +152,12 @@ async function importFile(event) {
     }
   }
 }
+
+function redirectToGmOrPlayerChapters(editableMode, campaign) {
+  return editableMode
+    ? { name: 'gm-chapters', params: { campaignId: campaign.id } }
+    : { name: 'player-chapters', params: { campaignId: campaign.id } }
+}
 </script>
 
 <template>
@@ -197,12 +203,12 @@ async function importFile(event) {
       class="collapse collapse-arrow bg-base-100 border border-base-300 mb-2 hover:bg-base-200 hover:border-base-content/20 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
     >
       <input type="checkbox" :id="'my-campaign-' + campaign.id" />
-        <h2 class="collapse-title font-extrabold flex items-center gap-2">
-          <span>{{ campaign.name }}</span>
-          <span class="badge" :class="STATE_BADGES[campaign.state]">
-            {{ STATE_LABELS[campaign.state] }}
-          </span>
-        </h2>
+      <h2 class="collapse-title font-extrabold flex items-center gap-2">
+        <span>{{ campaign.name }}</span>
+        <span class="badge" :class="STATE_BADGES[campaign.state]">
+          {{ STATE_LABELS[campaign.state] }}
+        </span>
+      </h2>
       <div class="collapse-content font-bold">
         <p v-if="campaign.description" class="mb-2">{{ campaign.description }}</p>
         <p v-else class="mb-2 text-base-content/60 italic">Pas de description.</p>
@@ -224,15 +230,20 @@ async function importFile(event) {
           <CampaignPlayersEditor :campaign="campaign" />
         </div>
 
-        <div v-if="editable" class="flex justify-between">
+        <div class="flex justify-between">
           <div>
-            <RouterLink :to="{ name: 'chapters', params: { campaignId: campaign.id } }" class="justify-start btn btn-primary">
+            <RouterLink
+              :to="redirectToGmOrPlayerChapters(editable, campaign)"
+              class="justify-start btn btn-primary"
+            >
               Voir Plus
             </RouterLink>
           </div>
-          <div class="flex gap-2">
+          <div v-if="editable" class="flex gap-2">
             <button class="btn btn-outline" @click="exportCampaign(campaign)">Exporter</button>
-            <button class="btn btn-error btn-outline" @click="askDelete(campaign)">Supprimer</button>
+            <button class="btn btn-error btn-outline" @click="askDelete(campaign)">
+              Supprimer
+            </button>
             <button class="btn btn-primary" @click="openEditForm(campaign)">Modifier</button>
           </div>
         </div>
