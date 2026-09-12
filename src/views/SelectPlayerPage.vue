@@ -26,9 +26,7 @@ function handlePlayerCreated(player) {
 </script>
 
 <template>
-  <main
-    class="flex flex-col items-center justify-center pt-2 bg-[url('/images/Background.png')] bg-cover bg-center min-h-screen"
-  >
+  <main class="flex flex-col items-center justify-center pt-2">
     <div class="bg-black/20 backdrop-blur-sm rounded-4xl px-12 py-8 mb-16">
       <h1
         class="text-6xl font-black mb-2 justify-center font-['Cinzel'] text-amber-500 drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]"
@@ -57,7 +55,7 @@ function handlePlayerCreated(player) {
         @click="handleOpenCreateModal"
       >
         <Plus class="w-12 h-12 text-amber-500 mb-2" />
-        <h2 class="text-xl font-bold text-amber-500 font-['Cinzel']">Nouveau Personnage</h2>
+        <h3 class="text-xl font-bold text-amber-500 font-['Cinzel']">Nouveau Personnage</h3>
       </button>
     </div>
 

@@ -168,13 +168,17 @@ function duplicate(quest) {
 <template>
   <div class="mb-4">
     <div class="flex items-center justify-between gap-2 mb-2">
-      <h3 class="font-bold">Quêtes</h3>
-      <button v-if="editable" class="btn btn-sm btn-primary" @click="openCreateForm">
+      <h3 class="font-bold text-amber-500 font-['Cinzel']">Quêtes</h3>
+      <button
+        v-if="editable"
+        class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
+        @click="openCreateForm"
+      >
         Nouvelle quête
       </button>
     </div>
 
-    <p v-if="quests.length === 0" class="text-base-content/60 italic font-normal">
+    <p v-if="quests.length === 0" class="text-amber-500/60 italic font-normal font-['Cinzel']">
       {{ editable ? 'Aucune quête dans ce chapitre.' : 'Aucune quête pour le moment.' }}
     </p>
 
@@ -182,7 +186,7 @@ function duplicate(quest) {
       <li
         v-for="quest in quests"
         :key="quest.id"
-        class="flex items-start justify-between gap-2 rounded-lg border border-base-300 bg-base-200 p-3"
+        class="flex items-start justify-between gap-2 rounded-xl border border-amber-500/20 bg-black/30 backdrop-blur-sm p-3"
         :class="{ 'opacity-60': !showDetails(quest) }"
       >
         <div class="min-w-0">
@@ -190,26 +194,32 @@ function duplicate(quest) {
             <button
               v-if="showDetails(quest)"
               type="button"
-              class="font-semibold text-left hover:underline"
+              class="font-semibold text-left hover:underline text-amber-500 cursor-pointer"
               @click="openDetail(quest)"
             >
               {{ quest.name }}
             </button>
-            <span v-else class="font-semibold">{{ quest.name }}</span>
-            <span class="badge badge-sm" :class="STATE_BADGES[quest.state]">
+            <span v-else class="font-semibold text-amber-500">{{ quest.name }}</span>
+            <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400 text-xs">
               {{ STATE_LABELS[quest.state] }}
             </span>
-            <span v-if="showDetails(quest)" class="badge badge-sm badge-outline font-normal">
+            <span
+              v-if="showDetails(quest)"
+              class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400 text-xs font-normal"
+            >
               {{ rewardCount(quest) }} récompense(s)
             </span>
-            <span v-if="editable && quest.placeId" class="badge badge-sm badge-outline font-normal">
+            <span
+              v-if="editable && quest.placeId"
+              class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400 text-xs font-normal"
+            >
               {{ placeName(quest.placeId) }}
             </span>
           </div>
 
           <p
             v-if="showDetails(quest) && quest.description"
-            class="mt-1 text-sm font-normal text-base-content/70 line-clamp-2"
+            class="mt-1 text-sm font-normal text-amber-500/70 line-clamp-2"
           >
             {{ quest.description }}
           </p>
@@ -218,7 +228,7 @@ function duplicate(quest) {
         <div class="flex shrink-0 gap-1">
           <button
             v-if="showDetails(quest)"
-            class="btn btn-sm btn-square btn-ghost"
+            class="bg-black/50 backdrop-blur-sm border border-amber-500/40 rounded-lg p-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
             aria-label="Voir le détail de la quête"
             title="Voir le détail"
             @click="openDetail(quest)"
@@ -227,7 +237,7 @@ function duplicate(quest) {
           </button>
           <button
             v-if="editable"
-            class="btn btn-sm btn-square btn-ghost"
+            class="bg-black/50 backdrop-blur-sm border border-amber-500/40 rounded-lg p-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
             aria-label="Modifier la quête"
             title="Modifier"
             @click="openEditForm(quest)"
@@ -236,7 +246,7 @@ function duplicate(quest) {
           </button>
           <button
             v-if="editable"
-            class="btn btn-sm btn-square btn-ghost"
+            class="bg-black/50 backdrop-blur-sm border border-amber-500/40 rounded-lg p-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
             aria-label="Dupliquer la quête"
             title="Dupliquer"
             @click="duplicate(quest)"
@@ -245,7 +255,7 @@ function duplicate(quest) {
           </button>
           <button
             v-if="editable"
-            class="btn btn-sm btn-square btn-ghost text-error"
+            class="bg-black/50 backdrop-blur-sm border border-red-500/40 rounded-lg p-2 text-red-500 hover:border-red-400/70 transition-all cursor-pointer"
             aria-label="Supprimer la quête"
             title="Supprimer"
             @click="askDelete(quest)"
@@ -259,31 +269,34 @@ function duplicate(quest) {
     <BaseModal :open="detailedQuest !== null" :title="detailedQuest?.name" @close="closeDetail">
       <div v-if="detailedQuest">
         <div class="flex flex-wrap items-center gap-2 mb-3">
-          <span class="badge" :class="STATE_BADGES[detailedQuest.state]">
+          <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400">
             {{ STATE_LABELS[detailedQuest.state] }}
           </span>
-          <span class="badge badge-outline">
+          <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400">
             {{ detailedQuest.rewards.itemIds.length }} objet(s) en récompense
           </span>
-          <span class="badge badge-outline">
+          <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400">
             {{ detailedQuest.rewards.clueIds.length }} indice(s) en récompense
           </span>
-          <span v-if="detailedQuest.placeId" class="badge badge-outline">
+          <span
+            v-if="detailedQuest.placeId"
+            class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400"
+          >
             {{ placeName(detailedQuest.placeId) }}
           </span>
         </div>
 
-        <p v-if="detailedQuest.description" class="whitespace-pre-line">
+        <p v-if="detailedQuest.description" class="whitespace-pre-line text-amber-500/80">
           {{ detailedQuest.description }}
         </p>
-        <p v-else class="text-base-content/60 italic">Pas de description.</p>
+        <p v-else class="text-amber-500/60 italic">Pas de description.</p>
 
         <template v-if="editable">
-          <p v-if="detailedQuest.comment" class="mt-3 text-base-content/70 whitespace-pre-line">
+          <p v-if="detailedQuest.comment" class="mt-3 text-amber-500/70 whitespace-pre-line">
             {{ detailedQuest.comment }}
           </p>
 
-          <div class="mt-3 text-sm text-base-content/70">
+          <div class="mt-3 text-sm text-amber-500/70">
             <p>
               Mot de passe d'activation :
               {{ detailedQuest.activationPassword || 'aucun' }}
@@ -297,7 +310,13 @@ function duplicate(quest) {
       </div>
 
       <div class="modal-action">
-        <button type="button" class="btn" @click="closeDetail">Fermer</button>
+        <button
+          type="button"
+          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
+          @click="closeDetail"
+        >
+          Fermer
+        </button>
       </div>
     </BaseModal>
 
@@ -309,13 +328,20 @@ function duplicate(quest) {
     >
       <form @submit.prevent="submitForm">
         <label class="form-control w-full mb-3">
-          <span class="label-text">Nom</span>
-          <input v-model="form.name" type="text" class="input input-bordered w-full" />
+          <span class="label-text text-amber-500 font-['Cinzel']">Nom</span>
+          <input
+            v-model="form.name"
+            type="text"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          />
         </label>
 
         <label class="form-control w-full mb-3">
-          <span class="label-text">Lieu</span>
-          <select v-model="form.placeId" class="select select-bordered w-full">
+          <span class="label-text text-amber-500 font-['Cinzel']">Lieu</span>
+          <select
+            v-model="form.placeId"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          >
             <option value="">Aucun lieu</option>
             <option v-for="place in places" :key="place.id" :value="place.id">
               {{ place.name }}
@@ -324,38 +350,53 @@ function duplicate(quest) {
         </label>
 
         <label class="form-control w-full mb-3">
-          <span class="label-text">Description</span>
-          <textarea v-model="form.description" class="textarea textarea-bordered w-full"></textarea>
+          <span class="label-text text-amber-500 font-['Cinzel']">Description</span>
+          <textarea
+            v-model="form.description"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          ></textarea>
         </label>
 
         <label class="form-control w-full mb-3">
-          <span class="label-text">Commentaire</span>
-          <textarea v-model="form.comment" class="textarea textarea-bordered w-full"></textarea>
+          <span class="label-text text-amber-500 font-['Cinzel']">Commentaire</span>
+          <textarea
+            v-model="form.comment"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          ></textarea>
         </label>
 
         <label class="form-control w-full mb-3">
-          <span class="label-text">Mot de passe d'activation</span>
+          <span class="label-text text-amber-500 font-['Cinzel']">Mot de passe d'activation</span>
           <input
             v-model="form.activationPassword"
             type="text"
-            class="input input-bordered w-full"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
           />
         </label>
 
         <label class="form-control w-full mb-3">
-          <span class="label-text">Mot de passe de résolution</span>
+          <span class="label-text text-amber-500 font-['Cinzel']">Mot de passe de résolution</span>
           <input
             v-model="form.resolutionPassword"
             type="text"
-            class="input input-bordered w-full"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
           />
         </label>
 
-        <p v-if="formError" class="text-error mb-2">{{ formError }}</p>
+        <p v-if="formError" class="text-red-400 mb-2">{{ formError }}</p>
 
         <div class="modal-action">
-          <button type="button" class="btn" @click="closeForm">Annuler</button>
-          <button type="submit" class="btn btn-primary">
+          <button
+            type="button"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
+            @click="closeForm"
+          >
+            Annuler
+          </button>
+          <button
+            type="submit"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
+          >
             {{ isEditing ? 'Enregistrer' : 'Créer' }}
           </button>
         </div>
@@ -368,12 +409,24 @@ function duplicate(quest) {
       title="Supprimer la quête"
       @close="cancelDelete"
     >
-      <p>
+      <p class="text-amber-500/80">
         Voulez-vous vraiment supprimer « {{ deletedQuest?.name }} » ? Cette action est irréversible.
       </p>
       <div class="modal-action">
-        <button type="button" class="btn" @click="cancelDelete">Annuler</button>
-        <button type="button" class="btn btn-error" @click="confirmDelete">Supprimer</button>
+        <button
+          type="button"
+          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
+          @click="cancelDelete"
+        >
+          Annuler
+        </button>
+        <button
+          type="button"
+          class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-4 py-2 text-red-500 hover:border-red-400/70 transition-all cursor-pointer"
+          @click="confirmDelete"
+        >
+          Supprimer
+        </button>
       </div>
     </BaseModal>
   </div>

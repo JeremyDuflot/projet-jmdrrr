@@ -71,26 +71,28 @@ function saveHp() {
 
 <template>
   <div class="w-full">
-    <span v-if="showLabel" class="font-bold block mb-1">Points de vie</span>
+    <span v-if="showLabel" class="font-bold block mb-1 text-amber-500 font-['Cinzel']"
+      >Points de vie</span
+    >
 
     <div v-if="!isEditing" class="flex items-center gap-2">
-      <span class="font-bold text-gray-400">{{ currentHp }} / {{ maxHp }}</span>
+      <span class="font-bold text-white/80">{{ currentHp }} / {{ maxHp }}</span>
       <button
         v-if="editable"
         type="button"
         @click="startEditing"
-        class="btn btn-xs btn-ghost btn-circle text-gray-400"
+        class="btn btn-xs btn-ghost btn-circle text-white/80"
         title="Modifier les points de vie"
       >
         <Pencil :size="16" />
       </button>
     </div>
 
-    <div v-else class="flex items-center gap-0.5 flex-wrap text-gray-400">
+    <div v-else class="flex items-center gap-0.5 flex-wrap text-white/80">
       <button
         type="button"
         @click="adjustHp(-10)"
-        class="btn btn-circle btn-xs bg-transparent border-none shadow-none text-gray-400 hover:bg-amber-500/20 text-[10px] min-h-0 h-6 w-6 p-0"
+        class="btn btn-circle btn-xs bg-transparent border-none shadow-none text-white/80 hover:bg-amber-500/20 text-[10px] min-h-0 h-6 w-6 p-0"
         :disabled="hp <= 0"
         title="-10"
       >
@@ -99,7 +101,7 @@ function saveHp() {
       <button
         type="button"
         @click="adjustHp(-1)"
-        class="btn btn-circle btn-xs bg-transparent border-none shadow-none text-gray-400 hover:bg-amber-500/20 text-base min-h-0 h-6 w-6 p-0"
+        class="btn btn-circle btn-xs bg-transparent border-none shadow-none text-white/80 hover:bg-amber-500/20 text-base min-h-0 h-6 w-6 p-0"
         :disabled="hp <= 0"
         title="-1"
       >
@@ -121,7 +123,7 @@ function saveHp() {
       <button
         type="button"
         @click="adjustHp(1)"
-        class="btn btn-circle btn-xs bg-transparent border-none shadow-none text-gray-400 hover:bg-amber-500/20 text-base min-h-0 h-6 w-6 p-0"
+        class="btn btn-circle btn-xs bg-transparent border-none shadow-none text-white/80 hover:bg-amber-500/20 text-base min-h-0 h-6 w-6 p-0"
         :disabled="hp >= maxHp"
         title="+1"
       >
@@ -130,7 +132,7 @@ function saveHp() {
       <button
         type="button"
         @click="adjustHp(10)"
-        class="btn btn-circle btn-xs bg-transparent border-none shadow-none text-gray-400 hover:bg-amber-500/20 text-[10px] min-h-0 h-6 w-6 p-0"
+        class="btn btn-circle btn-xs bg-transparent border-none shadow-none text-white/80 hover:bg-amber-500/20 text-[10px] min-h-0 h-6 w-6 p-0"
         :disabled="hp >= maxHp"
         title="+10"
       >

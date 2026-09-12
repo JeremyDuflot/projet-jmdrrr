@@ -161,17 +161,24 @@ function move(chapter, index, offset) {
   <div class="m-2">
     <div class="flex items-center justify-between mb-4">
       <div>
-        <h1 class="text-2xl font-extrabold">Chapitres</h1>
-        <p v-if="campaign" class="text-base-content/60">{{ campaign.name }}</p>
+        <h1 class="text-2xl font-extrabold text-amber-500 font-['Cinzel']">Chapitres</h1>
+        <p v-if="campaign" class="text-amber-500/60 font-['Cinzel']">{{ campaign.name }}</p>
       </div>
       <div v-if="editable && campaign" class="flex gap-2">
-        <button class="btn btn-primary" @click="openCreateForm">Nouveau chapitre</button>
+        <button
+          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
+          @click="openCreateForm"
+        >
+          Nouveau chapitre
+        </button>
       </div>
     </div>
 
-    <p v-if="!campaign" class="text-base-content/60 italic">Aucune campagne sélectionnée.</p>
+    <p v-if="!campaign" class="text-amber-500/60 italic font-['Cinzel']">
+      Aucune campagne sélectionnée.
+    </p>
 
-    <p v-else-if="visibleChapters.length === 0" class="text-base-content/60 italic">
+    <p v-else-if="visibleChapters.length === 0" class="text-amber-500/60 italic font-['Cinzel']">
       {{
         editable
           ? 'Aucun chapitre pour le moment. Créez-en un pour commencer.'
@@ -182,32 +189,36 @@ function move(chapter, index, offset) {
     <div
       v-for="{ chapter, index, isFirst, isLast } in visibleChapters"
       :key="chapter.id"
-      class="collapse collapse-arrow bg-base-100 border border-base-300 mb-2 hover:bg-base-200 hover:border-base-content/20 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+      class="collapse collapse-arrow bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl mb-2 hover:border-amber-400/70 hover:shadow-xl transition-all duration-300"
     >
       <input type="checkbox" :id="'my-chapter-' + chapter.id" />
-      <h2 class="collapse-title font-extrabold flex items-center gap-2">
+      <h2
+        class="collapse-title p-4 font-extrabold flex items-center gap-2 text-amber-500 font-['Cinzel']"
+      >
         <span>{{ chapter.name }}</span>
-        <span class="badge" :class="STATE_BADGES[chapter.state]">
+        <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400">
           {{ STATE_LABELS[chapter.state] }}
         </span>
       </h2>
-      <div class="collapse-content font-bold">
-        <p v-if="chapter.description" class="mb-2">{{ chapter.description }}</p>
-        <p v-else class="mb-2 text-base-content/60 italic">Pas de description.</p>
+      <div class="collapse-content p-4 font-bold">
+        <p v-if="chapter.description" class="mb-2 text-amber-500/80">{{ chapter.description }}</p>
+        <p v-else class="mb-2 text-amber-500/60 italic">Pas de description.</p>
 
-        <p v-if="editable && chapter.comment" class="mb-2 text-base-content/70">
+        <p v-if="editable && chapter.comment" class="mb-2 text-amber-500/70">
           {{ chapter.comment }}
         </p>
 
         <div class="flex flex-wrap gap-2 mb-4 text-sm font-normal">
-          <span class="badge badge-outline">{{ chapter.quests.length }} quête(s)</span>
-          <span class="badge badge-outline">
+          <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400"
+            >{{ chapter.quests.length }} quête(s)</span
+          >
+          <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400">
             {{ chapter.requiredItemIds.length }} objet(s) requis
           </span>
-          <span class="badge badge-outline">
+          <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400">
             {{ chapter.rewards.itemIds.length }} objet(s) en récompense
           </span>
-          <span class="badge badge-outline">
+          <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400">
             {{ chapter.rewards.clueIds.length }} indice(s) en récompense
           </span>
         </div>
@@ -216,24 +227,47 @@ function move(chapter, index, offset) {
 
         <div v-if="editable" class="flex flex-wrap justify-between gap-2">
           <div class="flex gap-2">
-            <button class="btn btn-outline" :disabled="isFirst" @click="move(chapter, index, -1)">
+            <button
+              class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all disabled:opacity-50 cursor-pointer"
+              :disabled="isFirst"
+              @click="move(chapter, index, -1)"
+            >
               Monter
             </button>
-            <button class="btn btn-outline" :disabled="isLast" @click="move(chapter, index, 1)">
+            <button
+              class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all disabled:opacity-50 cursor-pointer"
+              :disabled="isLast"
+              @click="move(chapter, index, 1)"
+            >
               Descendre
             </button>
           </div>
           <div class="flex flex-wrap gap-2">
             <button
               v-if="chapter.state === 'active'"
-              class="btn btn-success btn-outline"
+              class="bg-black/50 backdrop-blur-sm border-2 border-green-500/40 rounded-xl px-4 py-2 text-green-500 hover:border-green-400/70 transition-all cursor-pointer"
               @click="markCompleted(chapter)"
             >
               Marquer comme terminé
             </button>
-            <button class="btn btn-outline" @click="duplicate(chapter)">Dupliquer</button>
-            <button class="btn btn-error btn-outline" @click="askDelete(chapter)">Supprimer</button>
-            <button class="btn btn-primary" @click="openEditForm(chapter)">Modifier</button>
+            <button
+              class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
+              @click="duplicate(chapter)"
+            >
+              Dupliquer
+            </button>
+            <button
+              class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-4 py-2 text-red-500 hover:border-red-400/70 transition-all cursor-pointer"
+              @click="askDelete(chapter)"
+            >
+              Supprimer
+            </button>
+            <button
+              class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
+              @click="openEditForm(chapter)"
+            >
+              Modifier
+            </button>
           </div>
         </div>
       </div>
@@ -247,34 +281,53 @@ function move(chapter, index, offset) {
     >
       <form @submit.prevent="submitForm">
         <label class="form-control w-full mb-3">
-          <span class="label-text">Nom</span>
-          <input v-model="form.name" type="text" class="input input-bordered w-full" />
-        </label>
-
-        <label class="form-control w-full mb-3">
-          <span class="label-text">Description</span>
-          <textarea v-model="form.description" class="textarea textarea-bordered w-full"></textarea>
-        </label>
-
-        <label class="form-control w-full mb-3">
-          <span class="label-text">Commentaire</span>
-          <textarea v-model="form.comment" class="textarea textarea-bordered w-full"></textarea>
-        </label>
-
-        <label class="form-control w-full mb-3">
-          <span class="label-text">Mot de passe de résolution</span>
+          <span class="label-text text-amber-500 font-['Cinzel']">Nom</span>
           <input
-            v-model="form.resolutionPassword"
+            v-model="form.name"
             type="text"
-            class="input input-bordered w-full"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
           />
         </label>
 
-        <p v-if="formError" class="text-error mb-2">{{ formError }}</p>
+        <label class="form-control w-full mb-3">
+          <span class="label-text text-amber-500 font-['Cinzel']">Description</span>
+          <textarea
+            v-model="form.description"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          ></textarea>
+        </label>
+
+        <label class="form-control w-full mb-3">
+          <span class="label-text text-amber-500 font-['Cinzel']">Commentaire</span>
+          <textarea
+            v-model="form.comment"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          ></textarea>
+        </label>
+
+        <label class="form-control w-full mb-3">
+          <span class="label-text text-amber-500 font-['Cinzel']">Mot de passe de résolution</span>
+          <input
+            v-model="form.resolutionPassword"
+            type="text"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          />
+        </label>
+
+        <p v-if="formError" class="text-red-400 mb-2">{{ formError }}</p>
 
         <div class="modal-action">
-          <button type="button" class="btn" @click="closeForm">Annuler</button>
-          <button type="submit" class="btn btn-primary">
+          <button
+            type="button"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
+            @click="closeForm"
+          >
+            Annuler
+          </button>
+          <button
+            type="submit"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
+          >
             {{ isEditing ? 'Enregistrer' : 'Créer' }}
           </button>
         </div>
@@ -287,13 +340,25 @@ function move(chapter, index, offset) {
       title="Supprimer le chapitre"
       @close="cancelDelete"
     >
-      <p>
+      <p class="text-amber-500/80">
         Voulez-vous vraiment supprimer « {{ deletedChapter?.name }} » ? Cette action est
         irréversible.
       </p>
       <div class="modal-action">
-        <button type="button" class="btn" @click="cancelDelete">Annuler</button>
-        <button type="button" class="btn btn-error" @click="confirmDelete">Supprimer</button>
+        <button
+          type="button"
+          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
+          @click="cancelDelete"
+        >
+          Annuler
+        </button>
+        <button
+          type="button"
+          class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-4 py-2 text-red-500 hover:border-red-400/70 transition-all cursor-pointer"
+          @click="confirmDelete"
+        >
+          Supprimer
+        </button>
       </div>
     </BaseModal>
   </div>

@@ -123,24 +123,36 @@ function confirmDelete() {
 <template>
   <section class="font-normal">
     <div class="flex items-center justify-between mb-2">
-      <h3 class="font-bold">Joueurs</h3>
-      <button class="btn btn-sm btn-outline" @click="openCreateForm">Ajouter un joueur</button>
+      <h3 class="font-bold text-amber-500 font-['Cinzel']">Joueurs</h3>
+      <button
+        class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm"
+        @click="openCreateForm"
+      >
+        Ajouter un joueur
+      </button>
     </div>
 
-    <p v-if="campaign.players.length === 0" class="text-sm text-base-content/60 italic">
+    <p v-if="campaign.players.length === 0" class="text-sm text-amber-500/60 italic">
       Aucun joueur dans cette campagne.
     </p>
 
-    <ul v-else class="list bg-base-200 rounded-box">
-      <li v-for="player in campaign.players" :key="player.id" class="list-row items-center">
-        <div class="list-col-grow">
-          <p class="font-bold flex items-center gap-2">
+    <ul v-else class="flex flex-col gap-2">
+      <li
+        v-for="player in campaign.players"
+        :key="player.id"
+        class="bg-black/30 backdrop-blur-sm border border-amber-500/20 rounded-xl p-3 flex items-center justify-between"
+      >
+        <div class="flex-1">
+          <p class="font-bold flex items-center gap-2 text-amber-500">
             <span>{{ player.name }}</span>
-            <span v-if="player.state === 'dead'" class="badge badge-sm badge-error">
+            <span
+              v-if="player.state === 'dead'"
+              class="badge bg-red-500/20 border border-red-500/40 text-red-400"
+            >
               {{ STATE_LABELS.dead }}
             </span>
           </p>
-          <p class="text-sm text-base-content/70">
+          <p class="text-sm text-amber-500/70">
             {{ placeName(player.placeId) ?? 'Aucun lieu' }}
           </p>
           <LifeBar
@@ -152,8 +164,16 @@ function confirmDelete() {
             @update-hp="campaignsStore.updatePlayer(player.id, { currentHp: $event })"
           />
         </div>
-        <button class="btn btn-sm btn-ghost" @click="openEditForm(player)">Modifier</button>
-        <button class="btn btn-sm btn-ghost text-error" @click="deletedId = player.id">
+        <button
+          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm"
+          @click="openEditForm(player)"
+        >
+          Modifier
+        </button>
+        <button
+          class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-3 py-1 text-red-500 hover:border-red-400/70 transition-all text-sm"
+          @click="deletedId = player.id"
+        >
           Supprimer
         </button>
       </li>
@@ -166,13 +186,20 @@ function confirmDelete() {
     >
       <form @submit.prevent="submitForm">
         <label class="form-control w-full mb-3">
-          <span class="label-text">Nom</span>
-          <input v-model="form.name" type="text" class="input input-bordered w-full" />
+          <span class="label-text text-amber-500 font-['Cinzel']">Nom</span>
+          <input
+            v-model="form.name"
+            type="text"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          />
         </label>
 
         <label class="form-control w-full mb-3">
-          <span class="label-text">État</span>
-          <select v-model="form.state" class="select select-bordered w-full">
+          <span class="label-text text-amber-500 font-['Cinzel']">État</span>
+          <select
+            v-model="form.state"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          >
             <option v-for="state in PLAYER_STATES" :key="state" :value="state">
               {{ STATE_LABELS[state] }}
             </option>
@@ -181,29 +208,32 @@ function confirmDelete() {
 
         <div class="flex gap-3 mb-3">
           <label v-if="isEditing" class="form-control flex-1">
-            <span class="label-text">PV actuels</span>
+            <span class="label-text text-amber-500 font-['Cinzel']">PV actuels</span>
             <input
               v-model.number="form.currentHp"
               type="number"
               min="0"
               :max="form.maxHp"
-              class="input input-bordered w-full"
+              class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
             />
           </label>
           <label class="form-control flex-1">
-            <span class="label-text">PV max</span>
+            <span class="label-text text-amber-500 font-['Cinzel']">PV max</span>
             <input
               v-model.number="form.maxHp"
               type="number"
               min="1"
-              class="input input-bordered w-full"
+              class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
             />
           </label>
         </div>
 
         <label class="form-control w-full mb-3">
-          <span class="label-text">Lieu</span>
-          <select v-model="form.placeId" class="select select-bordered w-full">
+          <span class="label-text text-amber-500 font-['Cinzel']">Lieu</span>
+          <select
+            v-model="form.placeId"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          >
             <option :value="null">Aucun lieu</option>
             <option v-for="place in campaign.places" :key="place.id" :value="place.id">
               {{ place.name }}
@@ -212,20 +242,37 @@ function confirmDelete() {
         </label>
 
         <label class="form-control w-full mb-3">
-          <span class="label-text">Description</span>
-          <textarea v-model="form.description" class="textarea textarea-bordered w-full"></textarea>
+          <span class="label-text text-amber-500 font-['Cinzel']">Description</span>
+          <textarea
+            v-model="form.description"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          ></textarea>
         </label>
 
         <label class="form-control w-full mb-3">
-          <span class="label-text">Commentaire (visible par le MJ uniquement)</span>
-          <textarea v-model="form.comment" class="textarea textarea-bordered w-full"></textarea>
+          <span class="label-text text-amber-500 font-['Cinzel']"
+            >Commentaire (visible par le MJ uniquement)</span
+          >
+          <textarea
+            v-model="form.comment"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          ></textarea>
         </label>
 
-        <p v-if="formError" class="text-error mb-2">{{ formError }}</p>
+        <p v-if="formError" class="text-red-400 mb-2">{{ formError }}</p>
 
         <div class="modal-action">
-          <button type="button" class="btn" @click="closeForm">Annuler</button>
-          <button type="submit" class="btn btn-primary">
+          <button
+            type="button"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+            @click="closeForm"
+          >
+            Annuler
+          </button>
+          <button
+            type="submit"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+          >
             {{ isEditing ? 'Enregistrer' : 'Ajouter' }}
           </button>
         </div>
@@ -233,13 +280,25 @@ function confirmDelete() {
     </BaseModal>
 
     <BaseModal :open="deletedPlayer !== null" title="Supprimer le joueur" @close="deletedId = null">
-      <p>
+      <p class="text-amber-500/80">
         Voulez-vous vraiment retirer « {{ deletedPlayer?.name }} » de la campagne ? Cette action est
         irréversible.
       </p>
       <div class="modal-action">
-        <button type="button" class="btn" @click="deletedId = null">Annuler</button>
-        <button type="button" class="btn btn-error" @click="confirmDelete">Supprimer</button>
+        <button
+          type="button"
+          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+          @click="deletedId = null"
+        >
+          Annuler
+        </button>
+        <button
+          type="button"
+          class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-4 py-2 text-red-500 hover:border-red-400/70 transition-all"
+          @click="confirmDelete"
+        >
+          Supprimer
+        </button>
       </div>
     </BaseModal>
   </section>
