@@ -7,6 +7,17 @@ import LifeBar from '@/components/LifeBar.vue'
 import ResolutionPasswordPopup from '@/components/ResolutionPasswordPopup.vue'
 import PlaceNavigator from '@/components/PlaceNavigator.vue'
 
+function getStateBadgeClass(state) {
+  switch (state) {
+    case 'alive':
+      return 'bg-black/50 backdrop-blur-sm border-2 border-green-500/40 px-2 rounded-xl text-green-500'
+    case 'dead':
+      return 'bg-black/50 backdrop-blur-sm border-2 border-red-500/40 px-2 rounded-xl text-red-500'
+    default:
+      return 'bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 px-2 rounded-xl text-amber-500'
+  }
+}
+
 const route = useRoute()
 const campaignsStore = useCampaignsStore()
 
@@ -58,16 +69,21 @@ const filteredClues = computed(() => filterByQuery(player.value?.clues ?? [], se
 function handleUpdateHp(newHp) {
   if (!playerId.value) return
 
+  let cappedHp = newHp
+  if (cappedHp > player.value.maxHp) {
+    cappedHp = player.value.maxHp
+  }
+
   let state
-  if (newHp === 0) {
+  if (cappedHp === 0) {
     state = 'dead'
-  } else if (player.value.state === 'dead' && newHp > 0) {
+  } else if (player.value.state === 'dead' && cappedHp > 0) {
     state = 'alive'
   } else {
     state = player.value.state
   }
 
-  campaignsStore.updatePlayer(playerId.value, { currentHp: newHp, state })
+  campaignsStore.updatePlayer(playerId.value, { currentHp: cappedHp, state })
 }
 
 async function handleResolved({ type, name, gainedItems, gainedClues }) {
@@ -125,11 +141,14 @@ function closeSuccessDialog() {
     <div
       class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl shadow-xl mb-6 p-6"
     >
-      <h2 class="text-2xl font-bold text-amber-500 font-['Cinzel']">{{ player.name }}</h2>
-      <div class="badge mb-4 bg-amber-500/20 border border-amber-500/40 text-amber-400">
-        {{ player.state === 'alive' ? 'Vivant' : 'Mort' }}
-      </div>
+      <h2 class="flex items-center gap-2">
+        <span class="font-extrabold text-xl text-amber-500 font-['Cinzel']">{{ player.name }}</span>
+        <span :class="getStateBadgeClass(player.state)">
+          {{ player.state === 'alive' ? 'Vivant' : 'Mort' }}
+        </span>
+      </h2>
 
+      <div class="border-b border-amber-500/20 my-4" />
       <LifeBar
         :current-hp="player.currentHp"
         :max-hp="player.maxHp"

@@ -196,7 +196,7 @@ function confirmDelete() {
     <div class="flex items-center justify-between gap-2 mb-2">
       <h3 class="font-bold text-amber-500 font-['Cinzel']">{{ labels.title }}</h3>
       <button
-        class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm"
+        class="bg-black/50 backdrop-blur-sm border-2 cursor-pointer border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm"
         @click="openCreateForm"
       >
         {{ labels.add }}
@@ -207,7 +207,7 @@ function confirmDelete() {
       {{ labels.empty }}
     </p>
 
-    <ul v-else class="flex flex-col gap-2">
+    <ul v-else class="flex flex-col gap-2 max-h-100 overflow-y-auto pr-2">
       <li
         v-for="entity in entities"
         :key="entity.id"
@@ -220,13 +220,13 @@ function confirmDelete() {
           </p>
         </div>
         <button
-          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm"
+          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl cursor-pointer px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm"
           @click="openEditForm(entity)"
         >
           Modifier
         </button>
         <button
-          class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-3 py-1 text-red-500 hover:border-red-400/70 transition-all text-sm"
+          class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl cursor-pointer px-3 py-1 text-red-500 hover:border-red-400/70 transition-all text-sm"
           @click="deletedId = entity.id"
         >
           Supprimer
@@ -272,14 +272,14 @@ function confirmDelete() {
         <div class="modal-action">
           <button
             type="button"
-            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 cursor-pointer text-amber-500 hover:border-amber-400/70 transition-all"
             @click="closeForm"
           >
             Annuler
           </button>
           <button
             type="submit"
-            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl cursor-pointer px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
           >
             {{ isEditing ? 'Enregistrer' : 'Ajouter' }}
           </button>
@@ -299,14 +299,14 @@ function confirmDelete() {
       <div class="modal-action">
         <button
           type="button"
-          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl cursor-pointer px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
           @click="deletedId = null"
         >
           Annuler
         </button>
         <button
           type="button"
-          class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-4 py-2 text-red-500 hover:border-red-400/70 transition-all"
+          class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-4 cursor-pointer py-2 text-red-500 hover:border-red-400/70 transition-all"
           @click="confirmDelete"
         >
           Supprimer

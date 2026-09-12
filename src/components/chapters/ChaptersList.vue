@@ -3,7 +3,7 @@ import { computed, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useCampaignsStore } from '@/stores/rpgStore'
 import BaseModal from '@/components/BaseModal.vue'
-import QuestsList from '@/components/Quests/QuestsList.vue'
+import QuestsList from '@/components/quests/QuestsList.vue'
 import IdListPicker from '@/components/IdListPicker.vue'
 
 const STATE_LABELS = {
@@ -12,10 +12,15 @@ const STATE_LABELS = {
   completed: 'Terminé',
 }
 
-const STATE_BADGES = {
-  inactive: 'badge-ghost',
-  active: 'badge-success',
-  completed: 'badge-neutral',
+function getStateBadgeClass(state) {
+  switch (state) {
+    case 'active':
+      return 'bg-black/50 backdrop-blur-sm border-2 border-green-500/40 px-2 rounded-xl text-green-500'
+    case 'completed':
+      return 'bg-black/50 backdrop-blur-sm border-2 border-red-500/40 px-2 rounded-xl text-red-500'
+    default:
+      return 'bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 px-2 rounded-xl text-amber-500'
+  }
 }
 
 const props = defineProps({
@@ -215,16 +220,16 @@ function move(chapter, index, offset) {
       class="collapse collapse-arrow bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl mb-2 hover:border-amber-400/70 hover:shadow-xl transition-all duration-300"
     >
       <input type="checkbox" :id="'my-chapter-' + chapter.id" />
-      <h2
-        class="collapse-title p-4 font-extrabold flex items-center gap-2 text-amber-500 font-['Cinzel']"
-      >
-        <span>{{ chapter.name }}</span>
-        <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400">
+      <h2 class="collapse-title p-4 flex items-center gap-2">
+        <span class="font-extrabold text-amber-500 font-['Cinzel']">{{ chapter.name }}</span>
+        <span :class="getStateBadgeClass(chapter.state)">
           {{ STATE_LABELS[chapter.state] }}
         </span>
       </h2>
-      <div class="collapse-content p-4 font-bold">
-        <p v-if="chapter.description" class="mb-2 text-amber-500/80">{{ chapter.description }}</p>
+      <div class="collapse-content p-4">
+        <p v-if="chapter.description" class="mb-2 text-amber-500/80 font-medium">
+          {{ chapter.description }}
+        </p>
         <p v-else class="mb-2 text-amber-500/60 italic">Pas de description.</p>
 
         <p v-if="editable && chapter.comment" class="mb-2 text-amber-500/70">
@@ -250,21 +255,39 @@ function move(chapter, index, offset) {
 
         <div v-if="editable" class="flex flex-wrap justify-between gap-2">
           <div class="flex gap-2">
-            <button
-              class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all disabled:opacity-50 cursor-pointer"
-              :disabled="isFirst"
-              @click="move(chapter, index, -1)"
-            >
-              Monter
-            </button>
-            <button
-              class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all disabled:opacity-50 cursor-pointer"
-              :disabled="isLast"
-              @click="move(chapter, index, 1)"
-            >
-              Descendre
-            </button>
+            <div class="relative group">
+              <button
+                class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all disabled:opacity-50 cursor-pointer"
+                :disabled="isFirst"
+                @click="move(chapter, index, -1)"
+              >
+                Monter
+              </button>
+              <div
+                v-if="!isFirst"
+                class="pointer-events-none absolute bottom-full left-0 mb-2 whitespace-nowrap rounded-lg bg-black/90 border border-amber-500/40 px-3 py-1.5 text-xs text-amber-500 opacity-0 shadow-xl transition-opacity duration-200 group-hover:opacity-100"
+              >
+                Rendre le chapitre actif (si déjà terminé reste terminé)
+              </div>
+            </div>
+
+            <div class="relative group">
+              <button
+                class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all disabled:opacity-50 cursor-pointer"
+                :disabled="isLast"
+                @click="move(chapter, index, 1)"
+              >
+                Descendre
+              </button>
+              <div
+                v-if="!isLast"
+                class="pointer-events-none absolute bottom-full left-0 mb-2 whitespace-nowrap rounded-lg bg-black/90 border border-amber-500/40 px-3 py-1.5 text-xs text-amber-500 opacity-0 shadow-xl transition-opacity duration-200 group-hover:opacity-100"
+              >
+                Rendre le chapitre inactif
+              </div>
+            </div>
           </div>
+
           <div class="flex flex-wrap gap-2">
             <button
               v-if="chapter.state === 'active'"

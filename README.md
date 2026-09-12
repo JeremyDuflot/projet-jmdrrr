@@ -1,38 +1,50 @@
-# projet-jmdrrr
+# Projet outil pour Jeu de rôle
 
-This template should help get you started developing with Vue 3 in Vite.
+## Groupe 4
+- Gautier De Mauroy
+- Mickaël Desclaut
+- Jérémy Duflot
+- Solène Gouin
 
-## Recommended IDE Setup
-
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Recommended Browser Setup
-
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
+## Lancer le projet
 ```sh
-npm install
+npm ci
 ```
-
-### Compile and Hot-Reload for Development
-
 ```sh
 npm run dev
 ```
 
-### Compile and Minify for Production
+## Bonus
+Système de santé
+- Points de vie (HP) : maxHp, currentHp pour les joueurs
+- Barre de vie visuelle : composant LifeBar avec couleurs dynamiques selon le pourcentage de points de vie
+- Édition interactive : boutons +/-1, +/-10, édition directe, validation/annulation
+- État automatique : passage automatique à "mort" si HP = 0
 
-```sh
-npm run build
-```
+Interface utilisateur avancée
+- Modale de succès : popup animé avec icône Check lors de la résolution
+- Navigation : boutons Retour/Accueil flottants
+- Panneau latéral MJ : CampaignPlayersPanel fixé en bas à droite expandable avec HP des joueurs
+- Recherche de lieux : PlaceNavigator avec filtre pour les déplacements
+
+Création de personnages pour joueur
+- Modal de création : PlayerCreateModal avec formulaire complet
+- Inventaire initial : possibilité d'ajouter des objets lors de la création
+- Sélection de campagne : choix de la campagne cible lors de la création
+
+Gestion des erreurs
+- Alerte de persistance : message d'erreur si localStorage échoue
+- Feedback import/export : messages de succès/erreur visibles
+- Validation de formulaires : messages d'erreur inline
+- Remapping d'ID : lors de duplication/import pour éviter les conflits
+
+UI/UX améliorée
+- Thème graphique complet JDR médiévale avec TailwindCSS v4 + DaisyUI + Lucide Vue + images personnalisées
+- Collapse/expand : chapitres et quêtes en accordéon
+- Badges d'état : badges colorés selon les états
+- Compteurs : nombre de chapitres, quêtes, joueurs, lieux, objets, indices
+- Détail des quêtes : modal avec informations complètes
+- Filtre visibilité : les joueurs ne voient que les chapitres actifs/complétés
+- Auto-activation : premier chapitre activé automatiquement
+- Auto-progression : chapitre suivant activé quand le précédent est terminé
+- Abandon automatique : quêtes non résolues abandonnées quand chapitre terminé

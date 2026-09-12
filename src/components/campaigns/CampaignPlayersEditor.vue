@@ -5,6 +5,7 @@ import { PLAYER_STATES } from '@/data/entities'
 import BaseModal from '@/components/BaseModal.vue'
 import LifeBar from '@/components/LifeBar.vue'
 import IdListPicker from '@/components/IdListPicker.vue'
+import router from '@/router/index.js'
 
 const STATE_LABELS = {
   alive: 'Vivant',
@@ -19,6 +20,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+const emit = defineEmits(['select'])
 
 const campaignsStore = useCampaignsStore()
 
@@ -130,6 +133,29 @@ function confirmDelete() {
   campaignsStore.deletePlayer(deletedId.value)
   deletedId.value = null
 }
+
+function goToPlayerSheetPage(player) {
+  emit('select', player)
+  router.push({ name: 'player-sheet', params: { playerName: player.name } })
+}
+
+function handleUpdateHp(player, newHp) {
+  let cappedHp = newHp
+  if (cappedHp > player.maxHp) {
+    cappedHp = player.maxHp
+  }
+
+  let state
+  if (cappedHp === 0) {
+    state = 'dead'
+  } else if (player.state === 'dead' && cappedHp > 0) {
+    state = 'alive'
+  } else {
+    state = player.state
+  }
+
+  campaignsStore.updatePlayer(player.id, { currentHp: cappedHp, state })
+}
 </script>
 
 <template>
@@ -137,7 +163,7 @@ function confirmDelete() {
     <div class="flex items-center justify-between mb-2">
       <h3 class="font-bold text-amber-500 font-['Cinzel']">Joueurs</h3>
       <button
-        class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm"
+        class="bg-black/50 backdrop-blur-sm border-2 cursor-pointer border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm"
         @click="openCreateForm"
       >
         Ajouter un joueur
@@ -148,7 +174,7 @@ function confirmDelete() {
       Aucun joueur dans cette campagne.
     </p>
 
-    <ul v-else class="flex flex-col gap-2">
+    <ul v-else class="flex flex-col gap-2 max-h-100 overflow-y-auto pr-2">
       <li
         v-for="player in campaign.players"
         :key="player.id"
@@ -156,7 +182,13 @@ function confirmDelete() {
       >
         <div class="flex-1">
           <p class="font-bold flex items-center gap-2 text-amber-500">
-            <span>{{ player.name }}</span>
+            <button
+              type="button"
+              @click="goToPlayerSheetPage(player)"
+              class="font-bold text-amber-500 text-md mb-1 cursor-pointer hover:text-amber-300 hover:underline transition-colors text-left"
+            >
+              {{ player.name }}
+            </button>
             <span
               v-if="player.state === 'dead'"
               class="badge bg-red-500/20 border border-red-500/40 text-red-400"
@@ -170,7 +202,7 @@ function confirmDelete() {
               {{ player.inventory.itemIds.length }} objet(s)
             </span>
           </p>
-          <p class="text-sm text-amber-500/70">
+          <p class="text-sm text-amber-500/70 italic">
             {{ placeName(player.placeId) ?? 'Aucun lieu' }}
           </p>
           <LifeBar
@@ -179,17 +211,17 @@ function confirmDelete() {
             :max-hp="player.maxHp"
             :show-label="false"
             editable
-            @update-hp="campaignsStore.updatePlayer(player.id, { currentHp: $event })"
+            @update-hp="handleUpdateHp(player, $event)"
           />
         </div>
         <button
-          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm"
+          class="bg-black/50 backdrop-blur-sm border-2 cursor-pointer border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm"
           @click="openEditForm(player)"
         >
           Modifier
         </button>
         <button
-          class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-3 py-1 text-red-500 hover:border-red-400/70 transition-all text-sm"
+          class="bg-black/50 backdrop-blur-sm border-2 cursor-pointer border-red-500/40 rounded-xl px-3 py-1 text-red-500 hover:border-red-400/70 transition-all text-sm"
           @click="deletedId = player.id"
         >
           Supprimer
@@ -289,14 +321,14 @@ function confirmDelete() {
         <div class="modal-action">
           <button
             type="button"
-            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+            class="bg-black/50 backdrop-blur-sm border-2 cursor-pointer border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
             @click="closeForm"
           >
             Annuler
           </button>
           <button
             type="submit"
-            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+            class="bg-black/50 backdrop-blur-sm border-2 cursor-pointer border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
           >
             {{ isEditing ? 'Enregistrer' : 'Ajouter' }}
           </button>
@@ -312,14 +344,14 @@ function confirmDelete() {
       <div class="modal-action">
         <button
           type="button"
-          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+          class="bg-black/50 backdrop-blur-sm border-2 cursor-pointer border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
           @click="deletedId = null"
         >
           Annuler
         </button>
         <button
           type="button"
-          class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-4 py-2 text-red-500 hover:border-red-400/70 transition-all"
+          class="bg-black/50 backdrop-blur-sm border-2 cursor-pointer border-red-500/40 rounded-xl px-4 py-2 text-red-500 hover:border-red-400/70 transition-all"
           @click="confirmDelete"
         >
           Supprimer
