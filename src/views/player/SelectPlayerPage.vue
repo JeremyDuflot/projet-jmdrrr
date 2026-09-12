@@ -23,6 +23,24 @@ function handleOpenCreateModal() {
 function handlePlayerCreated(player) {
   router.push({ name: 'player-sheet', params: { playerName: player.name } })
 }
+
+function handleUpdateHp({ player, newHp }) {
+  let cappedHp = newHp
+  if (cappedHp > player.maxHp) {
+    cappedHp = player.maxHp
+  }
+
+  let state
+  if (cappedHp === 0) {
+    state = 'dead'
+  } else if (player.state === 'dead' && cappedHp > 0) {
+    state = 'alive'
+  } else {
+    state = player.state
+  }
+
+  campaignsStore.updatePlayer(player.id, { currentHp: cappedHp, state })
+}
 </script>
 
 <template>
@@ -45,8 +63,10 @@ function handlePlayerCreated(player) {
         v-for="player in players"
         :key="player.id"
         :player="player"
+        :editable="true"
         class="w-72"
         @select="handlePlayerSelect"
+        @update-hp="handleUpdateHp"
       />
 
       <button

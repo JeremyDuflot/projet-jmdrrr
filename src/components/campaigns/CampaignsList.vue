@@ -20,11 +20,11 @@ const STATE_LABELS = {
 function getStateBadgeClass(state) {
   switch (state) {
     case 'active':
-      return 'bg-black/50 backdrop-blur-sm border-2 border-green-500/40 px-4 py-2 rounded-xl text-green-500 hover:border-green-400/70 transition-all cursor-pointer'
+      return 'bg-black/50 backdrop-blur-sm border-2 border-green-500/40 px-2 rounded-xl text-green-500'
     case 'draft':
-      return 'bg-black/50 backdrop-blur-sm border-2 border-red-500/40 px-4 py-2 rounded-xl text-red-500 hover:border-red-400/70 transition-all cursor-pointer'
+      return 'bg-black/50 backdrop-blur-sm border-2 border-red-500/40 px-2 rounded-xl text-red-500'
     default:
-      return 'bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 px-4 py-2 rounded-xl text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer'
+      return 'bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 px-2 rounded-xl text-amber-500'
   }
 }
 
@@ -205,7 +205,10 @@ function redirectToGmOrPlayerChapters(editableMode, campaign) {
       "
     >
       <span>{{ importFeedback.text }}</span>
-      <button class="ml-4 text-amber-500 hover:text-amber-300" @click="importFeedback = null">
+      <button
+        class="ml-4 text-amber-500 hover:text-amber-300 cursor-pointer"
+        @click="importFeedback = null"
+      >
         Fermer
       </button>
     </div>
@@ -275,7 +278,7 @@ function redirectToGmOrPlayerChapters(editableMode, campaign) {
               :to="redirectToGmOrPlayerChapters(editable, campaign)"
               class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
             >
-              Voir Plus
+              Voir les chapitres
             </RouterLink>
           </div>
           <div v-if="editable" class="flex gap-2">

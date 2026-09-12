@@ -15,10 +15,11 @@ const STATE_LABELS = {
 function getStateBadgeClass(state) {
   switch (state) {
     case 'active':
+      return 'bg-black/50 backdrop-blur-sm border-2 border-green-500/40 px-2 rounded-xl text-green-500'
     case 'completed':
-      return 'bg-black/50 backdrop-blur-sm border-2 border-green-500/40 rounded-xl px-4 py-2 text-green-500 hover:border-green-400/70 transition-all cursor-pointer'
+      return 'bg-black/50 backdrop-blur-sm border-2 border-red-500/40 px-2 rounded-xl text-red-500'
     default:
-      return 'bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer'
+      return 'bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 px-2 rounded-xl text-amber-500'
   }
 }
 
@@ -219,16 +220,16 @@ function move(chapter, index, offset) {
       class="collapse collapse-arrow bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl mb-2 hover:border-amber-400/70 hover:shadow-xl transition-all duration-300"
     >
       <input type="checkbox" :id="'my-chapter-' + chapter.id" />
-      <h2
-        class="collapse-title p-4 font-extrabold flex items-center gap-2 text-amber-500 font-['Cinzel']"
-      >
-        <span>{{ chapter.name }}</span>
+      <h2 class="collapse-title p-4 flex items-center gap-2">
+        <span class="font-extrabold text-amber-500 font-['Cinzel']">{{ chapter.name }}</span>
         <span :class="getStateBadgeClass(chapter.state)">
           {{ STATE_LABELS[chapter.state] }}
         </span>
       </h2>
-      <div class="collapse-content p-4 font-bold">
-        <p v-if="chapter.description" class="mb-2 text-amber-500/80">{{ chapter.description }}</p>
+      <div class="collapse-content p-4">
+        <p v-if="chapter.description" class="mb-2 text-amber-500/80 font-medium">
+          {{ chapter.description }}
+        </p>
         <p v-else class="mb-2 text-amber-500/60 italic">Pas de description.</p>
 
         <p v-if="editable && chapter.comment" class="mb-2 text-amber-500/70">

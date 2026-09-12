@@ -44,8 +44,22 @@ function goToPlayerSheetPage(player) {
  * @param {{ player: Player, newHp: number }} payload
  */
 function handleUpdateHp({ player, newHp }) {
-  campaignsStore.updatePlayer(player.id, { currentHp: newHp })
-  emit('updateHp', { player, newHp })
+  let cappedHp = newHp
+  if (cappedHp > player.maxHp) {
+    cappedHp = player.maxHp
+  }
+
+  let state
+  if (cappedHp === 0) {
+    state = 'dead'
+  } else if (player.state === 'dead' && cappedHp > 0) {
+    state = 'alive'
+  } else {
+    state = player.state
+  }
+
+  campaignsStore.updatePlayer(player.id, { currentHp: cappedHp, state })
+  emit('updateHp', { player, newHp: cappedHp })
 }
 </script>
 
@@ -62,7 +76,7 @@ function handleUpdateHp({ player, newHp }) {
         <button
           type="button"
           @click="goToPlayerSheetPage(player)"
-          class="font-bold text-amber-500 text-sm mb-1 hover:text-amber-300 hover:underline transition-colors text-left"
+          class="font-bold text-amber-500 text-sm mb-1 cursor-pointer hover:text-amber-300 hover:underline transition-colors text-left"
         >
           {{ player.name }}
         </button>

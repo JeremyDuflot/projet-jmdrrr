@@ -15,12 +15,11 @@ const STATE_LABELS = {
 function getStateBadgeClass(state) {
   switch (state) {
     case 'active':
-    case 'completed':
-      return 'bg-black/50 backdrop-blur-sm border-2 border-green-500/40 rounded-xl px-4 py-2 text-green-500 hover:border-green-400/70 transition-all cursor-pointer'
-    case 'abandoned':
-      return 'bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-4 py-2 text-red-500 hover:border-red-400/70 transition-all cursor-pointer'
+      return 'bg-black/50 backdrop-blur-sm border-2 border-green-500/40 px-2 rounded-xl text-green-500'
+    case 'completed' && 'abandoned':
+      return 'bg-black/50 backdrop-blur-sm border-2 border-red-500/40 px-2 rounded-xl text-red-500  '
     default:
-      return 'bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer'
+      return 'bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 px-2 rounded-xl text-amber-500'
   }
 }
 
@@ -197,7 +196,7 @@ function duplicate(quest) {
       </button>
     </div>
 
-    <p v-if="quests.length === 0" class="text-amber-500/60 italic font-normal font-['Cinzel']">
+    <p v-if="quests.length === 0" class="text-amber-500/60 italic font-normal">
       {{ editable ? 'Aucune quête dans ce chapitre.' : 'Aucune quête pour le moment.' }}
     </p>
 
@@ -219,7 +218,7 @@ function duplicate(quest) {
               {{ quest.name }}
             </button>
             <span v-else class="font-semibold text-amber-500">{{ quest.name }}</span>
-            <span :class="getStateBadgeClass(quest.state) + ' text-xs'">
+            <span :class="getStateBadgeClass(quest.state)">
               {{ STATE_LABELS[quest.state] }}
             </span>
             <span

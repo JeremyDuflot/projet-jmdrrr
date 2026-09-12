@@ -1,5 +1,5 @@
 <script setup>
-import { getCampaignNameForPlayer } from '../../data/playerHelpers.js'
+import { getCampaignNameForPlayer } from '@/data/playerHelpers.js'
 import { User } from '@lucide/vue'
 import LifeBar from '@/components/LifeBar.vue'
 
