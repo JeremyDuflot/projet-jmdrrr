@@ -124,7 +124,12 @@ function confirmDelete() {
   <section class="font-normal">
     <div class="flex items-center justify-between mb-2">
       <h3 class="font-bold text-amber-500 font-['Cinzel']">Joueurs</h3>
-      <button class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm" @click="openCreateForm">Ajouter un joueur</button>
+      <button
+        class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm"
+        @click="openCreateForm"
+      >
+        Ajouter un joueur
+      </button>
     </div>
 
     <p v-if="campaign.players.length === 0" class="text-sm text-amber-500/60 italic">
@@ -132,11 +137,18 @@ function confirmDelete() {
     </p>
 
     <ul v-else class="flex flex-col gap-2">
-      <li v-for="player in campaign.players" :key="player.id" class="bg-black/30 backdrop-blur-sm border border-amber-500/20 rounded-xl p-3 flex items-center justify-between">
+      <li
+        v-for="player in campaign.players"
+        :key="player.id"
+        class="bg-black/30 backdrop-blur-sm border border-amber-500/20 rounded-xl p-3 flex items-center justify-between"
+      >
         <div class="flex-1">
           <p class="font-bold flex items-center gap-2 text-amber-500">
             <span>{{ player.name }}</span>
-            <span v-if="player.state === 'dead'" class="badge bg-red-500/20 border border-red-500/40 text-red-400">
+            <span
+              v-if="player.state === 'dead'"
+              class="badge bg-red-500/20 border border-red-500/40 text-red-400"
+            >
               {{ STATE_LABELS.dead }}
             </span>
           </p>
@@ -152,8 +164,16 @@ function confirmDelete() {
             @update-hp="campaignsStore.updatePlayer(player.id, { currentHp: $event })"
           />
         </div>
-        <button class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm" @click="openEditForm(player)">Modifier</button>
-        <button class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-3 py-1 text-red-500 hover:border-red-400/70 transition-all text-sm" @click="deletedId = player.id">
+        <button
+          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm"
+          @click="openEditForm(player)"
+        >
+          Modifier
+        </button>
+        <button
+          class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-3 py-1 text-red-500 hover:border-red-400/70 transition-all text-sm"
+          @click="deletedId = player.id"
+        >
           Supprimer
         </button>
       </li>
@@ -167,12 +187,19 @@ function confirmDelete() {
       <form @submit.prevent="submitForm">
         <label class="form-control w-full mb-3">
           <span class="label-text text-amber-500 font-['Cinzel']">Nom</span>
-          <input v-model="form.name" type="text" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full" />
+          <input
+            v-model="form.name"
+            type="text"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          />
         </label>
 
         <label class="form-control w-full mb-3">
           <span class="label-text text-amber-500 font-['Cinzel']">État</span>
-          <select v-model="form.state" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full">
+          <select
+            v-model="form.state"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          >
             <option v-for="state in PLAYER_STATES" :key="state" :value="state">
               {{ STATE_LABELS[state] }}
             </option>
@@ -203,7 +230,10 @@ function confirmDelete() {
 
         <label class="form-control w-full mb-3">
           <span class="label-text text-amber-500 font-['Cinzel']">Lieu</span>
-          <select v-model="form.placeId" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full">
+          <select
+            v-model="form.placeId"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          >
             <option :value="null">Aucun lieu</option>
             <option v-for="place in campaign.places" :key="place.id" :value="place.id">
               {{ place.name }}
@@ -213,19 +243,36 @@ function confirmDelete() {
 
         <label class="form-control w-full mb-3">
           <span class="label-text text-amber-500 font-['Cinzel']">Description</span>
-          <textarea v-model="form.description" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"></textarea>
+          <textarea
+            v-model="form.description"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          ></textarea>
         </label>
 
         <label class="form-control w-full mb-3">
-          <span class="label-text text-amber-500 font-['Cinzel']">Commentaire (visible par le MJ uniquement)</span>
-          <textarea v-model="form.comment" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"></textarea>
+          <span class="label-text text-amber-500 font-['Cinzel']"
+            >Commentaire (visible par le MJ uniquement)</span
+          >
+          <textarea
+            v-model="form.comment"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          ></textarea>
         </label>
 
         <p v-if="formError" class="text-red-400 mb-2">{{ formError }}</p>
 
         <div class="modal-action">
-          <button type="button" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all" @click="closeForm">Annuler</button>
-          <button type="submit" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all">
+          <button
+            type="button"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+            @click="closeForm"
+          >
+            Annuler
+          </button>
+          <button
+            type="submit"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+          >
             {{ isEditing ? 'Enregistrer' : 'Ajouter' }}
           </button>
         </div>
@@ -238,8 +285,20 @@ function confirmDelete() {
         irréversible.
       </p>
       <div class="modal-action">
-        <button type="button" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all" @click="deletedId = null">Annuler</button>
-        <button type="button" class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-4 py-2 text-red-500 hover:border-red-400/70 transition-all" @click="confirmDelete">Supprimer</button>
+        <button
+          type="button"
+          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+          @click="deletedId = null"
+        >
+          Annuler
+        </button>
+        <button
+          type="button"
+          class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-4 py-2 text-red-500 hover:border-red-400/70 transition-all"
+          @click="confirmDelete"
+        >
+          Supprimer
+        </button>
       </div>
     </BaseModal>
   </section>

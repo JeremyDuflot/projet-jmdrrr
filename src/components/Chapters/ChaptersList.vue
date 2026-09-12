@@ -166,7 +166,7 @@ function move(chapter, index, offset) {
       </div>
       <div v-if="editable && campaign" class="flex gap-2">
         <button
-          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
           @click="openCreateForm"
         >
           Nouveau chapitre
@@ -192,7 +192,9 @@ function move(chapter, index, offset) {
       class="collapse collapse-arrow bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl mb-2 hover:border-amber-400/70 hover:shadow-xl transition-all duration-300"
     >
       <input type="checkbox" :id="'my-chapter-' + chapter.id" />
-      <h2 class="collapse-title p-4 font-extrabold flex items-center gap-2 text-amber-500 font-['Cinzel']">
+      <h2
+        class="collapse-title p-4 font-extrabold flex items-center gap-2 text-amber-500 font-['Cinzel']"
+      >
         <span>{{ chapter.name }}</span>
         <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400">
           {{ STATE_LABELS[chapter.state] }}
@@ -226,14 +228,14 @@ function move(chapter, index, offset) {
         <div v-if="editable" class="flex flex-wrap justify-between gap-2">
           <div class="flex gap-2">
             <button
-              class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all disabled:opacity-50"
+              class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all disabled:opacity-50 cursor-pointer"
               :disabled="isFirst"
               @click="move(chapter, index, -1)"
             >
               Monter
             </button>
             <button
-              class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all disabled:opacity-50"
+              class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all disabled:opacity-50 cursor-pointer"
               :disabled="isLast"
               @click="move(chapter, index, 1)"
             >
@@ -243,25 +245,25 @@ function move(chapter, index, offset) {
           <div class="flex flex-wrap gap-2">
             <button
               v-if="chapter.state === 'active'"
-              class="bg-black/50 backdrop-blur-sm border-2 border-green-500/40 rounded-xl px-4 py-2 text-green-500 hover:border-green-400/70 transition-all"
+              class="bg-black/50 backdrop-blur-sm border-2 border-green-500/40 rounded-xl px-4 py-2 text-green-500 hover:border-green-400/70 transition-all cursor-pointer"
               @click="markCompleted(chapter)"
             >
               Marquer comme terminé
             </button>
             <button
-              class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+              class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
               @click="duplicate(chapter)"
             >
               Dupliquer
             </button>
             <button
-              class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-4 py-2 text-red-500 hover:border-red-400/70 transition-all"
+              class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-4 py-2 text-red-500 hover:border-red-400/70 transition-all cursor-pointer"
               @click="askDelete(chapter)"
             >
               Supprimer
             </button>
             <button
-              class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+              class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
               @click="openEditForm(chapter)"
             >
               Modifier
@@ -317,14 +319,14 @@ function move(chapter, index, offset) {
         <div class="modal-action">
           <button
             type="button"
-            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
             @click="closeForm"
           >
             Annuler
           </button>
           <button
             type="submit"
-            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
           >
             {{ isEditing ? 'Enregistrer' : 'Créer' }}
           </button>
@@ -345,14 +347,14 @@ function move(chapter, index, offset) {
       <div class="modal-action">
         <button
           type="button"
-          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
           @click="cancelDelete"
         >
           Annuler
         </button>
         <button
           type="button"
-          class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-4 py-2 text-red-500 hover:border-red-400/70 transition-all"
+          class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-4 py-2 text-red-500 hover:border-red-400/70 transition-all cursor-pointer"
           @click="confirmDelete"
         >
           Supprimer

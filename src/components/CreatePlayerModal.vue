@@ -96,7 +96,9 @@ function handleClose() {
 <template>
   <dialog v-if="show" class="modal modal-open">
     <div class="modal-box bg-black/90 backdrop-blur-sm border-2 border-amber-500/40 text-amber-500">
-      <h3 class="font-bold text-lg mb-4 text-amber-500 font-['Cinzel']">Ajouter un nouveau personnage</h3>
+      <h3 class="font-bold text-lg mb-4 text-amber-500 font-['Cinzel']">
+        Ajouter un nouveau personnage
+      </h3>
 
       <form @submit.prevent="handleSubmit" class="space-y-4">
         <div class="form-control">
@@ -177,10 +179,18 @@ function handleClose() {
             <span class="label-text font-bold text-amber-500 font-['Cinzel']">Inventaire</span>
           </label>
           <div v-if="items.length === 0" class="text-sm text-amber-500/50 mb-2">Aucun objet</div>
-          <div v-for="(item, index) in items" :key="index" class="mb-3 p-3 bg-black/30 backdrop-blur-sm border border-amber-500/20 rounded-xl">
+          <div
+            v-for="(item, index) in items"
+            :key="index"
+            class="mb-3 p-3 bg-black/30 backdrop-blur-sm border border-amber-500/20 rounded-xl"
+          >
             <div class="flex justify-between items-center mb-2">
               <span class="text-sm font-semibold text-amber-500">Objet {{ index + 1 }}</span>
-              <button type="button" class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-2 py-1 text-red-500 hover:border-red-400/70 transition-all text-xs" @click="removeItem(index)">
+              <button
+                type="button"
+                class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-2 py-1 text-red-500 hover:border-red-400/70 transition-all text-xs"
+                @click="removeItem(index)"
+              >
                 Supprimer
               </button>
             </div>
@@ -209,14 +219,29 @@ function handleClose() {
               />
             </div>
           </div>
-          <button type="button" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm mt-2" @click="addItem">
+          <button
+            type="button"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm mt-2"
+            @click="addItem"
+          >
             Ajouter un objet
           </button>
         </div>
 
         <div class="modal-action">
-          <button type="button" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all" @click="handleClose">Annuler</button>
-          <button type="submit" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all">Créer</button>
+          <button
+            type="button"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+            @click="handleClose"
+          >
+            Annuler
+          </button>
+          <button
+            type="submit"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+          >
+            Créer
+          </button>
         </div>
       </form>
     </div>

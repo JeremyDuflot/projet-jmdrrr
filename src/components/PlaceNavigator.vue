@@ -44,7 +44,11 @@ function moveTo(placeId) {
     </div>
 
     <div class="flex flex-col gap-2 max-h-64 overflow-y-auto">
-      <div v-for="place in filteredPlaces" :key="place.id" class="bg-black/30 backdrop-blur-sm border border-amber-500/20 rounded-xl p-3 flex-row items-center justify-between">
+      <div
+        v-for="place in filteredPlaces"
+        :key="place.id"
+        class="bg-black/30 backdrop-blur-sm border border-amber-500/20 rounded-xl p-3 flex-row items-center justify-between"
+      >
         <div>
           <p class="font-semibold text-amber-500">{{ place.name }}</p>
           <p class="text-sm text-amber-500/70">{{ place.description }}</p>

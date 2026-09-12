@@ -71,7 +71,9 @@ function saveHp() {
 
 <template>
   <div class="w-full">
-    <span v-if="showLabel" class="font-bold block mb-1 text-amber-500 font-['Cinzel']">Points de vie</span>
+    <span v-if="showLabel" class="font-bold block mb-1 text-amber-500 font-['Cinzel']"
+      >Points de vie</span
+    >
 
     <div v-if="!isEditing" class="flex items-center gap-2">
       <span class="font-bold text-white/80">{{ currentHp }} / {{ maxHp }}</span>

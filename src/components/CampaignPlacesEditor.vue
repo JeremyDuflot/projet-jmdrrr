@@ -82,7 +82,12 @@ function confirmDelete() {
   <section class="font-normal">
     <div class="flex items-center justify-between mb-2">
       <h3 class="font-bold text-amber-500 font-['Cinzel']">Lieux</h3>
-      <button class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm" @click="openCreateForm">Ajouter un lieu</button>
+      <button
+        class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm"
+        @click="openCreateForm"
+      >
+        Ajouter un lieu
+      </button>
     </div>
 
     <p v-if="campaign.places.length === 0" class="text-sm text-amber-500/60 italic">
@@ -90,15 +95,27 @@ function confirmDelete() {
     </p>
 
     <ul v-else class="flex flex-col gap-2">
-      <li v-for="place in campaign.places" :key="place.id" class="bg-black/30 backdrop-blur-sm border border-amber-500/20 rounded-xl p-3 flex items-center justify-between">
+      <li
+        v-for="place in campaign.places"
+        :key="place.id"
+        class="bg-black/30 backdrop-blur-sm border border-amber-500/20 rounded-xl p-3 flex items-center justify-between"
+      >
         <div class="flex-1">
           <p class="font-bold text-amber-500">{{ place.name }}</p>
           <p v-if="place.description" class="text-sm text-amber-500/70">
             {{ place.description }}
           </p>
         </div>
-        <button class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm" @click="openEditForm(place)">Modifier</button>
-        <button class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-3 py-1 text-red-500 hover:border-red-400/70 transition-all text-sm" @click="deletedId = place.id">
+        <button
+          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm"
+          @click="openEditForm(place)"
+        >
+          Modifier
+        </button>
+        <button
+          class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-3 py-1 text-red-500 hover:border-red-400/70 transition-all text-sm"
+          @click="deletedId = place.id"
+        >
           Supprimer
         </button>
       </li>
@@ -112,24 +129,45 @@ function confirmDelete() {
       <form @submit.prevent="submitForm">
         <label class="form-control w-full mb-3">
           <span class="label-text text-amber-500 font-['Cinzel']">Nom</span>
-          <input v-model="form.name" type="text" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full" />
+          <input
+            v-model="form.name"
+            type="text"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          />
         </label>
 
         <label class="form-control w-full mb-3">
           <span class="label-text text-amber-500 font-['Cinzel']">Description</span>
-          <textarea v-model="form.description" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"></textarea>
+          <textarea
+            v-model="form.description"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          ></textarea>
         </label>
 
         <label class="form-control w-full mb-3">
-          <span class="label-text text-amber-500 font-['Cinzel']">Commentaire (visible par le MJ uniquement)</span>
-          <textarea v-model="form.comment" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"></textarea>
+          <span class="label-text text-amber-500 font-['Cinzel']"
+            >Commentaire (visible par le MJ uniquement)</span
+          >
+          <textarea
+            v-model="form.comment"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
+          ></textarea>
         </label>
 
         <p v-if="formError" class="text-red-400 mb-2">{{ formError }}</p>
 
         <div class="modal-action">
-          <button type="button" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all" @click="closeForm">Annuler</button>
-          <button type="submit" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all">
+          <button
+            type="button"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+            @click="closeForm"
+          >
+            Annuler
+          </button>
+          <button
+            type="submit"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+          >
             {{ isEditing ? 'Enregistrer' : 'Ajouter' }}
           </button>
         </div>
@@ -142,8 +180,20 @@ function confirmDelete() {
         {{ deletedPlaceOccupants.length }} joueur(s) s'y trouvent et n'auront plus de lieu.
       </p>
       <div class="modal-action">
-        <button type="button" class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all" @click="deletedId = null">Annuler</button>
-        <button type="button" class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-4 py-2 text-red-500 hover:border-red-400/70 transition-all" @click="confirmDelete">Supprimer</button>
+        <button
+          type="button"
+          class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+          @click="deletedId = null"
+        >
+          Annuler
+        </button>
+        <button
+          type="button"
+          class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-4 py-2 text-red-500 hover:border-red-400/70 transition-all"
+          @click="confirmDelete"
+        >
+          Supprimer
+        </button>
       </div>
     </BaseModal>
   </section>

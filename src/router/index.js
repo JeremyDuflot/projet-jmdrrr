@@ -12,13 +12,38 @@ const router = createRouter({
   routes: [
     { name: 'home', path: '/', component: HomePage },
 
-    { name: 'gm-campaigns', path: '/gm/campaigns', component: GmCampaignsView, meta: { useLayout: true } },
-    { name: 'gm-chapters', path: '/gm/campaigns/:campaignId/chapters', component: GmChaptersPage, meta: { useLayout: true } },
+    {
+      name: 'gm-campaigns',
+      path: '/gm/campaigns',
+      component: GmCampaignsView,
+      meta: { useLayout: true },
+    },
+    {
+      name: 'gm-chapters',
+      path: '/gm/campaigns/:campaignId/chapters',
+      component: GmChaptersPage,
+      meta: { useLayout: true },
+    },
 
     { name: 'players', path: '/players', component: SelectPlayerPage, meta: { useLayout: true } },
-    { name: 'player-campaigns', path: '/player/campaigns', component: PlayerCampaignsPage, meta: { useLayout: true } },
-    { name: 'player-chapters', path: '/player/campaigns/:campaignId/chapters', component: PlayerChaptersPage, meta: { useLayout: true } },
-    { name: 'player-sheet', path: '/players/:playerName', component: PlayerSheetPage, meta: { useLayout: true } },
+    {
+      name: 'player-campaigns',
+      path: '/player/campaigns',
+      component: PlayerCampaignsPage,
+      meta: { useLayout: true },
+    },
+    {
+      name: 'player-chapters',
+      path: '/player/campaigns/:campaignId/chapters',
+      component: PlayerChaptersPage,
+      meta: { useLayout: true },
+    },
+    {
+      name: 'player-sheet',
+      path: '/players/:playerName',
+      component: PlayerSheetPage,
+      meta: { useLayout: true },
+    },
   ],
 })
 
