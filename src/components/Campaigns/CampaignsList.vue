@@ -152,6 +152,12 @@ async function importFile(event) {
     }
   }
 }
+
+function redirectToGmOrPlayerChapters(editableMode, campaign) {
+  return editableMode
+    ? { name: 'gm-chapters', params: { campaignId: campaign.id } }
+    : { name: 'player-chapters', params: { campaignId: campaign.id } }
+}
 </script>
 
 <template>
@@ -224,16 +230,16 @@ async function importFile(event) {
           <CampaignPlayersEditor :campaign="campaign" />
         </div>
 
-        <div v-if="editable" class="flex justify-between">
+        <div class="flex justify-between">
           <div>
             <RouterLink
-              :to="{ name: 'chapters', params: { campaignId: campaign.id } }"
+              :to="redirectToGmOrPlayerChapters(editable, campaign)"
               class="justify-start btn btn-primary"
             >
               Voir Plus
             </RouterLink>
           </div>
-          <div class="flex gap-2">
+          <div v-if="editable" class="flex gap-2">
             <button class="btn btn-outline" @click="exportCampaign(campaign)">Exporter</button>
             <button class="btn btn-error btn-outline" @click="askDelete(campaign)">
               Supprimer
