@@ -4,6 +4,6 @@ import ChaptersList from '@/components/Chapters/ChaptersList.vue'
 
 <template>
   <div class="m-4">
-    <ChaptersList editable />
+    <ChaptersList />
   </div>
 </template>
