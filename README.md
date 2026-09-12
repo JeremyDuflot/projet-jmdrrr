@@ -36,10 +36,14 @@ Gestion des erreurs
 - Alerte de persistance : message d'erreur si localStorage échoue
 - Feedback import/export : messages de succès/erreur visibles
 - Validation de formulaires : messages d'erreur inline
+
+Aspects techniques
 - Remapping d'ID : lors de duplication/import pour éviter les conflits
+- Jeu de données à l'installation avec Faker-js
 
 UI/UX améliorée
 - Thème graphique complet JDR médiévale avec TailwindCSS v4 + DaisyUI + Lucide Vue + images personnalisées
+- Responsive
 - Collapse/expand : chapitres et quêtes en accordéon
 - Badges d'état : badges colorés selon les états
 - Compteurs : nombre de chapitres, quêtes, joueurs, lieux, objets, indices
