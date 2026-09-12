@@ -1,16 +1,21 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
+import { Check } from '@lucide/vue'
 import { useCampaignsStore } from '@/stores/rpgStore.js'
 import LifeBar from '@/components/LifeBar.vue'
 import ResolutionPasswordPopup from '@/components/ResolutionPasswordPopup.vue'
+import PlaceNavigator from '@/components/PlaceNavigator.vue'
 
 const route = useRoute()
 const campaignsStore = useCampaignsStore()
 
 const playerName = route.params.playerName
 const searchQuery = ref('')
-const successMessage = ref('')
+
+/** @type {import('vue').Ref<HTMLDialogElement | null>} */
+const successDialogRef = ref(null)
+const successInfo = ref({ type: '', name: '' })
 
 const campaign = computed(() => {
   return campaignsStore.campaigns.find((c) => c.players.some((p) => p.name === playerName)) ?? null
@@ -27,9 +32,12 @@ const activeChapter = computed(
   () => campaign.value?.chapters.find((c) => c.state === 'active') ?? null,
 )
 
-const activeQuests = computed(
-  () => activeChapter.value?.quests.filter((q) => q.state === 'active') ?? [],
-)
+const activeQuests = computed(() => {
+  if (!campaign.value) return []
+  return campaign.value.chapters.flatMap((chapter) =>
+    chapter.quests.filter((quest) => quest.state === 'active'),
+  )
+})
 
 function filterByQuery(items, query) {
   if (!items) return []
@@ -62,19 +70,45 @@ function handleUpdateHp(newHp) {
   campaignsStore.updatePlayer(playerId.value, { currentHp: newHp, state })
 }
 
-function handleResolved({ type, name }) {
-  successMessage.value = `${type === 'quest' ? 'Quête' : 'Chapitre'} "${name}" résolu(e) !`
-  setTimeout(() => {
-    successMessage.value = ''
-  }, 4000)
+async function handleResolved({ type, name }) {
+  successInfo.value = { type, name }
+  await nextTick()
+  successDialogRef.value?.showModal()
+}
+
+function closeSuccessDialog() {
+  successDialogRef.value?.close()
 }
 </script>
 
 <template>
   <div class="min-h-screen bg-base-200 p-6">
-    <div v-if="successMessage" class="alert alert-success mb-4 max-w-4xl mx-auto">
-      <p>{{ successMessage }}</p>
-    </div>
+    <dialog ref="successDialogRef" class="modal">
+      <div
+        class="modal-box bg-black/90 backdrop-blur-sm border-2 border-amber-500/40 text-gray-200"
+      >
+        <div class="flex flex-col items-center text-center py-4">
+          <div class="rounded-full bg-success/20 p-3 mb-3">
+            <Check :size="32" class="text-success" />
+          </div>
+          <h3 class="font-bold text-lg mb-1 text-amber-500 font-['Cinzel']">
+            {{ successInfo.type === 'quest' ? 'Quête résolue !' : 'Chapitre résolu !' }}
+          </h3>
+          <p class="text-gray-400 text-sm">
+            "{{ successInfo.name }}" — Bien joué, l'aventure continue.
+          </p>
+        </div>
+        <div class="modal-action justify-center">
+          <button
+            type="button"
+            class="btn bg-amber-500/20 border-amber-500/40 text-amber-400 hover:bg-amber-500/30"
+            @click="closeSuccessDialog"
+          >
+            Fermer
+          </button>
+        </div>
+      </div>
+    </dialog>
 
     <div v-if="player" class="max-w-4xl mx-auto">
       <h1 class="text-4xl font-bold mb-6 text-center">Fiche de Personnage</h1>
@@ -110,17 +144,19 @@ function handleResolved({ type, name }) {
 
           <div>
             <h3 class="font-bold text-lg mb-2">Localisation</h3>
-            <div v-if="player.place" class="card bg-base-200">
+            <div v-if="player.place" class="card bg-base-200 mb-3">
               <div class="card-body p-4">
                 <h4 class="font-semibold">{{ player.place.name }}</h4>
                 <p class="text-sm text-base-content/70">{{ player.place.description }}</p>
               </div>
             </div>
-            <div v-else class="card bg-base-200">
+            <div v-else class="card bg-base-200 mb-3">
               <div class="card-body p-4">
                 <p class="text-sm text-base-content/50 italic">Aucune localisation définie</p>
               </div>
             </div>
+
+            <PlaceNavigator :player-id="playerId" />
           </div>
         </div>
       </div>
@@ -136,21 +172,23 @@ function handleResolved({ type, name }) {
             :player-id="playerId"
             @resolved="handleResolved"
           />
+        </div>
+      </div>
 
-          <div v-if="activeQuests.length > 0" class="mt-4">
-            <h4 class="font-semibold mb-2">Quêtes actives</h4>
-            <div class="flex flex-col gap-3">
-              <div v-for="quest in activeQuests" :key="quest.id" class="card bg-base-200">
-                <div class="card-body p-4">
-                  <p class="font-semibold">{{ quest.name }}</p>
-                  <p class="text-sm text-base-content/70 mb-2">{{ quest.description }}</p>
-                  <ResolutionPasswordPopup
-                    type="quest"
-                    :entity-id="quest.id"
-                    :player-id="playerId"
-                    @resolved="handleResolved"
-                  />
-                </div>
+      <div v-if="activeQuests.length > 0" class="card bg-base-100 shadow-xl mb-6">
+        <div class="card-body">
+          <h3 class="card-title">Quêtes actives</h3>
+          <div class="flex flex-col gap-3">
+            <div v-for="quest in activeQuests" :key="quest.id" class="card bg-base-200">
+              <div class="card-body p-4">
+                <p class="font-semibold">{{ quest.name }}</p>
+                <p class="text-sm text-base-content/70 mb-2">{{ quest.description }}</p>
+                <ResolutionPasswordPopup
+                  type="quest"
+                  :entity-id="quest.id"
+                  :player-id="playerId"
+                  @resolved="handleResolved"
+                />
               </div>
             </div>
           </div>
