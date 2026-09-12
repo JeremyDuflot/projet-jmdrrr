@@ -1,5 +1,5 @@
 <script setup>
-import ChaptersList from '@/components/Chapters/ChaptersList.vue'
+import ChaptersList from '@/components/chapters/ChaptersList.vue'
 </script>
 
 <template>

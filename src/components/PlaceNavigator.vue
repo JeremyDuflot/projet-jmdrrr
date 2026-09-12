@@ -64,7 +64,10 @@ function moveTo(placeId) {
         </button>
       </div>
 
-      <p v-if="filteredPlaces.length === 0" class="text-amber-500/50 text-sm text-center py-4">
+      <p
+        v-if="filteredPlaces.length === 0"
+        class="text-amber-500/50 text-sm text-center py-4 italic"
+      >
         Aucun lieu trouvé.
       </p>
     </div>

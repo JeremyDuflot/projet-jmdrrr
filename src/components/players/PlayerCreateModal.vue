@@ -150,12 +150,14 @@ function handleClose() {
 
         <div v-show="isGmPath" class="form-control">
           <label class="label" for="player-comment">
-            <span class="label-text text-amber-500 font-['Cinzel']">Commentaire</span>
+            <span class="label-text text-amber-500 font-['Cinzel']"
+              >Commentaire (visible par le MJ uniquement)</span
+            >
           </label>
           <textarea
             id="player-comment"
             v-model="formData.comment"
-            placeholder="Commentaire"
+            placeholder="Commentaire (visible par le MJ uniquement)"
             class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 focus:border-amber-400/70 w-full"
             rows="2"
           />
@@ -178,7 +180,9 @@ function handleClose() {
           <label class="label">
             <span class="label-text font-bold text-amber-500 font-['Cinzel']">Inventaire</span>
           </label>
-          <div v-if="items.length === 0" class="text-sm text-amber-500/50 mb-2">Aucun objet</div>
+          <div v-if="items.length === 0" class="text-sm text-amber-500/50 mb-2 italic">
+            Aucun objet
+          </div>
           <div
             v-for="(item, index) in items"
             :key="index"
@@ -188,7 +192,7 @@ function handleClose() {
               <span class="text-sm font-semibold text-amber-500">Objet {{ index + 1 }}</span>
               <button
                 type="button"
-                class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-2 py-1 text-red-500 hover:border-red-400/70 transition-all text-xs"
+                class="bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-2 py-1 text-red-500 hover:border-red-400/70 transition-all text-xs cursor-pointer"
                 @click="removeItem(index)"
               >
                 Supprimer
@@ -221,7 +225,7 @@ function handleClose() {
           </div>
           <button
             type="button"
-            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 text-amber-500 hover:border-amber-400/70 transition-all text-sm mt-2"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-3 py-1 cursor-pointer text-amber-500 hover:border-amber-400/70 transition-all text-sm mt-2"
             @click="addItem"
           >
             Ajouter un objet
@@ -231,14 +235,14 @@ function handleClose() {
         <div class="modal-action">
           <button
             type="button"
-            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 cursor-pointer text-amber-500 hover:border-amber-400/70 transition-all"
             @click="handleClose"
           >
             Annuler
           </button>
           <button
             type="submit"
-            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all"
+            class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 cursor-pointer py-2 text-amber-500 hover:border-amber-400/70 transition-all"
           >
             Créer
           </button>

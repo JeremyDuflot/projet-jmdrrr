@@ -3,8 +3,8 @@ import { computed, reactive, ref } from 'vue'
 import { useCampaignsStore } from '@/stores/rpgStore'
 import { CAMPAIGN_STATES } from '@/data/entities'
 import BaseModal from '@/components/BaseModal.vue'
-import CampaignContentEditor from '@/components/Campaigns/CampaignContentEditor.vue'
-import CampaignPlayersEditor from '@/components/Campaigns/CampaignPlayersEditor.vue'
+import CampaignContentEditor from '@/components/campaigns/CampaignContentEditor.vue'
+import CampaignPlayersEditor from '@/components/campaigns/CampaignPlayersEditor.vue'
 import {
   CAMPAIGN_FILE_EXTENSION,
   downloadCampaignFile,
@@ -17,10 +17,15 @@ const STATE_LABELS = {
   active: 'Active',
 }
 
-const STATE_BADGES = {
-  draft: 'badge-ghost',
-  available: 'badge-info',
-  active: 'badge-success',
+function getStateBadgeClass(state) {
+  switch (state) {
+    case 'active':
+      return 'bg-black/50 backdrop-blur-sm border-2 border-green-500/40 px-2 rounded-xl text-green-500'
+    case 'draft':
+      return 'bg-black/50 backdrop-blur-sm border-2 border-red-500/40 px-2 rounded-xl text-red-500'
+    default:
+      return 'bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 px-2 rounded-xl text-amber-500'
+  }
 }
 
 const props = defineProps({
@@ -200,7 +205,10 @@ function redirectToGmOrPlayerChapters(editableMode, campaign) {
       "
     >
       <span>{{ importFeedback.text }}</span>
-      <button class="ml-4 text-amber-500 hover:text-amber-300" @click="importFeedback = null">
+      <button
+        class="ml-4 text-amber-500 hover:text-amber-300 cursor-pointer"
+        @click="importFeedback = null"
+      >
         Fermer
       </button>
     </div>
@@ -219,11 +227,9 @@ function redirectToGmOrPlayerChapters(editableMode, campaign) {
       class="collapse collapse-arrow bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl mb-2 hover:border-amber-400/70 hover:shadow-xl transition-all duration-300"
     >
       <input type="checkbox" :id="'my-campaign-' + campaign.id" />
-      <h2
-        class="collapse-title p-4 font-extrabold flex items-center gap-2 text-amber-500 font-['Cinzel']"
-      >
-        <span>{{ campaign.name }}</span>
-        <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400">
+      <h2 class="collapse-title p-4 flex items-center gap-2">
+        <span class="font-extrabold text-amber-500 font-['Cinzel']">{{ campaign.name }}</span>
+        <span :class="getStateBadgeClass(campaign.state)">
           {{ STATE_LABELS[campaign.state] }}
         </span>
       </h2>
@@ -272,7 +278,7 @@ function redirectToGmOrPlayerChapters(editableMode, campaign) {
               :to="redirectToGmOrPlayerChapters(editable, campaign)"
               class="bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer"
             >
-              Voir Plus
+              Voir les chapitres
             </RouterLink>
           </div>
           <div v-if="editable" class="flex gap-2">
