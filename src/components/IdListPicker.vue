@@ -34,22 +34,24 @@ function toggle(id) {
 
 <template>
   <fieldset class="w-full mb-3">
-    <legend class="label-text">{{ label }}</legend>
+    <legend class="label-text text-amber-500 font-['Cinzel']">{{ label }}</legend>
 
-    <p v-if="entities.length === 0" class="text-sm text-base-content/60 italic">
+    <p v-if="entities.length === 0" class="text-sm text-amber-500/60 italic">
       {{ emptyText }}
     </p>
 
     <template v-else>
-      <div class="max-h-40 overflow-y-auto rounded-box border border-base-300 p-2">
+      <div
+        class="max-h-40 overflow-y-auto bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl p-2"
+      >
         <label
           v-for="entity in entities"
           :key="entity.id"
-          class="flex items-center gap-2 py-1 cursor-pointer"
+          class="flex items-center gap-2 py-1 text-amber-500 cursor-pointer"
         >
           <input
             type="checkbox"
-            class="checkbox checkbox-sm"
+            class="accent-amber-500 w-4 h-4"
             :checked="modelValue.includes(entity.id)"
             @change="toggle(entity.id)"
           />
@@ -57,7 +59,7 @@ function toggle(id) {
         </label>
       </div>
 
-      <p class="text-sm text-base-content/60 mt-1">{{ modelValue.length }} sélectionné(s)</p>
+      <p class="text-sm text-amber-500/60 mt-1">{{ modelValue.length }} sélectionné(s)</p>
     </template>
   </fieldset>
 </template>
