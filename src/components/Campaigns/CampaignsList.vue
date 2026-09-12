@@ -3,7 +3,7 @@ import { computed, reactive, ref } from 'vue'
 import { useCampaignsStore } from '@/stores/rpgStore'
 import { CAMPAIGN_STATES } from '@/data/entities'
 import BaseModal from '@/components/BaseModal.vue'
-import CampaignPlacesEditor from '@/components/CampaignPlacesEditor.vue'
+import CampaignContentEditor from '@/components/CampaignContentEditor.vue'
 import CampaignPlayersEditor from '@/components/CampaignPlayersEditor.vue'
 import {
   CAMPAIGN_FILE_EXTENSION,
@@ -260,7 +260,9 @@ function redirectToGmOrPlayerChapters(editableMode, campaign) {
         </div>
 
         <div v-if="editable" class="grid gap-4 mb-4 md:grid-cols-2">
-          <CampaignPlacesEditor :campaign="campaign" />
+          <CampaignContentEditor :campaign="campaign" collection="places" />
+          <CampaignContentEditor :campaign="campaign" collection="items" />
+          <CampaignContentEditor :campaign="campaign" collection="clues" />
           <CampaignPlayersEditor :campaign="campaign" />
         </div>
 

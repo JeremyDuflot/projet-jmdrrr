@@ -245,6 +245,21 @@ export const useCampaignsStore = defineStore(
       return found.player
     }
 
+    // updatePlayer protects `inventory` on purpose, so the list has its own
+    // action. It replaces the whole list, which is what a picker emits.
+    function setPlayerInventory(playerId, itemIds) {
+      const found = locatePlayer(playerId)
+      if (!found) return null
+
+      // Filtering against the campaign catalogue also drops anything that is
+      // not a known id, so no separate type guard is needed.
+      const known = new Set(found.campaign.items.map((item) => item.id))
+      const wanted = Array.isArray(itemIds) ? itemIds : []
+      found.player.inventory.itemIds = wanted.filter((id) => known.has(id))
+
+      return found.player
+    }
+
     function duplicatePlayer(playerId) {
       const found = locatePlayer(playerId)
       if (!found) return null
@@ -471,6 +486,7 @@ export const useCampaignsStore = defineStore(
 
       createPlayer,
       updatePlayer,
+      setPlayerInventory,
       duplicatePlayer,
       deletePlayer,
 

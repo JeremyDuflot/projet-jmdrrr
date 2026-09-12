@@ -132,7 +132,7 @@ function closeSuccessDialog() {
 
       <div>
         <h3 class="font-bold text-lg mb-2 text-amber-500 font-['Cinzel']">Description</h3>
-          <p class="text-amber-500/80">{{ player.description }}</p>
+        <p class="text-amber-500/80">{{ player.description }}</p>
       </div>
     </div>
 
