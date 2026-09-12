@@ -1,13 +1,10 @@
 <script setup>
-import { useRouter } from 'vue-router'
 import { useCampaignsStore } from '@/stores/rpgStore'
+import { useRoute } from 'vue-router'
+import MainLayout from '@/layouts/MainLayout.vue'
 
 const campaignsStore = useCampaignsStore()
-const router = useRouter()
-const routesNames = router
-  .getRoutes()
-  .filter((route) => !route.path.includes(':'))
-  .map((route) => route.name)
+const route = useRoute()
 </script>
 
 <template>
@@ -17,15 +14,8 @@ const routesNames = router
     >
   </div>
 
-  <RouterLink
-    v-for="(routeName, index) in routesNames"
-    :key="index"
-    :to="{ name: routeName }"
-    class="btn btn-active btn-primary"
-    >{{ routeName }}</RouterLink
-  >
-
-  <RouterView />
+  <MainLayout v-if="route.meta.useLayout">
+    <RouterView />
+  </MainLayout>
+  <RouterView v-else />
 </template>
-
-<style scoped></style>

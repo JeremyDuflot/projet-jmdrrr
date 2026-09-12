@@ -15,7 +15,7 @@ const emit = defineEmits(['select'])
 
 <template>
   <div
-    class="group relative flex-1 max-w-md h-124 rounded-lg overflow-hidden border-2 border-amber-500/40 ring-1 ring-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.8)] cursor-pointer transition-all duration-300 hover:scale-105 hover:border-amber-400/70 hover:shadow-[0_25px_70px_rgba(0,0,0,0.9)]"
+    class="group relative flex-1 max-w-md h-124 rounded-xl overflow-hidden border-2 border-amber-500/40 ring-1 ring-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.8)] cursor-pointer transition-all duration-300 hover:scale-105 hover:border-amber-400/70 hover:shadow-[0_25px_70px_rgba(0,0,0,0.9)]"
     @click="emit('select', routeName)"
   >
     <div
