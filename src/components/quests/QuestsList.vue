@@ -12,11 +12,16 @@ const STATE_LABELS = {
   abandoned: 'Abandonnée',
 }
 
-const STATE_BADGES = {
-  inactive: 'badge-ghost',
-  active: 'badge-success',
-  completed: 'badge-neutral',
-  abandoned: 'badge-error',
+function getStateBadgeClass(state) {
+  switch (state) {
+    case 'active':
+    case 'completed':
+      return 'bg-black/50 backdrop-blur-sm border-2 border-green-500/40 rounded-xl px-4 py-2 text-green-500 hover:border-green-400/70 transition-all cursor-pointer'
+    case 'abandoned':
+      return 'bg-black/50 backdrop-blur-sm border-2 border-red-500/40 rounded-xl px-4 py-2 text-red-500 hover:border-red-400/70 transition-all cursor-pointer'
+    default:
+      return 'bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer'
+  }
 }
 
 const props = defineProps({
@@ -214,7 +219,7 @@ function duplicate(quest) {
               {{ quest.name }}
             </button>
             <span v-else class="font-semibold text-amber-500">{{ quest.name }}</span>
-            <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400 text-xs">
+            <span :class="getStateBadgeClass(quest.state) + ' text-xs'">
               {{ STATE_LABELS[quest.state] }}
             </span>
             <span
@@ -283,7 +288,7 @@ function duplicate(quest) {
     <BaseModal :open="detailedQuest !== null" :title="detailedQuest?.name" @close="closeDetail">
       <div v-if="detailedQuest">
         <div class="flex flex-wrap items-center gap-2 mb-3">
-          <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400">
+          <span :class="getStateBadgeClass(detailedQuest.state)">
             {{ STATE_LABELS[detailedQuest.state] }}
           </span>
           <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400">

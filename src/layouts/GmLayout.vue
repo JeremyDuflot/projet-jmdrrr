@@ -1,5 +1,5 @@
 <script setup>
-import CampaignPlayersPanel from '@/components/Campaigns/CampaignPlayersPanel.vue'
+import CampaignPlayersPanel from '@/components/campaigns/CampaignPlayersPanel.vue'
 import { useCampaignsStore } from '@/stores/rpgStore.js'
 
 const campaignsStore = useCampaignsStore()

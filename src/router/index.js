@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '@/views/HomePage.vue'
-import SelectPlayerPage from '@/views/SelectPlayerPage.vue'
+import SelectPlayerPage from '@/views/player/SelectPlayerPage.vue'
 import GmCampaignsView from '@/views/gm/CampaignsPage.vue'
 import PlayerCampaignsPage from '@/views/player/CampaignsPage.vue'
 import PlayerSheetPage from '@/views/PlayerSheetPage.vue'

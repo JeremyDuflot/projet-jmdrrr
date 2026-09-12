@@ -15,7 +15,7 @@ const searchQuery = ref('')
 
 /** @type {import('vue').Ref<HTMLDialogElement | null>} */
 const successDialogRef = ref(null)
-const successInfo = ref({ type: '', name: '' })
+const successInfo = ref({ type: '', name: '', gainedItems: [], gainedClues: [] })
 
 const campaign = computed(() => {
   return campaignsStore.campaigns.find((c) => c.players.some((p) => p.name === playerName)) ?? null
@@ -70,8 +70,8 @@ function handleUpdateHp(newHp) {
   campaignsStore.updatePlayer(playerId.value, { currentHp: newHp, state })
 }
 
-async function handleResolved({ type, name }) {
-  successInfo.value = { type, name }
+async function handleResolved({ type, name, gainedItems, gainedClues }) {
+  successInfo.value = { type, name, gainedItems, gainedClues }
   await nextTick()
   successDialogRef.value?.showModal()
 }
@@ -93,6 +93,14 @@ function closeSuccessDialog() {
         </h3>
         <p class="text-gray-400 text-sm">
           "{{ successInfo.name }}" — Bien joué, l'aventure continue.
+        </p>
+
+        <p v-if="successInfo.gainedItems.length" class="text-amber-500/80 text-sm mt-3">
+          Vous récupérez : {{ successInfo.gainedItems.join(', ') }}
+        </p>
+
+        <p v-if="successInfo.gainedClues.length" class="text-amber-500/80 text-sm mt-1">
+          Indice(s) révélé(s) : {{ successInfo.gainedClues.join(', ') }}
         </p>
       </div>
       <div class="modal-action justify-center">

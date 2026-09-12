@@ -2,9 +2,9 @@
 import { computed, reactive, ref } from 'vue'
 import { useCampaignsStore } from '@/stores/rpgStore'
 import { PLAYER_STATES } from '@/data/entities'
-import BaseModal from './BaseModal.vue'
-import LifeBar from './LifeBar.vue'
-import IdListPicker from './IdListPicker.vue'
+import BaseModal from '@/components/BaseModal.vue'
+import LifeBar from '@/components/LifeBar.vue'
+import IdListPicker from '@/components/IdListPicker.vue'
 
 const STATE_LABELS = {
   alive: 'Vivant',

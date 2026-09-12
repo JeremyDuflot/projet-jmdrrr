@@ -3,7 +3,7 @@ import { computed, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useCampaignsStore } from '@/stores/rpgStore'
 import BaseModal from '@/components/BaseModal.vue'
-import QuestsList from '@/components/Quests/QuestsList.vue'
+import QuestsList from '@/components/quests/QuestsList.vue'
 import IdListPicker from '@/components/IdListPicker.vue'
 
 const STATE_LABELS = {
@@ -12,10 +12,14 @@ const STATE_LABELS = {
   completed: 'Terminé',
 }
 
-const STATE_BADGES = {
-  inactive: 'badge-ghost',
-  active: 'badge-success',
-  completed: 'badge-neutral',
+function getStateBadgeClass(state) {
+  switch (state) {
+    case 'active':
+    case 'completed':
+      return 'bg-black/50 backdrop-blur-sm border-2 border-green-500/40 rounded-xl px-4 py-2 text-green-500 hover:border-green-400/70 transition-all cursor-pointer'
+    default:
+      return 'bg-black/50 backdrop-blur-sm border-2 border-amber-500/40 rounded-xl px-4 py-2 text-amber-500 hover:border-amber-400/70 transition-all cursor-pointer'
+  }
 }
 
 const props = defineProps({
@@ -219,7 +223,7 @@ function move(chapter, index, offset) {
         class="collapse-title p-4 font-extrabold flex items-center gap-2 text-amber-500 font-['Cinzel']"
       >
         <span>{{ chapter.name }}</span>
-        <span class="badge bg-amber-500/20 border border-amber-500/40 text-amber-400">
+        <span :class="getStateBadgeClass(chapter.state)">
           {{ STATE_LABELS[chapter.state] }}
         </span>
       </h2>
